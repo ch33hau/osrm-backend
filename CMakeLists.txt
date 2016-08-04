@@ -54,6 +54,7 @@ option(ENABLE_ASSERTIONS OFF)
 option(COVERAGE OFF)
 option(SANITIZER OFF)
 option(ENABLE_LTO "Use LTO if available" ON)
+option(USE_TBB "Requires TBB - set to true for extract, prepare, etc." OFF)
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
@@ -274,27 +275,27 @@ add_dependency_includes(${Boost_INCLUDE_DIRS})
 
 find_package(Threads REQUIRED)
 
-find_package(TBB REQUIRED)
-add_dependency_includes(${TBB_INCLUDE_DIR})
-if(WIN32 AND CMAKE_BUILD_TYPE MATCHES Debug)
-  set(TBB_LIBRARIES ${TBB_DEBUG_LIBRARIES})
+if (USE_TBB)
+  find_package(TBB REQUIRED)
+  add_dependency_includes(${TBB_INCLUDE_DIR})
+  if(WIN32 AND CMAKE_BUILD_TYPE MATCHES Debug)
+    set(TBB_LIBRARIES ${TBB_DEBUG_LIBRARIES})
+  endif()
 endif()
 
-find_package(Luabind REQUIRED)
-include(check_luabind)
-add_dependency_includes(${LUABIND_INCLUDE_DIR})
+add_subdirectory(external_lib/luabind)
+include_directories(SYSTEM
+  ${CMAKE_CURRENT_SOURCE_DIR}/external_lib/luabind/external_lib/lua-5.1/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/external_lib/luabind)
+target_link_libraries(osrm_extract luabind)
+target_link_libraries(osrm_contract luabind)
 
-set(USED_LUA_LIBRARIES ${LUA_LIBRARY})
-if(LUAJIT_FOUND)
-  set(USED_LUA_LIBRARIES, LUAJIT_LIBRARIES)
-endif()
-add_dependency_includes(${LUA_INCLUDE_DIR})
-
-find_package(EXPAT REQUIRED)
-add_dependency_includes(${EXPAT_INCLUDE_DIRS})
-
-find_package(STXXL REQUIRED)
-add_dependency_includes(${STXXL_INCLUDE_DIR})
+add_subdirectory(external_lib/stxxl)
+include_directories(SYSTEM
+  external_lib/stxxl/include
+  ${PROJECT_BINARY_DIR}/external_lib/stxxl/include)
+target_link_libraries(osrm_extract stxxl)
+target_link_libraries(osrm_contract stxxl)
 
 set(OpenMP_FIND_QUIETLY ON)
 find_package(OpenMP)
@@ -302,9 +303,6 @@ if(OPENMP_FOUND)
   message(STATUS "OpenMP support found. Linking just in case for stxxl")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
-
-find_package(BZip2 REQUIRED)
-add_dependency_includes(${BZIP2_INCLUDE_DIR})
 
 find_package(ZLIB REQUIRED)
 add_dependency_includes(${ZLIB_INCLUDE_DIRS})
@@ -496,5 +494,5 @@ add_custom_target(uninstall
 
 
 # Modular build system: each directory registered here provides its own CMakeLists.txt
-add_subdirectory(unit_tests)
-add_subdirectory(src/benchmarks)
+# add_subdirectory(unit_tests)
+# add_subdirectory(src/benchmarks)

@@ -14,7 +14,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#ifdef OSRM_WITH_TBB
 #include <tbb/parallel_sort.h>
+#endif  // OSRM_WITH_TBB
 
 #include <cmath>
 
@@ -121,6 +123,8 @@ NodeID loadEdgesFromFile(std::istream &input_stream,
 
 #ifndef NDEBUG
     SimpleLogger().Write() << "Validating loaded edges...";
+
+#ifdef OSRM_WITH_TBB
     tbb::parallel_sort(
         edge_list.begin(),
         edge_list.end(),
@@ -128,6 +132,15 @@ NodeID loadEdgesFromFile(std::istream &input_stream,
             return (lhs.source < rhs.source) ||
                    (lhs.source == rhs.source && lhs.target < rhs.target);
         });
+#else
+    std::sort(
+        edge_list.begin(),
+        edge_list.end(),
+        [](const extractor::NodeBasedEdge &lhs, const extractor::NodeBasedEdge &rhs) {
+            return (lhs.source < rhs.source) ||
+                   (lhs.source == rhs.source && lhs.target < rhs.target);
+        });
+#endif  // OSRM_WITH_TBB
     for (auto i = 1u; i < edge_list.size(); ++i)
     {
         const auto &edge = edge_list[i];

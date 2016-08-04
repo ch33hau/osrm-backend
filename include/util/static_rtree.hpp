@@ -19,8 +19,10 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
 
+#ifdef OSRM_WITH_TBB
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_sort.h>
+#endif  // OSRM_WITH_TBB
 
 #include <algorithm>
 #include <array>
@@ -173,6 +175,7 @@ class StaticRTree
         std::vector<WrappedInputElement> input_wrapper_vector(element_count);
 
         // generate auxiliary vector of hilbert-values
+#ifdef OSRM_WITH_TBB
         tbb::parallel_for(
             tbb::blocked_range<uint64_t>(0, element_count),
             [&input_data_vector, &input_wrapper_vector, this](
@@ -199,12 +202,36 @@ class StaticRTree
                     current_wrapper.m_hilbert_value = hilbertCode(current_centroid);
                 }
             });
+#else
+        for (int element_counter = 0; element_counter < element_count; ++element_counter) {
+            WrappedInputElement &current_wrapper = input_wrapper_vector[element_counter];
+            current_wrapper.m_array_index = element_counter;
+
+            EdgeDataT const &current_element = input_data_vector[element_counter];
+
+            // Get Hilbert-Value for centroid in mercartor projection
+            BOOST_ASSERT(current_element.u < m_coordinate_list.size());
+            BOOST_ASSERT(current_element.v < m_coordinate_list.size());
+
+            Coordinate current_centroid = coordinate_calculation::centroid(
+                m_coordinate_list[current_element.u], m_coordinate_list[current_element.v]);
+            current_centroid.lat =
+                FixedLatitude{static_cast<std::int32_t>(COORDINATE_PRECISION *
+                              web_mercator::latToY(toFloating(current_centroid.lat)))};
+
+            current_wrapper.m_hilbert_value = hilbertCode(current_centroid);
+        }
+#endif  // OSRM_WITH_TBB
 
         // open leaf file
         boost::filesystem::ofstream leaf_node_file(leaf_node_filename, std::ios::binary);
 
         // sort the hilbert-value representatives
+#ifdef OSRM_WITH_TBB
         tbb::parallel_sort(input_wrapper_vector.begin(), input_wrapper_vector.end());
+#else
+        std::sort(input_wrapper_vector.begin(), input_wrapper_vector.end());
+#endif // OSRM_WITH_TBB
         std::vector<TreeNode> tree_nodes_in_level;
 
         // pack M elements into leaf node, write to leaf file and add child index to the parent node
@@ -310,6 +337,7 @@ class StaticRTree
         std::reverse(m_search_tree.begin(), m_search_tree.end());
 
         std::uint32_t search_tree_size = m_search_tree.size();
+#ifdef OSRM_WITH_TBB
         tbb::parallel_for(
             tbb::blocked_range<std::uint32_t>(0, search_tree_size),
             [this, &search_tree_size](const tbb::blocked_range<std::uint32_t> &range) {
@@ -327,6 +355,21 @@ class StaticRTree
                     }
                 }
             });
+#else
+        for (uint32_t i = 0; i < search_tree_size; ++i)
+        {
+            TreeNode &current_tree_node = this->m_search_tree[i];
+            for (uint32_t j = 0; j < current_tree_node.child_count; ++j)
+            {
+                if (!current_tree_node.children[j].is_leaf)
+                {
+                    const std::uint32_t old_id = current_tree_node.children[j].index;
+                    const std::uint32_t new_id = search_tree_size - old_id - 1;
+                    current_tree_node.children[j].index = new_id;
+                }
+            }
+        }
+#endif
 
         // open tree file
         boost::filesystem::ofstream tree_node_file(tree_node_filename, std::ios::binary);

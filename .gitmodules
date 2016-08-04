@@ -1,0 +1,6 @@
+[submodule "external_lib/luabind"]
+  path = external_lib/luabind
+  url = git@git.motis-project.de:lib/luabind.git
+[submodule "external_lib/stxxl"]
+  path = external_lib/stxxl
+  url = git@git.motis-project.de:lib/stxxl.git
