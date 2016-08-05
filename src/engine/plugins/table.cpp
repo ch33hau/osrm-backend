@@ -58,6 +58,7 @@ Status TablePlugin::HandleRequest(const api::TableParameters &params, util::json
         return Error("TooBig", "Too many table coordinates", result);
     }
 
+    // auto snapped_phantoms = SnapPhantomNodes(GetPhantomNodes(params));
     auto snapped_phantoms = SnapPhantomNodes(GetPhantomNodes(params));
     auto result_table = distance_table(snapped_phantoms, params.sources, params.destinations);
 

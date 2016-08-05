@@ -32,6 +32,7 @@ struct NearestParameters;
 struct TripParameters;
 struct MatchParameters;
 struct TileParameters;
+struct MultiTargetParameters;
 }
 namespace plugins
 {
@@ -41,6 +42,7 @@ class NearestPlugin;
 class TripPlugin;
 class MatchPlugin;
 class TilePlugin;
+class MultiTargetPlugin;
 }
 // End fwd decls
 
@@ -69,6 +71,7 @@ class Engine final
     Status Trip(const api::TripParameters &parameters, util::json::Object &result);
     Status Match(const api::MatchParameters &parameters, util::json::Object &result);
     Status Tile(const api::TileParameters &parameters, std::string &result);
+    Status MultiTarget(const api::MultiTargetParameters &parameters, util::json::Object &result);
 
   private:
     std::unique_ptr<EngineLock> lock;
@@ -79,6 +82,7 @@ class Engine final
     std::unique_ptr<plugins::TripPlugin> trip_plugin;
     std::unique_ptr<plugins::MatchPlugin> match_plugin;
     std::unique_ptr<plugins::TilePlugin> tile_plugin;
+    std::unique_ptr<plugins::MultiTargetPlugin> multi_target_plugin;
 
     std::unique_ptr<datafacade::BaseDataFacade> query_data_facade;
 };

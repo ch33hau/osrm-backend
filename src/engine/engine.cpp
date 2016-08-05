@@ -4,6 +4,7 @@
 #include "engine/status.hpp"
 
 #include "engine/plugins/match.hpp"
+#include "engine/plugins/multi_target.hpp"
 #include "engine/plugins/nearest.hpp"
 #include "engine/plugins/table.hpp"
 #include "engine/plugins/tile.hpp"
@@ -150,6 +151,7 @@ Engine::Engine(EngineConfig &config)
     trip_plugin = create<TripPlugin>(*query_data_facade, config.max_locations_trip);
     match_plugin = create<MatchPlugin>(*query_data_facade, config.max_locations_map_matching);
     tile_plugin = create<TilePlugin>(*query_data_facade);
+    multi_target_plugin = create<MultiTargetPlugin>(*query_data_facade);
 }
 
 // make sure we deallocate the unique ptr at a position where we know the size of the plugins
@@ -185,6 +187,11 @@ Status Engine::Match(const api::MatchParameters &params, util::json::Object &res
 Status Engine::Tile(const api::TileParameters &params, std::string &result)
 {
     return RunQuery(lock, *query_data_facade, params, *tile_plugin, result);
+}
+
+Status Engine::MultiTarget(const api::MultiTargetParameters &params, util::json::Object &result)
+{
+    return RunQuery(lock, *query_data_facade, params, *multi_target_plugin, result);
 }
 
 } // engine ns

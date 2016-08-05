@@ -25,39 +25,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef OSRM_FWD_HPP
-#define OSRM_FWD_HPP
+#ifndef ENGINE_API_MULTI_TARGET_PARAMETERS_HPP
+#define ENGINE_API_MULTI_TARGET_PARAMETERS_HPP
 
-// OSRM API forward declarations for usage in interfaces. Exposes forward declarations for:
-// osrm::util::json::Object, osrm::engine::api::XParameters
+#include "engine/api/base_parameters.hpp"
+
+#include <vector>
 
 namespace osrm
 {
-
-namespace util
-{
-namespace json
-{
-struct Object;
-} // ns json
-} // ns util
-
 namespace engine
 {
 namespace api
 {
-struct RouteParameters;
-struct TableParameters;
-struct NearestParameters;
-struct TripParameters;
-struct MatchParameters;
-struct TileParameters;
-struct MultiTargetParameters;
-} // ns api
 
-class Engine;
-struct EngineConfig;
-} // ns engine
-} // ns osrm
+struct MultiTargetParameters : public BaseParameters
+{
+    MultiTargetParameters() = default;
+
+    template <typename... Args>
+    MultiTargetParameters(const bool forward_, Args... args_)
+        : BaseParameters{std::forward<Args>(args_)...}, forward{forward_}
+    {
+    }
+
+    bool forward = true;
+
+    bool IsValid() const { return coordinates.size() > 2 && BaseParameters::IsValid(); }
+};
+}
+}
+}
 
 #endif

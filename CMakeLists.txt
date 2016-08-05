@@ -496,3 +496,7 @@ add_custom_target(uninstall
 # Modular build system: each directory registered here provides its own CMakeLists.txt
 # add_subdirectory(unit_tests)
 # add_subdirectory(src/benchmarks)
+
+
+add_executable(osrm-eval EXCLUDE_FROM_ALL eval/osrm_eval.cpp)
+target_link_libraries(osrm-eval osrm)

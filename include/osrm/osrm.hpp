@@ -44,6 +44,7 @@ using engine::api::NearestParameters;
 using engine::api::TripParameters;
 using engine::api::MatchParameters;
 using engine::api::TileParameters;
+using engine::api::MultiTargetParameters;
 
 /**
  * Represents a Open Source Routing Machine with access to its services.
@@ -129,6 +130,8 @@ class OSRM final
      * \see Status, TileParameters and json::Object
      */
     Status Tile(const TileParameters &parameters, std::string &result);
+
+    Status MultiTarget(const MultiTargetParameters &parameters, json::Object &result);
 
   private:
     std::unique_ptr<engine::Engine> engine_;

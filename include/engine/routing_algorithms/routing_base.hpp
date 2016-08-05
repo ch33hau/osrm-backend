@@ -71,7 +71,7 @@ template <class DataFacadeT, class Derived> class BasicRoutingInterface
     Since we are dealing with a graph that contains _negative_ edges,
     we need to add an offset to the termination criterion.
     */
-    void RoutingStep(SearchEngineData::QueryHeap &forward_heap,
+    bool RoutingStep(SearchEngineData::QueryHeap &forward_heap,
                      SearchEngineData::QueryHeap &reverse_heap,
                      NodeID &middle_node_id,
                      std::int32_t &upper_bound,
@@ -79,7 +79,8 @@ template <class DataFacadeT, class Derived> class BasicRoutingInterface
                      const bool forward_direction,
                      const bool stalling,
                      const bool force_loop_forward,
-                     const bool force_loop_reverse) const
+                     const bool force_loop_reverse,
+                     const bool clear_if_finished = true) const
     {
         const NodeID node = forward_heap.DeleteMin();
         const std::int32_t distance = forward_heap.GetKey(node);
@@ -127,10 +128,10 @@ template <class DataFacadeT, class Derived> class BasicRoutingInterface
         // make sure we don't terminate too early if we initialize the distance
         // for the nodes in the forward heap with the forward/reverse offset
         BOOST_ASSERT(min_edge_offset <= 0);
-        if (distance + min_edge_offset > upper_bound)
+        if (clear_if_finished && distance + min_edge_offset > upper_bound)
         {
             forward_heap.DeleteAll();
-            return;
+            return true;
         }
 
         // Stalling
@@ -151,7 +152,7 @@ template <class DataFacadeT, class Derived> class BasicRoutingInterface
                     {
                         if (forward_heap.GetKey(to) + edge_weight < distance)
                         {
-                            return;
+                            return false;
                         }
                     }
                 }
@@ -185,6 +186,8 @@ template <class DataFacadeT, class Derived> class BasicRoutingInterface
                 }
             }
         }
+
+        return false;
     }
 
     inline EdgeWeight GetLoopWeight(NodeID node) const
