@@ -33,6 +33,7 @@ struct TripParameters;
 struct MatchParameters;
 struct TileParameters;
 struct MultiTargetParameters;
+struct SmoothViaParameters;
 }
 namespace plugins
 {
@@ -43,6 +44,7 @@ class TripPlugin;
 class MatchPlugin;
 class TilePlugin;
 class MultiTargetPlugin;
+class SmoothViaPlugin;
 }
 // End fwd decls
 
@@ -72,6 +74,7 @@ class Engine final
     Status Match(const api::MatchParameters &parameters, util::json::Object &result);
     Status Tile(const api::TileParameters &parameters, std::string &result);
     Status MultiTarget(const api::MultiTargetParameters &parameters, util::json::Object &result);
+    Status SmoothVia(const api::SmoothViaParameters &parameters, util::json::Object &result);
 
   private:
     std::unique_ptr<EngineLock> lock;
@@ -83,6 +86,7 @@ class Engine final
     std::unique_ptr<plugins::MatchPlugin> match_plugin;
     std::unique_ptr<plugins::TilePlugin> tile_plugin;
     std::unique_ptr<plugins::MultiTargetPlugin> multi_target_plugin;
+    std::unique_ptr<plugins::SmoothViaPlugin> smooth_via_plugin;
 
     std::unique_ptr<datafacade::BaseDataFacade> query_data_facade;
 };

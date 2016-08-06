@@ -6,6 +6,7 @@
 #include "engine/plugins/match.hpp"
 #include "engine/plugins/multi_target.hpp"
 #include "engine/plugins/nearest.hpp"
+#include "engine/plugins/smooth_via.hpp"
 #include "engine/plugins/table.hpp"
 #include "engine/plugins/tile.hpp"
 #include "engine/plugins/trip.hpp"
@@ -152,6 +153,7 @@ Engine::Engine(EngineConfig &config)
     match_plugin = create<MatchPlugin>(*query_data_facade, config.max_locations_map_matching);
     tile_plugin = create<TilePlugin>(*query_data_facade);
     multi_target_plugin = create<MultiTargetPlugin>(*query_data_facade);
+    smooth_via_plugin = create<SmoothViaPlugin>(*query_data_facade);
 }
 
 // make sure we deallocate the unique ptr at a position where we know the size of the plugins
@@ -192,6 +194,11 @@ Status Engine::Tile(const api::TileParameters &params, std::string &result)
 Status Engine::MultiTarget(const api::MultiTargetParameters &params, util::json::Object &result)
 {
     return RunQuery(lock, *query_data_facade, params, *multi_target_plugin, result);
+}
+
+Status Engine::SmoothVia(const api::SmoothViaParameters &params, util::json::Object &result)
+{
+    return RunQuery(lock, *query_data_facade, params, *smooth_via_plugin, result);
 }
 
 } // engine ns

@@ -45,6 +45,7 @@ using engine::api::TripParameters;
 using engine::api::MatchParameters;
 using engine::api::TileParameters;
 using engine::api::MultiTargetParameters;
+using engine::api::SmoothViaParameters;
 
 /**
  * Represents a Open Source Routing Machine with access to its services.
@@ -132,6 +133,8 @@ class OSRM final
     Status Tile(const TileParameters &parameters, std::string &result);
 
     Status MultiTarget(const MultiTargetParameters &parameters, json::Object &result);
+
+    Status SmoothVia(const SmoothViaParameters &parameters, json::Object &result);
 
   private:
     std::unique_ptr<engine::Engine> engine_;

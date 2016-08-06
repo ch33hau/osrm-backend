@@ -1,5 +1,4 @@
 /*
-
 Copyright (c) 2016, Project OSRM contributors
 All rights reserved.
 
@@ -22,43 +21,56 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
-#ifndef OSRM_FWD_HPP
-#define OSRM_FWD_HPP
+#ifndef SMOOTH_VIA_PLUGIN_H
+#define SMOOTH_VIA_PLUGIN_H
 
-// OSRM API forward declarations for usage in interfaces. Exposes forward declarations for:
-// osrm::util::json::Object, osrm::engine::api::XParameters
+#include "engine/api/smooth_via_parameters.hpp"
+#include "engine/datafacade/datafacade_base.hpp"
+#include "engine/plugins/plugin_base.hpp"
+
+#include "engine/routing_algorithms/direct_shortest_path.hpp"
+#include "engine/routing_algorithms/shortest_path.hpp"
+#include "engine/search_engine_data.hpp"
+#include "util/json_container.hpp"
 
 namespace osrm
 {
-
-namespace util
-{
-namespace json
-{
-struct Object;
-} // ns json
-} // ns util
-
 namespace engine
 {
-namespace api
+namespace plugins
 {
-struct RouteParameters;
-struct TableParameters;
-struct NearestParameters;
-struct TripParameters;
-struct MatchParameters;
-struct TileParameters;
-struct MultiTargetParameters;
-struct SmoothViaParameters;
-} // ns api
 
-class Engine;
-struct EngineConfig;
-} // ns engine
-} // ns osrm
+struct LegResult
+{
+    double duration;
+    double distance;
+    std::vector<Coordinate> polyline;
+};
 
-#endif
+class SmoothViaPlugin final : public BasePlugin
+{
+  private:
+    SearchEngineData heaps;
+    routing_algorithms::DirectShortestPathRouting<datafacade::BaseDataFacade> direct_shortest_path;
+    routing_algorithms::ShortestPathRouting<datafacade::BaseDataFacade> shortest_path;
+
+  public:
+    explicit SmoothViaPlugin(datafacade::BaseDataFacade &facade);
+
+    Status HandleRequest(const api::SmoothViaParameters &params, util::json::Object &result);
+
+  private:
+    std::vector<std::vector<PhantomNode>> ResolveNodes(const api::SmoothViaParameters &);
+
+    std::vector<std::vector<std::vector<LegResult>>>
+    RouteAllLegs(const std::vector<std::vector<PhantomNode>> &);
+
+    LegResult RouteDirect(const PhantomNode &from, const PhantomNode &to);
+};
+}
+}
+}
+
+#endif // SMOOTH_VIA_PLUGIN_H

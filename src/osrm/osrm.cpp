@@ -3,6 +3,7 @@
 #include "engine/api/multi_target_parameters.hpp"
 #include "engine/api/nearest_parameters.hpp"
 #include "engine/api/route_parameters.hpp"
+#include "engine/api/smooth_via_parameters.hpp"
 #include "engine/api/table_parameters.hpp"
 #include "engine/api/trip_parameters.hpp"
 #include "engine/engine.hpp"
@@ -56,6 +57,11 @@ engine::Status OSRM::MultiTarget(const engine::api::MultiTargetParameters &param
                                  json::Object &result)
 {
     return engine_->MultiTarget(params, result);
+}
+
+engine::Status OSRM::SmoothVia(const engine::api::SmoothViaParameters &params, json::Object &result)
+{
+    return engine_->SmoothVia(params, result);
 }
 
 } // ns osrm
