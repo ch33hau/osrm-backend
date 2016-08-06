@@ -72,6 +72,17 @@ util::json::Object makeGeoJSONGeometry(ForwardIter begin, ForwardIter end)
     return geojson;
 }
 
+template <typename ForwardIter>
+util::json::Array makeCoordVec1DGeometry(ForwardIter begin, ForwardIter end)
+{
+    util::json::Array coord_array;
+    std::for_each(begin, end, [&coord_array](util::Coordinate const &coord) {
+        coord_array.values.push_back(static_cast<double>(toFloating(coord.lat)));
+        coord_array.values.push_back(static_cast<double>(toFloating(coord.lon)));
+    });
+    return coord_array;
+}
+
 util::json::Object makeStepManeuver(const guidance::StepManeuver &maneuver);
 
 util::json::Object makeRouteStep(guidance::RouteStep step,
