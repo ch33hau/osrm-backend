@@ -245,10 +245,7 @@ if(UNIX AND NOT APPLE)
   set(MAYBE_RT_LIBRARY rt)
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/cmake")
-set(OSMIUM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include")
-find_package(Osmium REQUIRED COMPONENTS io)
-add_dependency_includes(${OSMIUM_INCLUDE_DIR})
+target_include_directories(osrm-extract PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include")
 
 
 find_package(Boost 1.49.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS})

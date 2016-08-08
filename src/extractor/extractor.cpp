@@ -31,7 +31,7 @@
 
 #include <luabind/luabind.hpp>
 
-#include <osmium/io/any_input.hpp>
+#include <osmium/io/pbf_input.hpp>
 
 #include <tbb/parallel_for.h>
 #include <tbb/task_scheduler_init.h>
