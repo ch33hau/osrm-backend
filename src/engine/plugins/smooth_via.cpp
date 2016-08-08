@@ -115,7 +115,8 @@ Status SmoothViaPlugin::HandleRequest(const api::SmoothViaParameters &params,
     util::json::Array geometry;
     for (auto const &polyline : best_result.polylines)
     {
-        geometry.values.push_back(api::json::makeCoordVec1DGeometry(begin(polyline), end(polyline)));
+        geometry.values.push_back(
+            api::json::makeCoordVec1DGeometry(begin(polyline), end(polyline)));
     }
     result.values["geometry"] = geometry;
 
@@ -128,14 +129,29 @@ SmoothViaPlugin::ResolveNodes(const api::SmoothViaParameters &params)
     std::vector<std::vector<PhantomNode>> resolved_nodes;
     for (auto const &waypoint : params.waypoints)
     {
+        // XXX can we skip tiny component nodes altogether?!?
+
         std::vector<PhantomNode> nodes;
         for (auto const &coord : waypoint)
         {
             std::vector<PhantomNodeWithDistance> close_nodes;
-            close_nodes = facade.NearestPhantomNodesInRange(coord, 25.);
-            if (close_nodes.empty())
+            close_nodes = facade.NearestPhantomNodesInRange(coord, 50.);
+            if (close_nodes.empty() || std::all_of(begin(close_nodes),
+                                                   end(close_nodes),
+                                                   [](PhantomNodeWithDistance const &node) {
+                                                       return node.phantom_node.component.is_tiny;
+                                                   }))
             {
-                close_nodes = facade.NearestPhantomNodes(coord, 2u);
+                auto pair = facade.NearestPhantomNodeWithAlternativeFromBigComponent(coord);
+                if (!pair.first.component.is_tiny)
+                {
+                    nodes.push_back(pair.first);
+                }
+                else
+                {
+                    nodes.push_back(pair.second);
+                }
+                continue;
             }
 
             for (auto const &close_node : close_nodes)
@@ -149,8 +165,25 @@ SmoothViaPlugin::ResolveNodes(const api::SmoothViaParameters &params)
                    std::tie(rhs.location.lat, rhs.location.lon);
         });
         nodes.erase(std::unique(begin(nodes), end(nodes)), end(nodes));
+
+        if (std::all_of(begin(nodes), end(nodes), [](PhantomNode const &node) {
+                return node.component.is_tiny;
+            }))
+        {
+            std::cout << "\nALL_TINY:";
+
+            for (auto const &coord : waypoint)
+            {
+                std::cout << coord << " -- ";
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << nodes.size() << ", ";
+
         resolved_nodes.emplace_back(std::move(nodes));
     }
+    std::cout << std::endl;
 
     if (resolved_nodes.size() < 2)
     {
@@ -194,7 +227,7 @@ LegResult SmoothViaPlugin::RouteDirect(const PhantomNode &from, const PhantomNod
     raw_route.segment_end_coordinates.emplace_back(PhantomNodes{from, to});
 
     shortest_path(
-        raw_route.segment_end_coordinates, {true}, raw_route); // TODO correct u-turn behavior
+        raw_route.segment_end_coordinates, {false}, raw_route); // TODO correct u-turn behavior
 
     if (INVALID_EDGE_WEIGHT == raw_route.shortest_path_length)
     {
