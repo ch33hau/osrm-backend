@@ -4,13 +4,13 @@ local find_access_tag = require("lib/access").find_access_tag
 local get_destination = require("lib/destination").get_destination
 
 -- Begin of globals
-barrier_whitelist = { ["cattle_grid"] = true, ["border_control"] = true, ["checkpoint"] = true, ["toll_booth"] = true, ["sally_port"] = true, ["gate"] = true, ["lift_gate"] = true, ["no"] = true, ["entrance"] = true }
-access_tag_whitelist = { ["yes"] = true, ["motorcar"] = true, ["motor_vehicle"] = true, ["vehicle"] = true, ["permissive"] = true, ["designated"] = true, ["destination"] = true }
-access_tag_blacklist = { ["no"] = true, ["private"] = true, ["agricultural"] = true, ["forestry"] = true, ["emergency"] = true, ["psv"] = true, ["delivery"] = true }
+barrier_whitelist = { ["railway"] = true, ["bus"] = true, ["psv"] = true, ["busway"] = true, ["bus_trap"] = true, ["cattle_grid"] = true, ["border_control"] = true, ["checkpoint"] = true, ["toll_booth"] = true, ["sally_port"] = true, ["gate"] = true, ["lift_gate"] = true, ["no"] = true, ["entrance"] = true }
+access_tag_whitelist = { ["railway"] = true, ["delivery"] = true, ["bus"] = true, ["psv"] = true, ["no"] = true, ["yes"] = true, ["motorcar"] = true, ["motor_vehicle"] = true, ["vehicle"] = true, ["permissive"] = true, ["designated"] = true, ["destination"] = true }
+access_tag_blacklist = { ["private"] = true, ["agricultural"] = true, ["forestry"] = true, ["emergency"] = true, ["delivery"] = true }
 access_tag_restricted = { ["destination"] = true, ["delivery"] = true }
-access_tags_hierarchy = { "motorcar", "motor_vehicle", "vehicle", "access" }
+access_tags_hierarchy = { "railway", "psv", "bus", "motorcar", "motor_vehicle", "vehicle", "access" }
 service_tag_restricted = { ["parking_aisle"] = true }
-restriction_exception_tags = { "motorcar", "motor_vehicle", "vehicle" }
+restriction_exception_tags = { "railway", "psv", "bus", "motorcar", "motor_vehicle", "vehicle" }
 
 -- A list of suffixes to suppress in name change instructions
 suffix_list = { "N", "NE", "E", "SE", "S", "SW", "W", "NW", "North", "South", "West", "East" }
