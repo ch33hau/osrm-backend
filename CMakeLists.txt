@@ -46,7 +46,7 @@ if(WIN32 AND MSVC_VERSION LESS 1900)
   message(FATAL_ERROR "Building with Microsoft compiler needs Latest Visual Studio 2015 (Community or better)")
 endif()
 
-option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
+option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" OFF)
 option(ENABLE_JSON_LOGGING "Adds additional JSON debug logging to the response" OFF)
 option(BUILD_TOOLS "Build OSRM tools" OFF)
 option(BUILD_COMPONENTS "Build osrm-components" OFF)
