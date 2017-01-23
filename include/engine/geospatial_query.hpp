@@ -156,6 +156,23 @@ template <typename RTreeT, typename DataFacadeT> class GeospatialQuery
         return MakePhantomNodes(input_coordinate, results);
     }
 
+    std::vector<PhantomNodeWithDistance>
+    NearestPhantomNodesFromBigComponent(const util::Coordinate input_coordinate,
+                                        const unsigned max_results) const
+    {
+        auto results =
+            rtree.Nearest(input_coordinate,
+                          [](CandidateSegment const& segment) {
+                              auto const is_big = !segment.data.component.is_tiny;
+                              return std::make_pair(is_big, is_big);
+                          },
+                          [&max_results](std::size_t const num_results, CandidateSegment const&) {
+                              return num_results >= max_results;
+                          });
+
+        return MakePhantomNodes(input_coordinate, results);
+    }
+
     // Returns the nearest phantom node. If this phantom node is not from a big component
     // a second phantom node is return that is the nearest coordinate in a big component.
     std::pair<PhantomNode, PhantomNode>
