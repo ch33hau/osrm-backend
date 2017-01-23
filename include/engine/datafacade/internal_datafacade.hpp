@@ -339,8 +339,11 @@ class InternalDataFacade final : public BaseDataFacade
                                   " for reading.");
 
         if (!util::readAndCheckFingerprint(intersection_stream))
-            throw util::exception("Fingeprint does not match in " +
-                                  intersection_class_file.string());
+            util::SimpleLogger().Write(logWARNING) << "Fingerprint does not match in "
+                                                   << intersection_class_file.string();
+
+        // throw util::exception("Fingeprint does not match in " +
+        //                       intersection_class_file.string());
 
         {
             util::SimpleLogger().Write(logINFO) << "Loading Bearing Class IDs";
