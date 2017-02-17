@@ -51,7 +51,7 @@ struct MultiTargetParameters : public BaseParameters
 
     bool forward = true;
 
-    bool IsValid() const { return coordinates.size() > 2 && BaseParameters::IsValid(); }
+    bool IsValid() const { return coordinates.size() > 1 && BaseParameters::IsValid(); }
 };
 }
 }
