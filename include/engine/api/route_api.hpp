@@ -176,6 +176,13 @@ class RouteAPI : public BaseAPI
             json_overview = MakeGeometry(overview.begin(), overview.end());
         }
 
+        boost::optional<util::json::Value> json_osm_node_ids;
+        if (parameters.osm_node_ids)
+        {
+            auto osm_node_ids = guidance::assembleOsmNodeIds(leg_geometries);
+            json_osm_node_ids = json::makeStringArray(osm_node_ids);
+        }
+
         std::vector<util::json::Value> step_geometries;
         for (const auto idx : util::irange<std::size_t>(0UL, legs.size()))
         {
@@ -246,7 +253,8 @@ class RouteAPI : public BaseAPI
                                       json::makeRouteLegs(std::move(legs),
                                                           std::move(step_geometries),
                                                           std::move(annotations)),
-                                      std::move(json_overview));
+                                      std::move(json_overview),
+                                      std::move(json_osm_node_ids));
 
         return result;
     }

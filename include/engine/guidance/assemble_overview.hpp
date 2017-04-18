@@ -4,6 +4,7 @@
 #include "engine/guidance/leg_geometry.hpp"
 
 #include "util/coordinate.hpp"
+#include "util/typedefs.hpp"
 
 #include <vector>
 
@@ -16,6 +17,8 @@ namespace guidance
 
 std::vector<util::Coordinate> assembleOverview(const std::vector<LegGeometry> &leg_geometries,
                                                const bool use_simplification);
+
+std::vector<OSMNodeID> assembleOsmNodeIds(const std::vector<LegGeometry> &leg_geometries);
 
 } // namespace guidance
 } // namespace engine

@@ -12,6 +12,7 @@
 #include "util/coordinate.hpp"
 #include "util/json_container.hpp"
 
+#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 
 #include <algorithm>
@@ -83,6 +84,16 @@ util::json::Array makeCoordVec1DGeometry(ForwardIter begin, ForwardIter end)
     return coord_array;
 }
 
+template <typename T> util::json::Array makeStringArray(const std::vector<T> &vector)
+{
+    util::json::Array array;
+    for (auto const &e : vector)
+    {
+        array.values.emplace_back(boost::lexical_cast<std::string>(e));
+    }
+    return array;
+}
+
 util::json::Object makeStepManeuver(const guidance::StepManeuver &maneuver);
 
 util::json::Object makeRouteStep(guidance::RouteStep step,
@@ -90,7 +101,8 @@ util::json::Object makeRouteStep(guidance::RouteStep step,
 
 util::json::Object makeRoute(const guidance::Route &route,
                              util::json::Array legs,
-                             boost::optional<util::json::Value> geometry);
+                             boost::optional<util::json::Value> geometry,
+                             boost::optional<util::json::Value> osm_node_ids);
 
 util::json::Object
 makeWaypoint(const util::Coordinate location, std::string name, const Hint &hint);

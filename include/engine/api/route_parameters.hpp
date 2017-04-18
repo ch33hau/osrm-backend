@@ -71,19 +71,21 @@ struct RouteParameters : public BaseParameters
     RouteParameters() = default;
 
     template <typename... Args>
-    RouteParameters(const bool steps_,
+    RouteParameters(const bool osm_node_ids_,
+                    const bool steps_,
                     const bool alternatives_,
                     const bool annotations_,
                     const GeometriesType geometries_,
                     const OverviewType overview_,
                     const boost::optional<bool> continue_straight_,
                     Args... args_)
-        : BaseParameters{std::forward<Args>(args_)...}, steps{steps_}, alternatives{alternatives_},
-          annotations{annotations_}, geometries{geometries_}, overview{overview_},
-          continue_straight{continue_straight_}
+        : BaseParameters{std::forward<Args>(args_)...}, osm_node_ids(osm_node_ids_), steps{steps_},
+          alternatives{alternatives_}, annotations{annotations_}, geometries{geometries_},
+          overview{overview_}, continue_straight{continue_straight_}
     {
     }
 
+    bool osm_node_ids = false;
     bool steps = false;
     bool alternatives = false;
     bool annotations = false;

@@ -100,6 +100,34 @@ std::vector<util::Coordinate> assembleOverview(const std::vector<LegGeometry> &l
     return overview_geometry;
 }
 
+std::vector<OSMNodeID> assembleOsmNodeIds(const std::vector<LegGeometry> &leg_geometries)
+{
+    auto ids_size =
+        std::accumulate(leg_geometries.begin(),
+                        leg_geometries.end(),
+                        0,
+                        [](const std::size_t sum, const LegGeometry &leg_geometry) {
+                            return sum + leg_geometry.osm_node_ids.size();
+                        }) -
+        leg_geometries.size() + 1;
+    std::vector<OSMNodeID> ids;
+    ids.reserve(ids_size);
+
+    auto leg_reverse_index = leg_geometries.size();
+    for (const auto &geometry : leg_geometries)
+    {
+        auto begin = geometry.osm_node_ids.begin();
+        auto end = geometry.osm_node_ids.end();
+        if (--leg_reverse_index > 0)
+        {
+            end = std::prev(end);
+        }
+        ids.insert(ids.end(), begin, end);
+    }
+
+    return ids;
+}
+
 } // namespace guidance
 } // namespace engine
 } // namespace osrm
