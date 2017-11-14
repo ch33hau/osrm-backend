@@ -49,7 +49,7 @@ struct ResultFinder
         }
 
         std::vector<via_result> tails;
-        for (auto i = 0; i < leg_results[depth + 1].size(); ++i)
+        for (auto i = 0u; i < leg_results[depth + 1].size(); ++i)
         {
             auto tail = find_best_cached(depth + 1, i);
 
@@ -58,7 +58,7 @@ struct ResultFinder
                 continue;
             }
 
-            if (depth != -1)
+            if (depth != std::numeric_limits<size_t>::max())
             {
                 auto self = leg_results[depth][node_idx][i];
 
