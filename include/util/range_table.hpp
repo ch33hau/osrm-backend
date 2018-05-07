@@ -17,27 +17,28 @@ namespace util
  * and otherwise the compiler gets confused.
  */
 
-template <unsigned BLOCK_SIZE = 16, bool USE_SHARED_MEMORY = false> class RangeTable;
+template <unsigned OSRM_BLOCK_SIZE = 16, bool USE_SHARED_MEMORY = false> class RangeTable;
 
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY>
-std::ostream &operator<<(std::ostream &out, const RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY> &table);
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY>
+std::ostream &operator<<(std::ostream &out,
+                         const RangeTable<OSRM_BLOCK_SIZE, USE_SHARED_MEMORY> &table);
 
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY>
-std::istream &operator>>(std::istream &in, RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY> &table);
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY>
+std::istream &operator>>(std::istream &in, RangeTable<OSRM_BLOCK_SIZE, USE_SHARED_MEMORY> &table);
 
 /**
  * Stores adjacent ranges in a compressed format.
  *
  * Maximum supported length of a range is 255.
  *
- * Note: BLOCK_SIZE is the number of differential encodoed values.
- * But each block consists of an absolute value and BLOCK_SIZE differential values.
- * So the effective block size is sizeof(unsigned) + BLOCK_SIZE.
+ * Note: OSRM_BLOCK_SIZE is the number of differential encodoed values.
+ * But each block consists of an absolute value and OSRM_BLOCK_SIZE differential values.
+ * So the effective block size is sizeof(unsigned) + OSRM_BLOCK_SIZE.
  */
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
 {
   public:
-    using BlockT = std::array<unsigned char, BLOCK_SIZE>;
+    using BlockT = std::array<unsigned char, OSRM_BLOCK_SIZE>;
     using BlockContainerT = typename ShM<BlockT, USE_SHARED_MEMORY>::vector;
     using OffsetContainerT = typename ShM<unsigned, USE_SHARED_MEMORY>::vector;
     using RangeT = range<unsigned>;
@@ -62,8 +63,8 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
     template <typename VectorT> explicit RangeTable(const VectorT &lengths)
     {
         const unsigned number_of_blocks = [&lengths]() {
-            unsigned num = (lengths.size() + 1) / (BLOCK_SIZE + 1);
-            if ((lengths.size() + 1) % (BLOCK_SIZE + 1) != 0)
+            unsigned num = (lengths.size() + 1) / (OSRM_BLOCK_SIZE + 1);
+            if ((lengths.size() + 1) % (OSRM_BLOCK_SIZE + 1) != 0)
             {
                 num += 1;
             }
@@ -97,7 +98,7 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
                          lengths_prefix_sum == (block_offsets[block_counter] + block_sum));
 
             // block is full
-            if (BLOCK_SIZE == block_idx)
+            if (OSRM_BLOCK_SIZE == block_idx)
             {
                 diff_blocks.push_back(block);
                 block_counter++;
@@ -109,7 +110,7 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
             lengths_prefix_sum += l;
             last_length = l;
 
-            block_idx = (block_idx + 1) % (BLOCK_SIZE + 1);
+            block_idx = (block_idx + 1) % (OSRM_BLOCK_SIZE + 1);
         }
 
         // Last block can't be finished because we didn't add the sentinel
@@ -128,7 +129,7 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
         {
             block[block_idx - 1] = last_length;
             last_length = 0;
-            block_idx = (block_idx + 1) % (BLOCK_SIZE + 1);
+            block_idx = (block_idx + 1) % (OSRM_BLOCK_SIZE + 1);
         }
         diff_blocks.push_back(block);
 
@@ -140,10 +141,10 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
 
     inline RangeT GetRange(const unsigned id) const
     {
-        BOOST_ASSERT(id < block_offsets.size() + diff_blocks.size() * BLOCK_SIZE);
+        BOOST_ASSERT(id < block_offsets.size() + diff_blocks.size() * OSRM_BLOCK_SIZE);
         // internal_idx 0 is implicitly stored in block_offsets[block_idx]
-        const unsigned internal_idx = id % (BLOCK_SIZE + 1);
-        const unsigned block_idx = id / (BLOCK_SIZE + 1);
+        const unsigned internal_idx = id % (OSRM_BLOCK_SIZE + 1);
+        const unsigned block_idx = id / (OSRM_BLOCK_SIZE + 1);
 
         BOOST_ASSERT(block_idx < diff_blocks.size());
 
@@ -157,7 +158,7 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
         }
 
         // next index inside current block
-        if (internal_idx < BLOCK_SIZE)
+        if (internal_idx < OSRM_BLOCK_SIZE)
         {
             // note internal_idx - 1 is the *current* index for uint8_blocks
             end_idx = begin_idx + block[internal_idx];
@@ -184,9 +185,9 @@ template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY> class RangeTable
     unsigned sum_lengths;
 };
 
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY>
-unsigned RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY>::PrefixSumAtIndex(int index,
-                                                                     const BlockT &block) const
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY>
+unsigned RangeTable<OSRM_BLOCK_SIZE, USE_SHARED_MEMORY>::PrefixSumAtIndex(int index,
+                                                                          const BlockT &block) const
 {
     // this loop looks inefficent, but a modern compiler
     // will emit nice SIMD here, at least for sensible block sizes. (I checked.)
@@ -199,8 +200,9 @@ unsigned RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY>::PrefixSumAtIndex(int index,
     return sum;
 }
 
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY>
-std::ostream &operator<<(std::ostream &out, const RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY> &table)
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY>
+std::ostream &operator<<(std::ostream &out,
+                         const RangeTable<OSRM_BLOCK_SIZE, USE_SHARED_MEMORY> &table)
 {
     // write number of block
     const unsigned number_of_blocks = table.diff_blocks.size();
@@ -210,13 +212,13 @@ std::ostream &operator<<(std::ostream &out, const RangeTable<BLOCK_SIZE, USE_SHA
     // write block offsets
     out.write((char *)table.block_offsets.data(), sizeof(unsigned) * table.block_offsets.size());
     // write blocks
-    out.write((char *)table.diff_blocks.data(), BLOCK_SIZE * table.diff_blocks.size());
+    out.write((char *)table.diff_blocks.data(), OSRM_BLOCK_SIZE * table.diff_blocks.size());
 
     return out;
 }
 
-template <unsigned BLOCK_SIZE, bool USE_SHARED_MEMORY>
-std::istream &operator>>(std::istream &in, RangeTable<BLOCK_SIZE, USE_SHARED_MEMORY> &table)
+template <unsigned OSRM_BLOCK_SIZE, bool USE_SHARED_MEMORY>
+std::istream &operator>>(std::istream &in, RangeTable<OSRM_BLOCK_SIZE, USE_SHARED_MEMORY> &table)
 {
     // read number of block
     unsigned number_of_blocks;
@@ -230,10 +232,10 @@ std::istream &operator>>(std::istream &in, RangeTable<BLOCK_SIZE, USE_SHARED_MEM
     // read block offsets
     in.read((char *)table.block_offsets.data(), sizeof(unsigned) * number_of_blocks);
     // read blocks
-    in.read((char *)table.diff_blocks.data(), BLOCK_SIZE * number_of_blocks);
+    in.read((char *)table.diff_blocks.data(), OSRM_BLOCK_SIZE * number_of_blocks);
     return in;
 }
-}
-}
+} // namespace util
+} // namespace osrm
 
 #endif // RANGE_TABLE_HPP
