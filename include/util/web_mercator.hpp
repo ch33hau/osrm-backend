@@ -1,6 +1,9 @@
 #ifndef OSRM_WEB_MERCATOR_HPP
 #define OSRM_WEB_MERCATOR_HPP
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "util/coordinate.hpp"
 
 #include <boost/math/constants/constants.hpp>

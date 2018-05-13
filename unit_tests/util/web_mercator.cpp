@@ -4,6 +4,7 @@
 
 #include <osrm/coordinate.hpp>
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 using namespace osrm;
