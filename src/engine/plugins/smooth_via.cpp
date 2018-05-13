@@ -77,7 +77,11 @@ struct ResultFinder
 
         if (tails.empty())
         {
-            return {std::numeric_limits<int>::max(), std::numeric_limits<double>::max(), {{}}};
+            return {
+              static_cast<double>(std::numeric_limits<int>::max()),
+              static_cast<double>(std::numeric_limits<double>::max()),
+              {}
+            };
         }
 
         return *std::min_element(
@@ -232,8 +236,9 @@ LegResult SmoothViaPlugin::RouteDirect(const PhantomNode &from, const PhantomNod
     if (INVALID_EDGE_WEIGHT == raw_route.shortest_path_length)
     {
         std::cout << "Error occurred, single path not found" << std::endl;
-
-        return {std::numeric_limits<int>::max(), std::numeric_limits<double>::max(), {}};
+        return {static_cast<double>(std::numeric_limits<int>::max()),
+                static_cast<double>(std::numeric_limits<int>::max()),
+                {}};
     }
 
     LegResult result{0, 0.0, {}};

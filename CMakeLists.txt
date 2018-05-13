@@ -181,7 +181,6 @@ if (ENABLE_JSON_LOGGING)
 endif()
 
 add_definitions(${OSRM_DEFINES})
-add_definitions(-D_USE_MATH_DEFINES)
 include_directories(SYSTEM ${OSRM_INCLUDE_PATHS})
 
 # Binaries
