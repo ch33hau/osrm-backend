@@ -116,7 +116,7 @@ if(UNIX AND NOT APPLE)
   set(MAYBE_RT_LIBRARY rt)
 endif()
 
-target_include_directories(osrm-extract PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include")
+include_directories(osrm-extract "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include")
 
 
 find_package(Boost 1.49.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
