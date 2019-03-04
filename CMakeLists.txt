@@ -151,19 +151,9 @@ if (USE_TBB)
   endif()
 endif()
 
-add_subdirectory(external_lib/luabind)
-include_directories(SYSTEM
-  ${CMAKE_CURRENT_SOURCE_DIR}/external_lib/luabind/external_lib/lua-5.1/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/external_lib/luabind)
-target_link_libraries(osrm_extract luabind)
-target_link_libraries(osrm_contract luabind)
-
-add_subdirectory(external_lib/stxxl)
-include_directories(SYSTEM
-  external_lib/stxxl/include
-  ${PROJECT_BINARY_DIR}/external_lib/stxxl/include)
-target_link_libraries(osrm_extract stxxl)
-target_link_libraries(osrm_contract stxxl)
+if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deps")
+  add_subdirectory(deps)
+endif()
 
 set(OpenMP_FIND_QUIETLY ON)
 find_package(OpenMP)
@@ -171,9 +161,6 @@ if(OPENMP_FOUND)
   message(STATUS "OpenMP support found. Linking just in case for stxxl")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
-
-find_package(ZLIB REQUIRED)
-add_dependency_includes(${ZLIB_INCLUDE_DIRS})
 
 if (ENABLE_JSON_LOGGING)
   message(STATUS "Enabling json logging")
@@ -187,26 +174,26 @@ include_directories(SYSTEM ${OSRM_INCLUDE_PATHS})
 target_link_libraries(osrm-datastore osrm_store ${Boost_LIBRARIES})
 target_link_libraries(osrm-extract osrm_extract ${Boost_LIBRARIES})
 target_link_libraries(osrm-contract ${Boost_LIBRARIES} ${TBB_LIBRARIES} osrm_contract)
-target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} ${ZLIB_LIBRARY})
+target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
 
 set(EXTRACTOR_LIBRARIES
     ${BZIP2_LIBRARIES}
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${EXPAT_LIBRARIES}
-    ${LUABIND_LIBRARY}
-    ${USED_LUA_LIBRARIES}
+    luabind
+    lua
     ${OSMIUM_LIBRARIES}
-    ${STXXL_LIBRARY}
+    stxxl
     ${TBB_LIBRARIES}
-    ${ZLIB_LIBRARY}
+    zlibstatic
     ${MAYBE_COVERAGE_LIBRARIES})
 set(CONTRACTOR_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${LUABIND_LIBRARY}
-    ${USED_LUA_LIBRARIES}
-    ${STXXL_LIBRARY}
+    luabind
+    lua
+    stxxl
     ${TBB_LIBRARIES}
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
@@ -214,9 +201,10 @@ set(ENGINE_LIBRARIES
     ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${TBB_LIBRARIES}
+    stxxl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES}
-    ${ZLIB_LIBRARY})
+    zlibstatic)
 set(STORAGE_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
@@ -226,9 +214,12 @@ set(STORAGE_LIBRARIES
 set(UTIL_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${STXXL_LIBRARY}
+    stxxl
     ${TBB_LIBRARIES}
     ${MAYBE_COVERAGE_LIBRARIES})
+
+message(${ENGINE_LIBRARIES})
+
 # Libraries
 target_link_libraries(osrm ${ENGINE_LIBRARIES})
 target_link_libraries(osrm_contract ${CONTRACTOR_LIBRARIES})
@@ -359,12 +350,6 @@ configure_file(
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
-
-
-# Modular build system: each directory registered here provides its own CMakeLists.txt
-# add_subdirectory(unit_tests)
-# add_subdirectory(src/benchmarks)
-
 
 add_executable(osrm-eval EXCLUDE_FROM_ALL eval/osrm_eval.cpp)
 target_link_libraries(osrm-eval osrm)
