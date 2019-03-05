@@ -224,6 +224,8 @@ target_link_libraries(osrm_contract ${CONTRACTOR_LIBRARIES})
 target_link_libraries(osrm_extract ${EXTRACTOR_LIBRARIES})
 target_link_libraries(osrm_store ${STORAGE_LIBRARIES})
 
+target_include_directories(osrm SYSTEM PUBLIC ${OSRM_INCLUDE_PATHS})
+
 if(BUILD_COMPONENTS)
   find_package(GDAL)
   if(GDAL_FOUND)
