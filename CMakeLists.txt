@@ -218,8 +218,6 @@ set(UTIL_LIBRARIES
     ${TBB_LIBRARIES}
     ${MAYBE_COVERAGE_LIBRARIES})
 
-message(${ENGINE_LIBRARIES})
-
 # Libraries
 target_link_libraries(osrm ${ENGINE_LIBRARIES})
 target_link_libraries(osrm_contract ${CONTRACTOR_LIBRARIES})
