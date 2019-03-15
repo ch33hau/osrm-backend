@@ -224,7 +224,11 @@ target_link_libraries(osrm_contract ${CONTRACTOR_LIBRARIES})
 target_link_libraries(osrm_extract ${EXTRACTOR_LIBRARIES})
 target_link_libraries(osrm_store ${STORAGE_LIBRARIES})
 
-target_include_directories(osrm SYSTEM PUBLIC ${OSRM_INCLUDE_PATHS})
+target_include_directories(osrm SYSTEM
+  PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include/
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+)
 
 if(BUILD_COMPONENTS)
   find_package(GDAL)

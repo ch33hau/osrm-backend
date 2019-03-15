@@ -134,7 +134,7 @@ class InternalDataFacade final : public BaseDataFacade
         in_stream.read(reinterpret_cast<char *>(&size), sizeof(size));
         m_lane_tupel_id_pairs.resize(size);
         in_stream.read(reinterpret_cast<char *>(&m_lane_tupel_id_pairs[0]),
-                       sizeof(m_lane_tupel_id_pairs) * size);
+                       sizeof(m_lane_tupel_id_pairs[0]) * size);
     }
 
     void LoadTimestamp(const boost::filesystem::path &timestamp_path)
@@ -159,8 +159,8 @@ class InternalDataFacade final : public BaseDataFacade
 
         BOOST_ASSERT_MSG(0 != node_list.size(), "node list empty");
         // BOOST_ASSERT_MSG(0 != edge_list.size(), "edge list empty");
-        util::SimpleLogger().Write() << "loaded " << node_list.size() << " nodes and "
-                                     << edge_list.size() << " edges";
+        util::SimpleLogger().Write()
+            << "loaded " << node_list.size() << " nodes and " << edge_list.size() << " edges";
         m_query_graph = std::unique_ptr<QueryGraph>(new QueryGraph(node_list, edge_list));
 
         BOOST_ASSERT_MSG(0 == node_list.size(), "node list not flushed");
@@ -310,8 +310,8 @@ class InternalDataFacade final : public BaseDataFacade
         if (!util::deserializeAdjacencyArray(lane_description_file.string(),
                                              m_lane_description_offsets,
                                              m_lane_description_masks))
-            util::SimpleLogger().Write(logWARNING) << "Failed to read turn lane descriptions from "
-                                                   << lane_description_file.string();
+            util::SimpleLogger().Write(logWARNING)
+                << "Failed to read turn lane descriptions from " << lane_description_file.string();
     }
 
     void LoadStreetNames(const boost::filesystem::path &names_file)
@@ -339,8 +339,8 @@ class InternalDataFacade final : public BaseDataFacade
                                   " for reading.");
 
         if (!util::readAndCheckFingerprint(intersection_stream))
-            util::SimpleLogger().Write(logWARNING) << "Fingerprint does not match in "
-                                                   << intersection_class_file.string();
+            util::SimpleLogger().Write(logWARNING)
+                << "Fingerprint does not match in " << intersection_class_file.string();
 
         // throw util::exception("Fingeprint does not match in " +
         //                       intersection_class_file.string());
@@ -363,7 +363,7 @@ class InternalDataFacade final : public BaseDataFacade
             std::vector<util::guidance::BearingClass> bearing_classes;
             // and the actual bearing values
             std::uint64_t num_bearings;
-            intersection_stream.read(reinterpret_cast<char*>(&num_bearings),sizeof(num_bearings));
+            intersection_stream.read(reinterpret_cast<char *>(&num_bearings), sizeof(num_bearings));
             m_bearing_values_table.resize(num_bearings);
             intersection_stream.read(reinterpret_cast<char *>(&m_bearing_values_table[0]),
                                      sizeof(m_bearing_values_table[0]) * num_bearings);
@@ -577,8 +577,8 @@ class InternalDataFacade final : public BaseDataFacade
     {
         BOOST_ASSERT(m_geospatial_query.get());
 
-        return m_geospatial_query->NearestPhantomNodesFromBigComponent(
-            input_coordinate, max_results);
+        return m_geospatial_query->NearestPhantomNodesFromBigComponent(input_coordinate,
+                                                                       max_results);
     }
 
     std::pair<PhantomNode, PhantomNode> NearestPhantomNodeWithAlternativeFromBigComponent(
@@ -814,8 +814,8 @@ class InternalDataFacade final : public BaseDataFacade
                     m_lane_description_offsets[lane_description_id + 1]);
     }
 };
-}
-}
-}
+} // namespace datafacade
+} // namespace engine
+} // namespace osrm
 
 #endif // INTERNAL_DATAFACADE_HPP
