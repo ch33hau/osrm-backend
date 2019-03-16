@@ -89,6 +89,9 @@ add_library(osrm_extract STATIC ${ExtractorGlob} ${UtilGlob})
 add_library(osrm_contract STATIC ${ContractorGlob} ${UtilGlob})
 add_library(osrm_store STATIC ${StorageGlob} ${UtilGlob})
 
+target_compile_definitions(osrm_extract PUBLIC -DOSRM_ENABLE_STXXL)
+target_compile_definitions(osrm_contract PUBLIC -DOSRM_ENABLE_STXXL)
+
 add_dependencies(osrm FingerPrintConfigure)
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -201,7 +204,6 @@ set(ENGINE_LIBRARIES
     ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${TBB_LIBRARIES}
-    stxxl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES}
     zlibstatic)

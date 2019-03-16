@@ -11,7 +11,9 @@
 
 #include <bitset>
 #include <fstream>
+#ifdef OSRM_ENABLE_STXXL
 #include <stxxl/vector>
+#endif
 #include <vector>
 
 #include "util/fingerprint.hpp"
@@ -119,6 +121,8 @@ bool serializeVectorIntoAdjacencyArray(const std::string &filename,
     return static_cast<bool>(out_stream);
 }
 
+#ifdef OSRM_ENABLE_STXXL
+
 template <typename simple_type, std::size_t WRITE_BLOCK_BUFFER_SIZE = 1024>
 bool serializeVector(std::ofstream &out_stream, const stxxl::vector<simple_type> &data)
 {
@@ -147,6 +151,8 @@ bool serializeVector(std::ofstream &out_stream, const stxxl::vector<simple_type>
 
     return static_cast<bool>(out_stream);
 }
+
+#endif
 
 template <typename simple_type>
 bool deserializeAdjacencyArray(const std::string &filename,
