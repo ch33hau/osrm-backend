@@ -5,7 +5,7 @@
 [stxxl]
   url=git@git.motis-project.de:lib/stxxl.git
   branch=cpp17
-  commit=cfe98cb8293798792ef529581f50a3b9392feb74
+  commit=7bcd37f54bb131daaa0c8d6a2f856f9e8b4c6636
 [zlib]
   url=git@git.motis-project.de:lib/zlib.git
   branch=master
