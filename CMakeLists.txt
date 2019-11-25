@@ -128,6 +128,9 @@ add_dependency_defines(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 add_dependency_defines(-DBOOST_RESULT_OF_USE_DECLTYPE)
 add_dependency_defines(-DBOOST_FILESYSTEM_NO_DEPRECATED)
 add_dependency_includes(${Boost_INCLUDE_DIRS})
+if (MSVC)
+  add_dependency_defines(-D_USE_MATH_DEFINES)
+endif()
 
 find_package(Threads REQUIRED)
 

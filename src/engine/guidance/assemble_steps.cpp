@@ -26,8 +26,10 @@ std::pair<short, short> getIntermediateBearings(const LegGeometry &leg_geometry,
     const auto post_turn_coordinate = leg_geometry.locations[turn_index + 1];
 
     return std::make_pair<short, short>(
-        std::round(util::coordinate_calculation::bearing(pre_turn_coordinate, turn_coordinate)),
-        std::round(util::coordinate_calculation::bearing(turn_coordinate, post_turn_coordinate)));
+        static_cast<short>(std::round(
+            util::coordinate_calculation::bearing(pre_turn_coordinate, turn_coordinate))),
+        static_cast<short>(std::round(
+            util::coordinate_calculation::bearing(turn_coordinate, post_turn_coordinate))));
 }
 
 std::pair<short, short> getDepartBearings(const LegGeometry &leg_geometry)
@@ -37,7 +39,8 @@ std::pair<short, short> getDepartBearings(const LegGeometry &leg_geometry)
     const auto post_turn_coordinate = *(leg_geometry.locations.begin() + 1);
     return std::make_pair<short, short>(
         0,
-        std::round(util::coordinate_calculation::bearing(turn_coordinate, post_turn_coordinate)));
+        static_cast<short>(std::round(
+            util::coordinate_calculation::bearing(turn_coordinate, post_turn_coordinate))));
 }
 
 std::pair<short, short> getArriveBearings(const LegGeometry &leg_geometry)
@@ -46,9 +49,11 @@ std::pair<short, short> getArriveBearings(const LegGeometry &leg_geometry)
     const auto turn_coordinate = leg_geometry.locations.back();
     const auto pre_turn_coordinate = *(leg_geometry.locations.end() - 2);
     return std::make_pair<short, short>(
-        std::round(util::coordinate_calculation::bearing(pre_turn_coordinate, turn_coordinate)), 0);
+        static_cast<short>(std::round(
+            util::coordinate_calculation::bearing(pre_turn_coordinate, turn_coordinate))),
+        0);
 }
-} // ns detail
-} // ns engine
-} // ns guidance
-} // ns detail
+} // namespace detail
+} // namespace guidance
+} // namespace engine
+} // namespace osrm
