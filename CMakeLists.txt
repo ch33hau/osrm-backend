@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.16)
 # we depend on 2.8.11 introducing target_include_directories
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR AND NOT MSVC_IDE)
@@ -96,7 +96,7 @@ add_dependencies(osrm FingerPrintConfigure)
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
 
 # Activate C++11
-if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+if(NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 

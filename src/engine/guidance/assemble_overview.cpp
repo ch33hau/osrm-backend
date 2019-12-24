@@ -62,7 +62,7 @@ std::vector<util::Coordinate> simplifyGeometry(const std::vector<LegGeometry> &l
     }
     return overview_geometry;
 }
-}
+} // namespace
 
 std::vector<util::Coordinate> assembleOverview(const std::vector<LegGeometry> &leg_geometries,
                                                const bool use_simplification)
@@ -77,11 +77,11 @@ std::vector<util::Coordinate> assembleOverview(const std::vector<LegGeometry> &l
     auto overview_size =
         std::accumulate(leg_geometries.begin(),
                         leg_geometries.end(),
-                        0,
+                        size_t{0U},
                         [](const std::size_t sum, const LegGeometry &leg_geometry) {
                             return sum + leg_geometry.locations.size();
                         }) -
-        leg_geometries.size() + 1;
+        leg_geometries.size() + 1U;
     std::vector<util::Coordinate> overview_geometry;
     overview_geometry.reserve(overview_size);
 
@@ -102,14 +102,13 @@ std::vector<util::Coordinate> assembleOverview(const std::vector<LegGeometry> &l
 
 std::vector<OSMNodeID> assembleOsmNodeIds(const std::vector<LegGeometry> &leg_geometries)
 {
-    auto ids_size =
-        std::accumulate(leg_geometries.begin(),
-                        leg_geometries.end(),
-                        0,
-                        [](const std::size_t sum, const LegGeometry &leg_geometry) {
-                            return sum + leg_geometry.osm_node_ids.size();
-                        }) -
-        leg_geometries.size() + 1;
+    auto ids_size = std::accumulate(leg_geometries.begin(),
+                                    leg_geometries.end(),
+                                    size_t{0},
+                                    [](const std::size_t sum, const LegGeometry &leg_geometry) {
+                                        return sum + leg_geometry.osm_node_ids.size();
+                                    }) -
+                    leg_geometries.size() + 1U;
     std::vector<OSMNodeID> ids;
     ids.reserve(ids_size);
 

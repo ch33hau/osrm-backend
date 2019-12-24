@@ -93,8 +93,8 @@ template <class CandidateLists> struct HiddenMarkovModel
         for (const auto t : util::irange(initial_timestamp, viterbi.size()))
         {
             std::fill(viterbi[t].begin(), viterbi[t].end(), IMPOSSIBLE_LOG_PROB);
-            std::fill(parents[t].begin(), parents[t].end(), std::make_pair(0u, 0u));
-            std::fill(path_distances[t].begin(), path_distances[t].end(), 0);
+            std::fill(parents[t].begin(), parents[t].end(), std::make_pair(0U, 0U));
+            std::fill(path_distances[t].begin(), path_distances[t].end(), 0.0);
             std::fill(pruned[t].begin(), pruned[t].end(), true);
         }
         std::fill(breakage.begin() + initial_timestamp, breakage.end(), true);
@@ -133,8 +133,8 @@ template <class CandidateLists> struct HiddenMarkovModel
         return initial_timestamp;
     }
 };
-}
-}
-}
+} // namespace map_matching
+} // namespace engine
+} // namespace osrm
 
 #endif // HIDDEN_MARKOV_MODEL
