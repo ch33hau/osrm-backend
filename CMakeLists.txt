@@ -331,8 +331,5 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
     IMMEDIATE @ONLY)
 
-add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
-
 add_executable(osrm-eval EXCLUDE_FROM_ALL eval/osrm_eval.cpp)
 target_link_libraries(osrm-eval osrm)
