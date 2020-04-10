@@ -60,12 +60,30 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/third_party/)
 
-add_custom_target(FingerPrintConfigure ALL ${CMAKE_COMMAND}
-  "-DOUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}"
-  "-DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
-  -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FingerPrint-Config.cmake"
-  COMMENT "Configuring revision fingerprint"
-  VERBATIM)
+set(OLDFILE ${CMAKE_CURRENT_BINARY_DIR}/include/util/fingerprint_impl.hpp)
+set(NEWFILE ${OLDFILE}.tmp)
+set(INFILE ${CMAKE_CURRENT_SOURCE_DIR}/include/util/fingerprint_impl.hpp.in)
+file(MD5 ${CMAKE_CURRENT_SOURCE_DIR}/src/tools/contract.cpp MD5PREPARE)
+file(MD5 ${CMAKE_CURRENT_SOURCE_DIR}/include/util/static_rtree.hpp MD5RTREE)
+file(MD5 ${CMAKE_CURRENT_SOURCE_DIR}/include/util/graph_loader.hpp MD5GRAPH)
+file(MD5 ${CMAKE_CURRENT_SOURCE_DIR}/include/engine/datafacade/internal_datafacade.hpp MD5OBJECTS)
+
+CONFIGURE_FILE(${INFILE} ${NEWFILE})
+
+file(MD5 ${NEWFILE} MD5NEW)
+
+if (EXISTS ${OLDFILE})
+  file(MD5 ${OLDFILE} MD5OLD)
+  if(NOT ${MD5NEW} STREQUAL ${MD5OLD})
+    file(REMOVE_RECURSE ${OLDFILE})
+    file(RENAME ${NEWFILE} ${OLDFILE})
+  else()
+    file(REMOVE_RECURSE ${NEWFILE})
+    message(STATUS "Fingerprint unchanged, not regenerating")
+  endif()
+else()
+  file(RENAME ${NEWFILE} ${OLDFILE})
+endif()
 
 set(BOOST_COMPONENTS date_time filesystem iostreams program_options regex system thread)
 
@@ -92,7 +110,6 @@ add_library(osrm_store STATIC ${StorageGlob} ${UtilGlob})
 target_compile_definitions(osrm_extract PUBLIC -DOSRM_ENABLE_STXXL)
 target_compile_definitions(osrm_contract PUBLIC -DOSRM_ENABLE_STXXL)
 
-add_dependencies(osrm FingerPrintConfigure)
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
 
 # Activate C++11
@@ -166,8 +183,6 @@ target_link_libraries(osrm-datastore osrm_store ${Boost_LIBRARIES})
 target_link_libraries(osrm-extract osrm_extract ${Boost_LIBRARIES})
 target_link_libraries(osrm-contract ${Boost_LIBRARIES} ${TBB_LIBRARIES} osrm_contract)
 target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
-add_dependencies(osrm-contract FingerPrintConfigure)
-add_dependencies(osrm-extract FingerPrintConfigure)
 
 
 set(EXTRACTOR_LIBRARIES
