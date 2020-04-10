@@ -10,3 +10,7 @@
   url=git@github.com:motis-project/zlib.git
   branch=master
   commit=8e7c86d3a0e49101b9a67d74c4a07345dcb0e485
+[tbb]
+  url=git@github.com:motis-project/tbb.git
+  branch=master
+  commit=fd28e353d518e806e0d106d4a9527354803a912c

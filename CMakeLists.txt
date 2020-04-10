@@ -54,7 +54,6 @@ option(ENABLE_ASSERTIONS OFF)
 option(COVERAGE OFF)
 option(SANITIZER OFF)
 option(ENABLE_LTO "Use LTO if available" ON)
-option(USE_TBB "Requires TBB - set to true for extract, prepare, etc." OFF)
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
@@ -151,14 +150,6 @@ endif()
 
 find_package(Threads REQUIRED)
 
-if (USE_TBB)
-  find_package(TBB REQUIRED)
-  add_dependency_includes(${TBB_INCLUDE_DIR})
-  if(WIN32 AND CMAKE_BUILD_TYPE MATCHES Debug)
-    set(TBB_LIBRARIES ${TBB_DEBUG_LIBRARIES})
-  endif()
-endif()
-
 if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deps")
   add_subdirectory(deps)
 endif()
@@ -181,7 +172,7 @@ include_directories(SYSTEM ${OSRM_INCLUDE_PATHS})
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_LIBRARIES})
 target_link_libraries(osrm-extract osrm_extract ${Boost_LIBRARIES})
-target_link_libraries(osrm-contract ${Boost_LIBRARIES} ${TBB_LIBRARIES} osrm_contract)
+target_link_libraries(osrm-contract ${Boost_LIBRARIES} tbb_static osrm_contract)
 target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
 
 
@@ -194,7 +185,7 @@ set(EXTRACTOR_LIBRARIES
     lua
     ${OSMIUM_LIBRARIES}
     stxxl
-    ${TBB_LIBRARIES}
+    tbb_static
     zlibstatic
     ${MAYBE_COVERAGE_LIBRARIES})
 set(CONTRACTOR_LIBRARIES
@@ -203,27 +194,27 @@ set(CONTRACTOR_LIBRARIES
     luabind
     lua
     stxxl
-    ${TBB_LIBRARIES}
+    tbb_static
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(ENGINE_LIBRARIES
     ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${TBB_LIBRARIES}
+    tbb_static
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES}
     zlibstatic)
 set(STORAGE_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${TBB_LIBRARIES}
+    tbb_static
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(UTIL_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     stxxl
-    ${TBB_LIBRARIES}
+    tbb_static
     ${MAYBE_COVERAGE_LIBRARIES})
 
 # Libraries
@@ -242,7 +233,7 @@ if(BUILD_COMPONENTS)
   find_package(GDAL)
   if(GDAL_FOUND)
     add_executable(osrm-components src/tools/components.cpp ${UtilGlob})
-    target_link_libraries(osrm-components ${TBB_LIBRARIES})
+    target_link_libraries(osrm-components tbb_static)
     include_directories(SYSTEM ${GDAL_INCLUDE_DIR})
     target_link_libraries(osrm-components ${GDAL_LIBRARIES} ${Boost_LIBRARIES})
     install(TARGETS osrm-components DESTINATION bin)
