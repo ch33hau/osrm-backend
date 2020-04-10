@@ -5,7 +5,7 @@
 [stxxl]
   url=git@github.com:motis-project/stxxl.git
   branch=master
-  commit=ecda0a59b3aa40b9541b4fbc5dd4e4dc1b9b78fa
+  commit=61b4dcd42e0b0978ab3dccf21f27eaec79bf5c3a
 [zlib]
   url=git@github.com:motis-project/zlib.git
   branch=master
