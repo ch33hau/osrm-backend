@@ -172,6 +172,11 @@ include_directories(SYSTEM ${OSRM_INCLUDE_PATHS})
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_LIBRARIES})
 target_link_libraries(osrm-extract osrm_extract ${Boost_LIBRARIES})
+if (MSVC)
+  # missing symbol "__imp_ntohl" in function
+  # osmium::io::detail::PBFParser::read_blob_header_size_from_file(void)"
+  target_link_libraries(osrm-extract wsock32 ws2_32)
+endif()
 target_link_libraries(osrm-contract ${Boost_LIBRARIES} tbb_static osrm_contract)
 target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
 
