@@ -1,7 +1,7 @@
 [luabind]
   url=git@github.com:motis-project/luabind.git
   branch=master
-  commit=de712a919afb320e2189018fdc7e1007eeb3d99e
+  commit=bfa33b544fd78deeec8e8af4111bd31153e825ee
 [stxxl]
   url=git@github.com:motis-project/stxxl.git
   branch=master
