@@ -262,3 +262,38 @@ Feature: Via points
             | 3,2,1     | ab,bc,cd,da,ab,ab,ab,bc,cd,da,ab,ab | 3000m +-1    |
             | 6,5,4     | bc,cd,da,ab,bc,bc,bc,cd,da,ab,bc,bc | 3000m +-1    |
             | 9,8,7     | cd,da,ab,bc,cd,cd,cd,da,ab,bc,cd,cd | 3000m +-1    |
+
+    # See issue #2706
+    # this case is currently broken. It simply works as put here due to staggered intersections triggering a name collapse.
+    # See 2824 for further information
+    @todo
+    Scenario: Incorrect ordering of nodes can produce multiple U-turns
+        Given the node map
+            |   | a |   |   |   |
+            | e | b | c | d | f |
+
+        And the ways
+            | nodes  | oneway |
+            | abcd   | no     |
+            | ebbdcf | yes    |
+
+        When I route I should get
+            | from | to | route         |
+            | e    | f  | ebbdcf,ebbdcf |
+
+    @2798
+    Scenario: UTurns Enabled
+        Given the node map
+            | a | b | c | d | e |
+
+        And the query options
+            | continue_straight | false |
+
+        And the ways
+            | nodes | oneway |
+            | abc   | yes    |
+            | edc   | yes    |
+
+        When I route I should get
+            | waypoints | route |
+            | a,b,e     |       |

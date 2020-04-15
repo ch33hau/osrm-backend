@@ -724,8 +724,8 @@ Feature: Turn Lane Guidance
 
         And the ways
             | nodes | name | highway | turn:lanes:forward |
-            | ab    | road | primary | through,right      |
-            | bc    | road | primary | through,right      |
+            | ab    | road | primary | through;right      |
+            | bc    | road | primary | through;right      |
             | cd    | road | primary |                    |
             | xa    | road | primary |                    |
             | be    | turn | primary |                    |
@@ -736,4 +736,134 @@ Feature: Turn Lane Guidance
             | x,d       | road,road | depart,arrive | ,     |
 
 
+    Scenario: Lane Parsing Issue #2694
+        Given the node map
+            |   | c |
+            | a | b |
+            |   | d |
 
+        And the ways
+            | nodes | highway | turn:lanes:forward |
+            | ab    | primary | left;left\|right   |
+            | bc    | primary |                    |
+            | bd    | primary |                    |
+
+        When I route I should get
+            | waypoints | route     | turns                   | lanes                   |
+            | a,c       | ab,bc,bc  | depart,turn left,arrive | ,left:true right:false, |
+
+    # http://www.openstreetmap.org/#map=19/47.97685/7.82933&layers=D
+    @bug @todo
+    Scenario: Lane Parsing Issue #2706: None Assignments I
+        Given the node map
+            |   | f |   |   | j  |   |
+            |   |   |   |   |    |   |
+            | a | b | c |   | d  | e |
+            |   |   |   |   |    |   |
+            |   |   |   |   | i  |   |
+            |   | g |   |   | h  |   |
+
+        And the nodes
+            | node | highway         |
+            | a    | traffic_signals |
+            | i    | traffic_signals |
+
+        And the ways
+            | nodes | highway        | name           | oneway | turn:lanes:forward       |
+            | ab    | secondary      | Wiesentalstr   |        | through;left\|right      |
+            | bc    | secondary      | Wiesentalstr   |        | none\|left;through       |
+            | cd    | secondary      | Wiesentalstr   |        | none\|left;through       |
+            | de    | residential    | Wippertstr     |        |                          |
+            | fb    | secondary      | Merzhauser Str | yes    | through\|through\|right  |
+            | bg    | secondary      | Merzhauser Str | yes    |                          |
+            | hi    | secondary      | Merzhauser Str | yes    | left;reverse\|none\|none |
+            | ic    | secondary_link | Merzhauser Str | yes    |                          |
+            | id    | secondary      | Merzhauser Str | yes    | through;right\|none      |
+            | dj    | secondary      | Merzhauser Str | yes    |                          |
+
+        And the relations
+            | type        | way:from | way:to | node:via | restriction    |
+            | restriction | fb       | fb     | b        | no_left_turn   |
+            | restriction | ic       | cb     | c        | only_left_turn |
+            | restriction | id       | dc     | d        | no_left_turn   |
+
+        When I route I should get
+            | waypoints | route     | turns                   | lanes                  |
+            | h,a ||||
+            # Note: at the moment we don't care about routes, we care about the extract process triggering assertions
+
+    # https://www.openstreetmap.org/#map=19/47.99257/7.83276&layers=D
+    @bug @todo
+    Scenario: Lane Parsing Issue #2706: None Assignments II
+        Given the node map
+            |   | k | l |   |
+            | j | a | b | f |
+            | i | c | d | e |
+            |   | h | g |   |
+
+        And the ways
+            | nodes | highway        | name           | oneway | turn:lanes                           |
+            | ka    | secondary      | Eschholzstr    | yes    | left;reverse\|through\|through\|none |
+            | kj    | unclassified   | kj             | yes    |                                      |
+            | ac    | secondary      | Eschholzstr    | yes    | left;reverse\|none\|none\|none       |
+            | ch    | secondary      | Eschholzstr    | yes    |                                      |
+            | gd    | secondary      | Eschholzstr    | yes    | left;reverse\|through\|through\|none |
+            | db    | secondary      | Eschholzstr    | yes    | left;reverse\|through\|through\|none |
+            | bl    | secondary      | Eschholzstr    | yes    |                                      |
+            | fb    | residential    | Haslacher Str  | yes    | left;reverse\|left;through\|right    |
+            | ba    | secondary_link | Haslacher Str  | yes    | left;reverse\|left;through           |
+            | aj    | unclassified   | Haslacher Str  | yes    |                                      |
+            | ic    | unclassified   | Haslacher Str  | yes    | left;reverse\|left\|through          |
+            | cd    | secondary_link | Haslacher Str  | yes    | left;reverse\|left\|through          |
+            | de    | residential    | Haslacher Str  | yes    |                                      |
+
+        And the relations
+            | type        | way:from | way:to | node:via | restriction      |
+            | restriction | ka       | ac     | a        | only_straight_on |
+            | restriction | ic       | cd     | c        | only_straight_on |
+            | restriction | gd       | db     | d        | only_straight_on |
+
+        When I route I should get
+            | waypoints | route     | turns                   | lanes                  |
+            | i,e ||||
+            # Note: at the moment we don't care about routes, we care about the extract process triggering assertions
+
+    @bug @todo
+    Scenario: Lane Parsing Issue #2706: None Assignments III - Minimal reproduction recipe
+        Given the node map
+            |   |   | l |   |
+            |   | a | b |   |
+            |   |   | d |   |
+            |   |   |   |   |
+
+        And the ways
+            | nodes | highway        | name           | oneway | turn:lanes                           |
+            | db    | secondary      | Eschholzstr    | yes    | left;reverse\|through\|through\|none |
+            | bl    | secondary      | Eschholzstr    | yes    |                                      |
+            | ba    | secondary_link | Haslacher Str  | yes    |                                      |
+
+        When I route I should get
+            | waypoints | route     | turns                   | lanes                  |
+            | d,a ||||
+            # Note: at the moment we don't care about routes, we care about the extract process triggering assertions
+
+    @reverse @2730
+    Scenario: Reverse on the right
+        Given the node map
+            | a |   |   | c |   |
+            |   |   |   | b | d |
+            | f |   |   | e |   |
+
+        And the ways
+            | nodes | highway | name    | turn:lanes:forward           | oneway |
+            | ab    | primary | in      | left\|through\|right;reverse | yes    |
+            | bc    | primary | left    |                              | no     |
+            | bd    | primary | through |                              | no     |
+            | be    | primary | right   |                              | no     |
+            | bf    | primary | in      |                              | yes    |
+
+        When I route I should get
+            | waypoints | route              | turns                           | lanes                                        |
+            | a,c       | in,left,left       | depart,turn left,arrive         | ,left:true straight:false right;uturn:false, |
+            | a,d       | in,through,through | depart,new name straight,arrive | ,left:false straight:true right;uturn:false, |
+            | a,e       | in,right,right     | depart,turn right,arrive        | ,left:false straight:false right;uturn:true, |

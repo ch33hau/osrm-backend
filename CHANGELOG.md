@@ -1,3 +1,27 @@
+# 5.3.4
+  Changes from 5.3.3
+    - Bugfixes
+      - BREAKING: Fixed a bug that could crash postprocessing of instructions on invalid roundabout taggings. This change requires reprocessing datasets with osrm-extract and osrm-contract
+
+# 5.3.3
+  Changes from 5.3.2
+    - Bugfixes
+      - Fixed an issue that would result in segfaults for viaroutes with an invalid intermediate segment when u-turns were allowed at the via-location
+      - Fixed an issue that could result in segfaults when querying roads that could require looping back to the start of a way while using a core factor
+      - Fixed an issue that could break some testcases when using a core factor
+      - Fixed an issue with parallel edges that could result in weird routes
+
+# 5.3.2
+  Changes from 5.3.1
+    - Bugfixes
+      - fixed a bug that occurred when trimming very short segments at the begin/end of a route (less than 1 meter)
+
+# 5.3.1
+  Changes from 5.3.1
+    - Bugfixes:
+      - Disabled broken lane handling for complex uturn/oneway combinations for now (190 intersections affected on the planet)
+      - Fixed a bug with overlaping geometries, which broke OSRM on recent Egypt extracts with data-modelling issues
+
 # 5.3.0
   Changes from 5.3.0-rc.3
     - Guidance

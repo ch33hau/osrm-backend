@@ -118,9 +118,8 @@ Intersection TurnLaneHandler::assignTurnLanes(const NodeID at,
 
     if (!lane_data.empty() && canMatchTrivially(intersection, lane_data) &&
         lane_data.size() !=
-            static_cast<std::size_t>(
-                lane_data.back().tag != TurnLaneType::uturn && intersection[0].entry_allowed ? 1
-                                                                                             : 0) +
+            static_cast<std::size_t>((
+                !hasTag(TurnLaneType::uturn, lane_data) && intersection[0].entry_allowed ? 1 : 0)) +
                 possible_entries &&
         intersection[0].entry_allowed && !hasTag(TurnLaneType::none, lane_data))
         lane_data.push_back({TurnLaneType::uturn, lane_data.back().to, lane_data.back().to});
