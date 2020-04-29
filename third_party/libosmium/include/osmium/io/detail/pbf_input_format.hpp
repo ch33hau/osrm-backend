@@ -67,7 +67,7 @@ namespace osmium {
 
         namespace detail {
 
-            class PBFParser : public Parser {
+            class PBFParser final : public Parser {
 
                 std::string m_input_buffer;
 

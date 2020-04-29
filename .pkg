@@ -1,11 +1,11 @@
 [luabind]
   url=git@github.com:motis-project/luabind.git
   branch=master
-  commit=bfa33b544fd78deeec8e8af4111bd31153e825ee
+  commit=0da83d04dabe2794440092e0efdcfa2cf914c6c8
 [stxxl]
   url=git@github.com:motis-project/stxxl.git
   branch=master
-  commit=848ae94de61293b1eddcaf068ecc3d62cb0a6fdb
+  commit=693fc195b7b8645264dc955e886b117a0e25d422
 [zlib]
   url=git@github.com:motis-project/zlib.git
   branch=master

@@ -200,7 +200,7 @@ namespace osmium {
 
         }; // class CompressionFactory
 
-        class NoCompressor : public Compressor {
+        class NoCompressor final : public Compressor {
 
             int m_fd;
 
@@ -236,7 +236,7 @@ namespace osmium {
 
         }; // class NoCompressor
 
-        class NoDecompressor : public Decompressor {
+        class NoDecompressor final : public Decompressor {
 
             int m_fd;
             const char *m_buffer;
