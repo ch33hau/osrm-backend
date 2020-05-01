@@ -41,9 +41,9 @@ namespace extractor
 struct ExtractorConfig
 {
     ExtractorConfig() noexcept : requested_num_threads(0) {}
-    void UseDefaultOutputNames()
+    void UseDefaultOutputNames(std::string basepath = "")
     {
-        std::string basepath = input_path.string();
+        basepath = basepath.empty() ? input_path.string() : basepath;
 
         auto pos = std::string::npos;
         std::array<std::string, 5> known_extensions{
