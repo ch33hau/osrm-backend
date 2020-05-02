@@ -15,8 +15,6 @@
 
 #include <boost/assert.hpp>
 
-#include <stxxl/vector>
-
 #include <tbb/enumerable_thread_specific.h>
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_sort.h>
@@ -1105,7 +1103,7 @@ class GraphContractor
     }
 
     std::shared_ptr<ContractorGraph> contractor_graph;
-    stxxl::vector<QueryEdge> external_edge_list;
+    std::vector<QueryEdge> external_edge_list;
     std::vector<NodeID> orig_node_id_from_new_node_id_map;
     std::vector<float> node_levels;
 

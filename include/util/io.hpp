@@ -124,7 +124,7 @@ bool serializeVectorIntoAdjacencyArray(const std::string &filename,
 #ifdef OSRM_ENABLE_STXXL
 
 template <typename simple_type, std::size_t WRITE_BLOCK_BUFFER_SIZE = 1024>
-bool serializeVector(std::ofstream &out_stream, const stxxl::vector<simple_type> &data)
+bool serializeVector(std::ofstream &out_stream, const std::vector<simple_type> &data)
 {
     const std::uint64_t size = data.size();
     out_stream.write(reinterpret_cast<const char *>(&size), sizeof(size));

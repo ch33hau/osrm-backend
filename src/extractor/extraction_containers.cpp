@@ -19,8 +19,6 @@
 
 #include <luabind/luabind.hpp>
 
-#include <stxxl/sort>
-
 #include <chrono>
 #include <limits>
 
@@ -112,7 +110,7 @@ static const int WRITE_BLOCK_BUFFER_SIZE = 8000;
 ExtractionContainers::ExtractionContainers()
 {
     // Check if stxxl can be instantiated
-    stxxl::vector<unsigned> dummy_vector;
+    std::vector<unsigned> dummy_vector;
 
     // Insert three empty strings offsets for name, destination and pronunciation
     name_offsets.push_back(0);
@@ -169,8 +167,8 @@ void ExtractionContainers::PrepareData(const std::string &output_file_name,
 
 void ExtractionContainers::WriteTurnLaneMasks(
     const std::string &file_name,
-    const stxxl::vector<std::uint32_t> &offsets,
-    const stxxl::vector<guidance::TurnLaneType::Mask> &masks) const
+    const std::vector<std::uint32_t> &offsets,
+    const std::vector<guidance::TurnLaneType::Mask> &masks) const
 {
     util::SimpleLogger().Write() << "Writing turn lane masks...";
     TIMER_START(turn_lane_timer);
@@ -242,8 +240,8 @@ void ExtractionContainers::PrepareNodes()
 {
     std::cout << "[extractor] Sorting used nodes        ... " << std::flush;
     TIMER_START(sorting_used_nodes);
-    stxxl::sort(
-        used_node_id_list.begin(), used_node_id_list.end(), OSMNodeIDSTXXLLess(), stxxl_memory);
+    std::sort(
+        used_node_id_list.begin(), used_node_id_list.end(), OSMNodeIDSTXXLLess());
     TIMER_STOP(sorting_used_nodes);
     std::cout << "ok, after " << TIMER_SEC(sorting_used_nodes) << "s" << std::endl;
 
@@ -256,10 +254,9 @@ void ExtractionContainers::PrepareNodes()
 
     std::cout << "[extractor] Sorting all nodes         ... " << std::flush;
     TIMER_START(sorting_nodes);
-    stxxl::sort(all_nodes_list.begin(),
+    std::sort(all_nodes_list.begin(),
                 all_nodes_list.end(),
-                ExternalMemoryNodeSTXXLCompare(),
-                stxxl_memory);
+                ExternalMemoryNodeSTXXLCompare());
     TIMER_STOP(sorting_nodes);
     std::cout << "ok, after " << TIMER_SEC(sorting_nodes) << "s" << std::endl;
 
@@ -309,7 +306,7 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
     // Sort edges by start.
     std::cout << "[extractor] Sorting edges by start    ... " << std::flush;
     TIMER_START(sort_edges_by_start);
-    stxxl::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMStartID(), stxxl_memory);
+    std::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMStartID());
     TIMER_STOP(sort_edges_by_start);
     std::cout << "ok, after " << TIMER_SEC(sort_edges_by_start) << "s" << std::endl;
 
@@ -374,7 +371,7 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
     // Sort Edges by target
     std::cout << "[extractor] Sorting edges by target   ... " << std::flush;
     TIMER_START(sort_edges_by_target);
-    stxxl::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMTargetID(), stxxl_memory);
+    std::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMTargetID());
     TIMER_STOP(sort_edges_by_target);
     std::cout << "ok, after " << TIMER_SEC(sort_edges_by_target) << "s" << std::endl;
 
@@ -485,10 +482,9 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
     // Sort edges by start.
     std::cout << "[extractor] Sorting edges by renumbered start ... " << std::flush;
     TIMER_START(sort_edges_by_renumbered_start);
-    stxxl::sort(all_edges_list.begin(),
+    std::sort(all_edges_list.begin(),
                 all_edges_list.end(),
-                CmpEdgeByInternalSourceTargetAndName{name_char_data, name_offsets},
-                stxxl_memory);
+                CmpEdgeByInternalSourceTargetAndName{name_char_data, name_offsets});
     TIMER_STOP(sort_edges_by_renumbered_start);
     std::cout << "ok, after " << TIMER_SEC(sort_edges_by_renumbered_start) << "s" << std::endl;
 
@@ -697,20 +693,18 @@ void ExtractionContainers::PrepareRestrictions()
 {
     std::cout << "[extractor] Sorting used ways         ... " << std::flush;
     TIMER_START(sort_ways);
-    stxxl::sort(way_start_end_id_list.begin(),
+    std::sort(way_start_end_id_list.begin(),
                 way_start_end_id_list.end(),
-                FirstAndLastSegmentOfWayStxxlCompare(),
-                stxxl_memory);
+                FirstAndLastSegmentOfWayStxxlCompare());
     TIMER_STOP(sort_ways);
     std::cout << "ok, after " << TIMER_SEC(sort_ways) << "s" << std::endl;
 
     std::cout << "[extractor] Sorting " << restrictions_list.size() << " restriction. by from... "
               << std::flush;
     TIMER_START(sort_restrictions);
-    stxxl::sort(restrictions_list.begin(),
+    std::sort(restrictions_list.begin(),
                 restrictions_list.end(),
-                CmpRestrictionContainerByFrom(),
-                stxxl_memory);
+                CmpRestrictionContainerByFrom());
     TIMER_STOP(sort_restrictions);
     std::cout << "ok, after " << TIMER_SEC(sort_restrictions) << "s" << std::endl;
 
@@ -801,10 +795,9 @@ void ExtractionContainers::PrepareRestrictions()
 
     std::cout << "[extractor] Sorting restrictions. by to  ... " << std::flush;
     TIMER_START(sort_restrictions_to);
-    stxxl::sort(restrictions_list.begin(),
+    std::sort(restrictions_list.begin(),
                 restrictions_list.end(),
-                CmpRestrictionContainerByTo(),
-                stxxl_memory);
+                CmpRestrictionContainerByTo());
     TIMER_STOP(sort_restrictions_to);
     std::cout << "ok, after " << TIMER_SEC(sort_restrictions_to) << "s" << std::endl;
 

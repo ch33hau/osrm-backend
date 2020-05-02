@@ -37,11 +37,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 
 // OpenStreetMap node ids are higher than 2^32
-OSRM_STRONG_TYPEDEF(std::uint64_t, OSMNodeID)
-OSRM_STRONG_TYPEDEF_HASHABLE(std::uint64_t, OSMNodeID)
+using OSMNodeID = std::uint64_t;
+//OSRM_STRONG_TYPEDEF(std::uint64_t, OSMNodeID)
+//OSRM_STRONG_TYPEDEF_HASHABLE(std::uint64_t, OSMNodeID)
 
-OSRM_STRONG_TYPEDEF(std::uint32_t, OSMWayID)
-OSRM_STRONG_TYPEDEF_HASHABLE(std::uint32_t, OSMWayID)
+using OSMWayID = std::uint32_t;
+//OSRM_STRONG_TYPEDEF(std::uint32_t, OSMWayID)
+//OSRM_STRONG_TYPEDEF_HASHABLE(std::uint32_t, OSMWayID)
 
 static const OSMNodeID SPECIAL_OSM_NODEID = OSMNodeID{std::numeric_limits<std::uint64_t>::max()};
 static const OSMWayID SPECIAL_OSM_WAYID = OSMWayID{std::numeric_limits<std::uint32_t>::max()};

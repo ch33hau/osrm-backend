@@ -106,9 +106,6 @@ add_library(osrm_extract STATIC ${ExtractorGlob} ${UtilGlob})
 add_library(osrm_contract STATIC ${ContractorGlob} ${UtilGlob})
 add_library(osrm_store STATIC ${StorageGlob} ${UtilGlob})
 
-target_compile_definitions(osrm_extract PUBLIC -DOSRM_ENABLE_STXXL)
-target_compile_definitions(osrm_contract PUBLIC -DOSRM_ENABLE_STXXL)
-
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
 
 # Activate C++11
@@ -154,13 +151,6 @@ if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deps")
   add_subdirectory(deps)
 endif()
 
-set(OpenMP_FIND_QUIETLY ON)
-find_package(OpenMP)
-if(OPENMP_FOUND)
-  message(STATUS "OpenMP support found. Linking just in case for stxxl")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
 if (ENABLE_JSON_LOGGING)
   message(STATUS "Enabling json logging")
   add_dependency_defines(-DENABLE_JSON_LOGGING)
@@ -189,7 +179,6 @@ set(EXTRACTOR_LIBRARIES
     luabind
     lua
     ${OSMIUM_LIBRARIES}
-    stxxl
     tbb_static
     zlibstatic
     ${MAYBE_COVERAGE_LIBRARIES})
@@ -198,7 +187,6 @@ set(CONTRACTOR_LIBRARIES
     ${CMAKE_THREAD_LIBS_INIT}
     luabind
     lua
-    stxxl
     tbb_static
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
@@ -218,7 +206,6 @@ set(STORAGE_LIBRARIES
 set(UTIL_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    stxxl
     tbb_static
     ${MAYBE_COVERAGE_LIBRARIES})
 

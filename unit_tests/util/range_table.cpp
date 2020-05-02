@@ -15,7 +15,7 @@ using namespace osrm::util;
 constexpr unsigned BLOCK_SIZE = 16;
 typedef RangeTable<BLOCK_SIZE, false> TestRangeTable;
 
-void ConstructionTest(stxxl::vector<unsigned> lengths, std::vector<unsigned> offsets)
+void ConstructionTest(std::vector<unsigned> lengths, std::vector<unsigned> offsets)
 {
     BOOST_ASSERT(lengths.size() == offsets.size() - 1);
 
@@ -29,7 +29,7 @@ void ConstructionTest(stxxl::vector<unsigned> lengths, std::vector<unsigned> off
     }
 }
 
-void ComputeLengthsOffsets(stxxl::vector<unsigned> &lengths,
+void ComputeLengthsOffsets(std::vector<unsigned> &lengths,
                            std::vector<unsigned> &offsets,
                            unsigned num)
 {
@@ -53,7 +53,7 @@ void ComputeLengthsOffsets(stxxl::vector<unsigned> &lengths,
 
 BOOST_AUTO_TEST_CASE(serialization_test)
 {
-    stxxl::vector<unsigned> lengths;
+    std::vector<unsigned> lengths;
     std::vector<unsigned> offsets;
     ComputeLengthsOffsets(lengths, offsets, (BLOCK_SIZE + 1) * 10);
 
@@ -75,12 +75,12 @@ BOOST_AUTO_TEST_CASE(serialization_test)
 BOOST_AUTO_TEST_CASE(construction_test)
 {
     // only offset empty block
-    stxxl::vector<unsigned> empty_lengths;
+    std::vector<unsigned> empty_lengths;
     empty_lengths.push_back(1);
     ConstructionTest(empty_lengths, {0, 1});
     // first block almost full => sentinel is last element of block
     // [0] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, (16)}
-    stxxl::vector<unsigned> almost_full_lengths;
+    std::vector<unsigned> almost_full_lengths;
     std::vector<unsigned> almost_full_offsets;
     ComputeLengthsOffsets(almost_full_lengths, almost_full_offsets, BLOCK_SIZE);
     ConstructionTest(almost_full_lengths, almost_full_offsets);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(construction_test)
     // first block full => sentinel is offset of new block, next block empty
     // [0]     {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
     // [(153)] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    stxxl::vector<unsigned> full_lengths;
+    std::vector<unsigned> full_lengths;
     std::vector<unsigned> full_offsets;
     ComputeLengthsOffsets(full_lengths, full_offsets, BLOCK_SIZE + 1);
     ConstructionTest(full_lengths, full_offsets);
@@ -96,13 +96,13 @@ BOOST_AUTO_TEST_CASE(construction_test)
     // first block full and offset of next block not sentinel, but the first differential value
     // [0]   {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
     // [153] {(17), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    stxxl::vector<unsigned> over_full_lengths;
+    std::vector<unsigned> over_full_lengths;
     std::vector<unsigned> over_full_offsets;
     ComputeLengthsOffsets(over_full_lengths, over_full_offsets, BLOCK_SIZE + 2);
     ConstructionTest(over_full_lengths, over_full_offsets);
 
     // test multiple blocks
-    stxxl::vector<unsigned> multiple_lengths;
+    std::vector<unsigned> multiple_lengths;
     std::vector<unsigned> multiple_offsets;
     ComputeLengthsOffsets(multiple_lengths, multiple_offsets, (BLOCK_SIZE + 1) * 10);
     ConstructionTest(multiple_lengths, multiple_offsets);
