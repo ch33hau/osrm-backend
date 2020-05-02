@@ -111,10 +111,10 @@ target_compile_features(osrm_contract PRIVATE cxx_std_11)
 target_compile_features(osrm_store PRIVATE cxx_std_11)
 
 if (MSVC)
-  target_compile_definitions(osrm PUBLIC NOMINMAX)
-  target_compile_definitions(osrm_extract PUBLIC NOMINMAX)
-  target_compile_definitions(osrm_contract PUBLIC NOMINMAX)
-  target_compile_definitions(osrm_store PUBLIC NOMINMAX)
+  target_compile_definitions(osrm PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN)
+  target_compile_definitions(osrm_extract PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN)
+  target_compile_definitions(osrm_contract PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN)
+  target_compile_definitions(osrm_store PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN)
 endif()
 
 
