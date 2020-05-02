@@ -105,13 +105,20 @@ add_library(osrm STATIC src/osrm/osrm.cpp ${EngineGlob} ${UtilGlob} ${StorageGlo
 add_library(osrm_extract STATIC ${ExtractorGlob} ${UtilGlob})
 add_library(osrm_contract STATIC ${ContractorGlob} ${UtilGlob})
 add_library(osrm_store STATIC ${StorageGlob} ${UtilGlob})
+target_compile_features(osrm PRIVATE cxx_std_11)
+target_compile_features(osrm_extract PRIVATE cxx_std_11)
+target_compile_features(osrm_contract PRIVATE cxx_std_11)
+target_compile_features(osrm_store PRIVATE cxx_std_11)
+
+if (MSVC)
+  target_compile_definitions(osrm PUBLIC NOMINMAX)
+  target_compile_definitions(osrm_extract PUBLIC NOMINMAX)
+  target_compile_definitions(osrm_contract PUBLIC NOMINMAX)
+  target_compile_definitions(osrm_store PUBLIC NOMINMAX)
+endif()
+
 
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
-
-# Activate C++11
-if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif()
 
 if(UNIX AND NOT APPLE)
   set(MAYBE_RT_LIBRARY rt)
