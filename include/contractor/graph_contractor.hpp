@@ -270,7 +270,7 @@ class GraphContractor
         const constexpr size_t DeleteGrainSize = 1;
 
         const NodeID number_of_nodes = contractor_graph->GetNumberOfNodes();
-        util::Percent p(number_of_nodes);
+        util::Percent p(25, 98, number_of_nodes);
 
         ThreadDataContainer thread_data_list(number_of_nodes);
 
@@ -292,9 +292,9 @@ class GraphContractor
         bool use_cached_node_priorities = !node_levels.empty();
         if (use_cached_node_priorities)
         {
-            std::cout << "using cached node priorities ..." << std::flush;
+            std::clog << "using cached node priorities ..." << std::flush;
             node_priorities.swap(node_levels);
-            std::cout << "ok" << std::endl;
+            std::clog << "ok" << std::endl;
         }
         else
         {
@@ -302,7 +302,7 @@ class GraphContractor
             node_priorities.resize(number_of_nodes);
             node_levels.resize(number_of_nodes);
 
-            std::cout << "initializing elimination PQ ..." << std::flush;
+            std::clog << "initializing elimination PQ ..." << std::flush;
             tbb::parallel_for(tbb::blocked_range<int>(0, number_of_nodes, PQGrainSize),
                               [this, &node_priorities, &node_depth, &thread_data_list](
                                   const tbb::blocked_range<int> &range) {
@@ -313,11 +313,11 @@ class GraphContractor
                                           this->EvaluateNodePriority(data, node_depth[x], x);
                                   }
                               });
-            std::cout << "ok" << std::endl;
+            std::clog << "ok" << std::endl;
         }
         BOOST_ASSERT(node_priorities.size() == number_of_nodes);
 
-        std::cout << "preprocessing " << number_of_nodes << " nodes ..." << std::flush;
+        std::clog << "preprocessing " << number_of_nodes << " nodes ..." << std::flush;
 
         unsigned current_level = 0;
         bool flushed_contractor = false;
@@ -331,7 +331,7 @@ class GraphContractor
                     new_edge_set; // this one is not explicitely
                                   // cleared since it goes out of
                                   // scope anywa
-                std::cout << " [flush " << number_of_contracted_nodes << " nodes] " << std::flush;
+                std::clog << " [flush " << number_of_contracted_nodes << " nodes] " << std::flush;
 
                 // Delete old heap data to free memory that we need for the coming operations
                 thread_data_list.data.clear();
@@ -618,7 +618,7 @@ class GraphContractor
 
     template <class Edge> inline void GetEdges(util::DeallocatingVector<Edge> &edges)
     {
-        util::Percent p(contractor_graph->GetNumberOfNodes());
+        util::Percent p(98, 100,contractor_graph->GetNumberOfNodes());
         util::SimpleLogger().Write() << "Getting edges of minimized graph";
         const NodeID number_of_nodes = contractor_graph->GetNumberOfNodes();
         if (contractor_graph->GetNumberOfNodes())

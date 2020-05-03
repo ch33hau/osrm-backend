@@ -81,18 +81,18 @@ SimpleLogger::~SimpleLogger()
         switch (level)
         {
         case logWARNING:
-            std::cerr << (is_terminal ? RED : "") << os.str() << (is_terminal ? COL_RESET : "")
+            std::clog << (is_terminal ? RED : "") << os.str() << (is_terminal ? COL_RESET : "")
                       << std::endl;
             break;
         case logDEBUG:
 #ifndef NDEBUG
-            std::cout << (is_terminal ? YELLOW : "") << os.str() << (is_terminal ? COL_RESET : "")
+            std::clog << (is_terminal ? YELLOW : "") << os.str() << (is_terminal ? COL_RESET : "")
                       << std::endl;
 #endif
             break;
         case logINFO:
         default:
-            std::cout << os.str() << (is_terminal ? COL_RESET : "") << std::endl;
+            std::clog << os.str() << (is_terminal ? COL_RESET : "") << std::endl;
             break;
         }
     }

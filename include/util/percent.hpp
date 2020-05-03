@@ -12,11 +12,15 @@ namespace util
 class Percent
 {
   public:
-    explicit Percent(unsigned max_value, unsigned step = 5) { Reinit(max_value, step); }
+    Percent(unsigned from, unsigned to,
+            unsigned max_value, unsigned step = 5)
+    { Reinit(from, to, max_value, step); }
 
     // Reinitializes
-    void Reinit(unsigned max_value, unsigned step = 5)
+    void Reinit(unsigned from, unsigned to, unsigned max_value, unsigned step = 5)
     {
+        m_from = from;
+        m_to = to;
         m_max_value = max_value;
         m_current_value = 0;
         m_percent_interval = m_max_value / 100;
@@ -34,7 +38,7 @@ class Percent
             PrintPercent(current_value / static_cast<double>(m_max_value) * 100.);
         }
         if (current_value + 1 == m_max_value)
-            std::cout << " 100%" << std::endl;
+            std::clog << " 100%" << std::endl;
     }
 
     void PrintIncrement()
@@ -51,27 +55,35 @@ class Percent
 
   private:
     std::atomic_uint m_current_value;
+    unsigned m_from;
+    unsigned m_to;
     unsigned m_max_value;
     unsigned m_percent_interval;
     unsigned m_next_threshold;
     unsigned m_last_percent;
     unsigned m_step;
 
+    void update_status(double percent) {
+        auto const val = m_from + (percent / 100.0) * (m_to - m_from);
+        std::clog << '\0' << static_cast<int>(val) << '\0';
+    }
+
     // Displays progress.
     void PrintPercent(double percent)
     {
+        update_status(percent);
         while (percent >= m_last_percent + m_step)
         {
             m_last_percent += m_step;
             if (m_last_percent % 10 == 0)
             {
-                std::cout << " " << m_last_percent << "% ";
+                std::clog << " " << m_last_percent << "% ";
             }
             else
             {
-                std::cout << ".";
+                std::clog << ".";
             }
-            std::cout.flush();
+            std::clog.flush();
         }
     }
 };

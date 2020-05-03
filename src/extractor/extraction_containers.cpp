@@ -193,7 +193,7 @@ void ExtractionContainers::WriteTurnLaneMasks(
 
 void ExtractionContainers::WriteCharData(const std::string &file_name)
 {
-    std::cout << "[extractor] writing street name index ... " << std::flush;
+    std::clog << "[extractor] writing street name index ... " << std::flush;
     TIMER_START(write_index);
     boost::filesystem::ofstream file_stream(file_name, std::ios::binary);
 
@@ -233,34 +233,34 @@ void ExtractionContainers::WriteCharData(const std::string &file_name)
     file_stream.write(write_buffer, buffer_len);
 
     TIMER_STOP(write_index);
-    std::cout << "ok, after " << TIMER_SEC(write_index) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(write_index) << "s" << std::endl;
 }
 
 void ExtractionContainers::PrepareNodes()
 {
-    std::cout << "[extractor] Sorting used nodes        ... " << std::flush;
+    std::clog << "[extractor] Sorting used nodes        ... " << std::flush;
     TIMER_START(sorting_used_nodes);
     std::sort(
         used_node_id_list.begin(), used_node_id_list.end(), OSMNodeIDSTXXLLess());
     TIMER_STOP(sorting_used_nodes);
-    std::cout << "ok, after " << TIMER_SEC(sorting_used_nodes) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sorting_used_nodes) << "s" << std::endl;
 
-    std::cout << "[extractor] Erasing duplicate nodes   ... " << std::flush;
+    std::clog << "[extractor] Erasing duplicate nodes   ... " << std::flush;
     TIMER_START(erasing_dups);
     auto new_end = std::unique(used_node_id_list.begin(), used_node_id_list.end());
     used_node_id_list.resize(new_end - used_node_id_list.begin());
     TIMER_STOP(erasing_dups);
-    std::cout << "ok, after " << TIMER_SEC(erasing_dups) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(erasing_dups) << "s" << std::endl;
 
-    std::cout << "[extractor] Sorting all nodes         ... " << std::flush;
+    std::clog << "[extractor] Sorting all nodes         ... " << std::flush;
     TIMER_START(sorting_nodes);
     std::sort(all_nodes_list.begin(),
                 all_nodes_list.end(),
                 ExternalMemoryNodeSTXXLCompare());
     TIMER_STOP(sorting_nodes);
-    std::cout << "ok, after " << TIMER_SEC(sorting_nodes) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sorting_nodes) << "s" << std::endl;
 
-    std::cout << "[extractor] Building node id map      ... " << std::flush;
+    std::clog << "[extractor] Building node id map      ... " << std::flush;
     TIMER_START(id_map);
     external_to_internal_node_id_map.reserve(used_node_id_list.size());
     auto node_iter = all_nodes_list.begin();
@@ -298,19 +298,19 @@ void ExtractionContainers::PrepareNodes()
     }
     max_internal_node_id = boost::numeric_cast<NodeID>(internal_id);
     TIMER_STOP(id_map);
-    std::cout << "ok, after " << TIMER_SEC(id_map) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(id_map) << "s" << std::endl;
 }
 
 void ExtractionContainers::PrepareEdges(lua_State *segment_state)
 {
     // Sort edges by start.
-    std::cout << "[extractor] Sorting edges by start    ... " << std::flush;
+    std::clog << "[extractor] Sorting edges by start    ... " << std::flush;
     TIMER_START(sort_edges_by_start);
     std::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMStartID());
     TIMER_STOP(sort_edges_by_start);
-    std::cout << "ok, after " << TIMER_SEC(sort_edges_by_start) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_edges_by_start) << "s" << std::endl;
 
-    std::cout << "[extractor] Setting start coords      ... " << std::flush;
+    std::clog << "[extractor] Setting start coords      ... " << std::flush;
     TIMER_START(set_start_coords);
     // Traverse list of edges and nodes in parallel and set start coord
     auto node_iterator = all_nodes_list.begin();
@@ -366,17 +366,17 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
     };
     std::for_each(edge_iterator, all_edges_list_end, markSourcesInvalid);
     TIMER_STOP(set_start_coords);
-    std::cout << "ok, after " << TIMER_SEC(set_start_coords) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(set_start_coords) << "s" << std::endl;
 
     // Sort Edges by target
-    std::cout << "[extractor] Sorting edges by target   ... " << std::flush;
+    std::clog << "[extractor] Sorting edges by target   ... " << std::flush;
     TIMER_START(sort_edges_by_target);
     std::sort(all_edges_list.begin(), all_edges_list.end(), CmpEdgeByOSMTargetID());
     TIMER_STOP(sort_edges_by_target);
-    std::cout << "ok, after " << TIMER_SEC(sort_edges_by_target) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_edges_by_target) << "s" << std::endl;
 
     // Compute edge weights
-    std::cout << "[extractor] Computing edge weights    ... " << std::flush;
+    std::clog << "[extractor] Computing edge weights    ... " << std::flush;
     TIMER_START(compute_weights);
     node_iterator = all_nodes_list.begin();
     edge_iterator = all_edges_list.begin();
@@ -477,16 +477,16 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
     };
     std::for_each(edge_iterator, all_edges_list_end_, markTargetsInvalid);
     TIMER_STOP(compute_weights);
-    std::cout << "ok, after " << TIMER_SEC(compute_weights) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(compute_weights) << "s" << std::endl;
 
     // Sort edges by start.
-    std::cout << "[extractor] Sorting edges by renumbered start ... " << std::flush;
+    std::clog << "[extractor] Sorting edges by renumbered start ... " << std::flush;
     TIMER_START(sort_edges_by_renumbered_start);
     std::sort(all_edges_list.begin(),
                 all_edges_list.end(),
                 CmpEdgeByInternalSourceTargetAndName{name_char_data, name_offsets});
     TIMER_STOP(sort_edges_by_renumbered_start);
-    std::cout << "ok, after " << TIMER_SEC(sort_edges_by_renumbered_start) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_edges_by_renumbered_start) << "s" << std::endl;
 
     BOOST_ASSERT(all_edges_list.size() > 0);
     for (unsigned i = 0; i < all_edges_list.size();)
@@ -581,7 +581,7 @@ void ExtractionContainers::PrepareEdges(lua_State *segment_state)
 
 void ExtractionContainers::WriteEdges(std::ofstream &file_out_stream) const
 {
-    std::cout << "[extractor] Writing used edges       ... " << std::flush;
+    std::clog << "[extractor] Writing used edges       ... " << std::flush;
     TIMER_START(write_edges);
     // Traverse list of edges and nodes in parallel and set target coord
     std::uint64_t used_edges_counter = 0;
@@ -609,15 +609,15 @@ void ExtractionContainers::WriteEdges(std::ofstream &file_out_stream) const
         throw util::exception("There are too many edges, OSRM only supports 2^32");
     }
     TIMER_STOP(write_edges);
-    std::cout << "ok, after " << TIMER_SEC(write_edges) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(write_edges) << "s" << std::endl;
 
-    std::cout << "[extractor] setting number of edges   ... " << std::flush;
+    std::clog << "[extractor] setting number of edges   ... " << std::flush;
 
     used_edges_counter_buffer = boost::numeric_cast<std::uint32_t>(used_edges_counter);
 
     file_out_stream.seekp(start_position);
     file_out_stream.write((char *)&used_edges_counter_buffer, sizeof(used_edges_counter_buffer));
-    std::cout << "ok" << std::endl;
+    std::clog << "ok" << std::endl;
 
     util::SimpleLogger().Write() << "Processed " << used_edges_counter << " edges";
 }
@@ -625,11 +625,11 @@ void ExtractionContainers::WriteEdges(std::ofstream &file_out_stream) const
 void ExtractionContainers::WriteNodes(std::ofstream &file_out_stream) const
 {
     // write dummy value, will be overwritten later
-    std::cout << "[extractor] setting number of nodes   ... " << std::flush;
+    std::clog << "[extractor] setting number of nodes   ... " << std::flush;
     file_out_stream.write((char *)&max_internal_node_id, sizeof(unsigned));
-    std::cout << "ok" << std::endl;
+    std::clog << "ok" << std::endl;
 
-    std::cout << "[extractor] Confirming/Writing used nodes     ... " << std::flush;
+    std::clog << "[extractor] Confirming/Writing used nodes     ... " << std::flush;
     TIMER_START(write_nodes);
     // identify all used nodes by a merging step of two sorted lists
     auto node_iterator = all_nodes_list.begin();
@@ -657,7 +657,7 @@ void ExtractionContainers::WriteNodes(std::ofstream &file_out_stream) const
         ++node_iterator;
     }
     TIMER_STOP(write_nodes);
-    std::cout << "ok, after " << TIMER_SEC(write_nodes) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(write_nodes) << "s" << std::endl;
 
     util::SimpleLogger().Write() << "Processed " << max_internal_node_id << " nodes";
 }
@@ -691,24 +691,24 @@ void ExtractionContainers::WriteRestrictions(const std::string &path) const
 
 void ExtractionContainers::PrepareRestrictions()
 {
-    std::cout << "[extractor] Sorting used ways         ... " << std::flush;
+    std::clog << "[extractor] Sorting used ways         ... " << std::flush;
     TIMER_START(sort_ways);
     std::sort(way_start_end_id_list.begin(),
                 way_start_end_id_list.end(),
                 FirstAndLastSegmentOfWayStxxlCompare());
     TIMER_STOP(sort_ways);
-    std::cout << "ok, after " << TIMER_SEC(sort_ways) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_ways) << "s" << std::endl;
 
-    std::cout << "[extractor] Sorting " << restrictions_list.size() << " restriction. by from... "
+    std::clog << "[extractor] Sorting " << restrictions_list.size() << " restriction. by from... "
               << std::flush;
     TIMER_START(sort_restrictions);
     std::sort(restrictions_list.begin(),
                 restrictions_list.end(),
                 CmpRestrictionContainerByFrom());
     TIMER_STOP(sort_restrictions);
-    std::cout << "ok, after " << TIMER_SEC(sort_restrictions) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_restrictions) << "s" << std::endl;
 
-    std::cout << "[extractor] Fixing restriction starts ... " << std::flush;
+    std::clog << "[extractor] Fixing restriction starts ... " << std::flush;
     TIMER_START(fix_restriction_starts);
     auto restrictions_iterator = restrictions_list.begin();
     auto way_start_and_end_iterator = way_start_end_id_list.cbegin();
@@ -791,17 +791,17 @@ void ExtractionContainers::PrepareRestrictions()
     }
 
     TIMER_STOP(fix_restriction_starts);
-    std::cout << "ok, after " << TIMER_SEC(fix_restriction_starts) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(fix_restriction_starts) << "s" << std::endl;
 
-    std::cout << "[extractor] Sorting restrictions. by to  ... " << std::flush;
+    std::clog << "[extractor] Sorting restrictions. by to  ... " << std::flush;
     TIMER_START(sort_restrictions_to);
     std::sort(restrictions_list.begin(),
                 restrictions_list.end(),
                 CmpRestrictionContainerByTo());
     TIMER_STOP(sort_restrictions_to);
-    std::cout << "ok, after " << TIMER_SEC(sort_restrictions_to) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(sort_restrictions_to) << "s" << std::endl;
 
-    std::cout << "[extractor] Fixing restriction ends   ... " << std::flush;
+    std::clog << "[extractor] Fixing restriction ends   ... " << std::flush;
     TIMER_START(fix_restriction_ends);
     restrictions_iterator = restrictions_list.begin();
     way_start_and_end_iterator = way_start_end_id_list.cbegin();
@@ -877,7 +877,7 @@ void ExtractionContainers::PrepareRestrictions()
         ++restrictions_iterator;
     }
     TIMER_STOP(fix_restriction_ends);
-    std::cout << "ok, after " << TIMER_SEC(fix_restriction_ends) << "s" << std::endl;
+    std::clog << "ok, after " << TIMER_SEC(fix_restriction_ends) << "s" << std::endl;
 }
 }
 }

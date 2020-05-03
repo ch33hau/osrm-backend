@@ -253,7 +253,7 @@ unsigned EdgeBasedGraphFactory::RenumberEdges()
 /// Creates the nodes in the edge expanded graph from edges in the node-based graph.
 void EdgeBasedGraphFactory::GenerateEdgeExpandedNodes()
 {
-    util::Percent progress(m_node_based_graph->GetNumberOfNodes());
+    util::Percent progress(15, 20,m_node_based_graph->GetNumberOfNodes());
 
     // loop over all edges and generate new set of nodes
     for (const auto node_u : util::irange(0u, m_node_based_graph->GetNumberOfNodes()))
@@ -337,7 +337,7 @@ void EdgeBasedGraphFactory::GenerateEdgeExpandedEdges(
     // Loop over all turns and generate new set of edges.
     // Three nested loop look super-linear, but we are dealing with a (kind of)
     // linear number of turns only.
-    util::Percent progress(m_node_based_graph->GetNumberOfNodes());
+    util::Percent progress(20, 25,m_node_based_graph->GetNumberOfNodes());
     SuffixTable street_name_suffix_table(lua_state);
     guidance::TurnAnalysis turn_analysis(*m_node_based_graph,
                                          m_node_info_list,
