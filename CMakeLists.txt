@@ -117,6 +117,10 @@ if (MSVC)
   target_compile_definitions(osrm_store PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN)
 endif()
 
+target_compile_definitions(osrm PRIVATE TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
+target_compile_definitions(osrm_extract PRIVATE TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
+target_compile_definitions(osrm_contract PRIVATE TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
+target_compile_definitions(osrm_store PRIVATE TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
 set_target_properties(osrm PROPERTIES LINKER_LANGUAGE CXX)
 
