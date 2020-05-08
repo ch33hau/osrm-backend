@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/collection.hpp>
 #include <osmium/osm/tag.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace tags {
 
@@ -107,9 +107,9 @@ namespace osmium {
         public:
 
             typedef Filter<TKey, TValue, TKeyComp, TValueComp> filter_type;
-            typedef const osmium::Tag& argument_type;
+            typedef const osrm_osmium::Tag& argument_type;
             typedef bool result_type;
-            typedef boost::filter_iterator<filter_type, osmium::TagList::const_iterator> iterator;
+            typedef boost::filter_iterator<filter_type, osrm_osmium::TagList::const_iterator> iterator;
 
             explicit Filter(bool default_result = false) :
                 m_default_result(default_result) {
@@ -126,7 +126,7 @@ namespace osmium {
                 return *this;
             }
 
-            bool operator()(const osmium::Tag& tag) const {
+            bool operator()(const osrm_osmium::Tag& tag) const {
                 for (const Rule& rule : m_rules) {
                     if (TKeyComp()(rule.key, tag.key()) && (rule.ignore_value || TValueComp()(rule.value, tag.value()))) {
                         return rule.result;
@@ -157,6 +157,6 @@ namespace osmium {
 
     } // namespace tags
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_TAGS_FILTER_HPP

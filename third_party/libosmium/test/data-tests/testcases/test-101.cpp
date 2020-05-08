@@ -1,15 +1,15 @@
 
 #include "common.hpp"
 
-class TestHandler101 : public osmium::handler::Handler {
+class TestHandler101 : public osrm_osmium::handler::Handler {
 
 public:
 
     TestHandler101() :
-        osmium::handler::Handler() {
+        osrm_osmium::handler::Handler() {
     }
 
-    void node(osmium::Node& node) {
+    void node(osrm_osmium::Node& node) {
         if (node.id() == 101000) {
             REQUIRE(node.version() == 1);
             REQUIRE(node.location().lon() == 1.12);
@@ -30,13 +30,13 @@ public:
 TEST_CASE("101") {
 
     SECTION("test 101") {
-        osmium::io::Reader reader(dirname + "/1/101/data.osm");
+        osrm_osmium::io::Reader reader(dirname + "/1/101/data.osm");
 
         CheckBasicsHandler check_basics_handler(101, 4, 0, 0);
         CheckWKTHandler check_wkt_handler(dirname, 101);
         TestHandler101 test_handler;
 
-        osmium::apply(reader, check_basics_handler, check_wkt_handler, test_handler);
+        osrm_osmium::apply(reader, check_basics_handler, check_wkt_handler, test_handler);
     }
 
 }

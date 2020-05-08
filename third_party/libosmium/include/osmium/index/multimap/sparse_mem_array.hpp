@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/index/detail/vector_multimap.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -53,6 +53,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MULTIMAP_SPARSE_MEM_ARRAY_HPP

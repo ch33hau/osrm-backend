@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <fstream>
 #include <string>
 
-namespace osmium {
+namespace osrm_osmium {
 
     class MemoryUsage {
 
@@ -94,6 +94,6 @@ namespace osmium {
 
     }; // class MemoryUsage
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_MEMORY_HPP

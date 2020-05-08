@@ -61,7 +61,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/thread/pool.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -84,10 +84,10 @@ namespace osmium {
                 opl_output_options m_options;
 
                 void append_encoded_string(const char* data) {
-                    osmium::io::detail::append_utf8_encoded_string(*m_out, data);
+                    osrm_osmium::io::detail::append_utf8_encoded_string(*m_out, data);
                 }
 
-                void write_meta(const osmium::OSMObject& object) {
+                void write_meta(const osrm_osmium::OSMObject& object) {
                     output_formatted("%" PRId64, object.id());
                     if (m_options.add_metadata) {
                         output_formatted(" v%d d", object.version());
@@ -111,7 +111,7 @@ namespace osmium {
                     }
                 }
 
-                void write_location(const osmium::Location& location, const char x, const char y) {
+                void write_location(const osrm_osmium::Location& location, const char x, const char y) {
                     if (location) {
                         output_formatted(" %c%.7f %c%.7f", x, location.lon_without_check(), y, location.lat_without_check());
                     } else {
@@ -124,7 +124,7 @@ namespace osmium {
 
             public:
 
-                OPLOutputBlock(osmium::memory::Buffer&& buffer, const opl_output_options& options) :
+                OPLOutputBlock(osrm_osmium::memory::Buffer&& buffer, const opl_output_options& options) :
                     OutputBlock(std::move(buffer)),
                     m_options(options) {
                 }
@@ -138,7 +138,7 @@ namespace osmium {
                 ~OPLOutputBlock() noexcept = default;
 
                 std::string operator()() {
-                    osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
+                    osrm_osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
 
                     std::string out;
                     using std::swap;
@@ -147,14 +147,14 @@ namespace osmium {
                     return out;
                 }
 
-                void node(const osmium::Node& node) {
+                void node(const osrm_osmium::Node& node) {
                     *m_out += 'n';
                     write_meta(node);
                     write_location(node.location(), 'x', 'y');
                     *m_out += '\n';
                 }
 
-                void way(const osmium::Way& way) {
+                void way(const osrm_osmium::Way& way) {
                     *m_out += 'w';
                     write_meta(way);
 
@@ -171,7 +171,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     *m_out += 'r';
                     write_meta(relation);
 
@@ -190,7 +190,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void changeset(const osmium::Changeset& changeset) {
+                void changeset(const osrm_osmium::Changeset& changeset) {
                     output_formatted("c%d k%d s", changeset.id(), changeset.num_changes());
                     *m_out += changeset.created_at().to_iso();
                     *m_out += " e";
@@ -217,13 +217,13 @@ namespace osmium {
 
             }; // class OPLOutputBlock
 
-            class OPLOutputFormat : public osmium::io::detail::OutputFormat {
+            class OPLOutputFormat : public osrm_osmium::io::detail::OutputFormat {
 
                 opl_output_options m_options;
 
             public:
 
-                OPLOutputFormat(const osmium::io::File& file, future_string_queue_type& output_queue) :
+                OPLOutputFormat(const osrm_osmium::io::File& file, future_string_queue_type& output_queue) :
                     OutputFormat(output_queue),
                     m_options() {
                     m_options.add_metadata = file.is_not_false("add_metadata");
@@ -234,17 +234,17 @@ namespace osmium {
 
                 ~OPLOutputFormat() noexcept final = default;
 
-                void write_buffer(osmium::memory::Buffer&& buffer) final {
-                    m_output_queue.push(osmium::thread::Pool::instance().submit(OPLOutputBlock{std::move(buffer), m_options}));
+                void write_buffer(osrm_osmium::memory::Buffer&& buffer) final {
+                    m_output_queue.push(osrm_osmium::thread::Pool::instance().submit(OPLOutputBlock{std::move(buffer), m_options}));
                 }
 
             }; // class OPLOutputFormat
 
             // we want the register_output_format() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_opl_output = osmium::io::detail::OutputFormatFactory::instance().register_output_format(osmium::io::file_format::opl,
-                [](const osmium::io::File& file, future_string_queue_type& output_queue) {
-                    return new osmium::io::detail::OPLOutputFormat(file, output_queue);
+            const bool registered_opl_output = osrm_osmium::io::detail::OutputFormatFactory::instance().register_output_format(osrm_osmium::io::file_format::opl,
+                [](const osrm_osmium::io::File& file, future_string_queue_type& output_queue) {
+                    return new osrm_osmium::io::detail::OPLOutputFormat(file, output_queue);
             });
 
             // dummy function to silence the unused variable warning from above
@@ -256,6 +256,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_OPL_OUTPUT_FORMAT_HPP

@@ -14,7 +14,7 @@
  * 2. Correct ID space used by nodes, ways, and relations
  * 3. No ID used more than once
  */
-class CheckBasicsHandler : public osmium::handler::Handler {
+class CheckBasicsHandler : public osrm_osmium::handler::Handler {
 
     // Lower bound for the id range allowed in this test.
     int m_id_range;
@@ -28,10 +28,10 @@ class CheckBasicsHandler : public osmium::handler::Handler {
 
     // All IDs encountered in the data.osm file will be stored in this set and
     // checked for duplicates.
-    std::unordered_set<osmium::object_id_type> m_ids;
+    std::unordered_set<osrm_osmium::object_id_type> m_ids;
 
     // Check id is in range [min, max] and that it isn't more than once in input.
-    void id_check(osmium::object_id_type id, osmium::object_id_type min, osmium::object_id_type max) {
+    void id_check(osrm_osmium::object_id_type id, osrm_osmium::object_id_type min, osrm_osmium::object_id_type max) {
         if (id < m_id_range + min || id > m_id_range + max) {
             std::cerr << "  id " << id << " out of range for this test case\n";
             exit(1);
@@ -49,7 +49,7 @@ public:
     static const int ids_per_testcase = 1000;
 
     CheckBasicsHandler(int testcase, int nodes, int ways, int relations) :
-        osmium::handler::Handler(),
+        osrm_osmium::handler::Handler(),
         m_id_range(testcase * ids_per_testcase),
         m_num_nodes(nodes),
         m_num_ways(ways),
@@ -71,17 +71,17 @@ public:
         }
     }
 
-    void node(const osmium::Node& node) {
+    void node(const osrm_osmium::Node& node) {
         id_check(node.id(), 0, 799);
         --m_num_nodes;
     }
 
-    void way(const osmium::Way& way) {
+    void way(const osrm_osmium::Way& way) {
         id_check(way.id(), 800, 899);
         --m_num_ways;
     }
 
-    void relations(const osmium::Relation& relation) {
+    void relations(const osrm_osmium::Relation& relation) {
         id_check(relation.id(), 900, 999);
         --m_num_relations;
     }

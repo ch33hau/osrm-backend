@@ -61,7 +61,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/thread/util.hpp>
 #include <osmium/util/config.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -76,13 +76,13 @@ namespace osmium {
                  *
                  * @param size Number of bytes to read
                  * @returns String with the data
-                 * @throws osmium::pbf_error If size bytes can't be read
+                 * @throws osrm_osmium::pbf_error If size bytes can't be read
                  */
                 std::string read_from_input_queue(size_t size) {
                     while (m_input_buffer.size() < size) {
                         std::string new_data = get_input();
                         if (input_done()) {
-                            throw osmium::pbf_error("truncated data (EOF encountered)");
+                            throw osrm_osmium::pbf_error("truncated data (EOF encountered)");
                         }
                         m_input_buffer += new_data;
                     }
@@ -106,13 +106,13 @@ namespace osmium {
                     try {
                         const std::string input_data = read_from_input_queue(sizeof(size_in_network_byte_order));
                         size_in_network_byte_order = *reinterpret_cast<const uint32_t*>(input_data.data());
-                    } catch (osmium::pbf_error&) {
+                    } catch (osrm_osmium::pbf_error&) {
                         return 0; // EOF
                     }
 
                     const uint32_t size = ntohl(size_in_network_byte_order);
                     if (size > static_cast<uint32_t>(max_blob_header_size)) {
-                        throw osmium::pbf_error("invalid BlobHeader size (> max_blob_header_size)");
+                        throw osrm_osmium::pbf_error("invalid BlobHeader size (> max_blob_header_size)");
                     }
 
                     return size;
@@ -140,11 +140,11 @@ namespace osmium {
                     }
 
                     if (blob_header_datasize == 0) {
-                        throw osmium::pbf_error("PBF format error: BlobHeader.datasize missing or zero.");
+                        throw osrm_osmium::pbf_error("PBF format error: BlobHeader.datasize missing or zero.");
                     }
 
                     if (strncmp(expected_type, blob_header_type.first, blob_header_type.second)) {
-                        throw osmium::pbf_error("blob does not have expected type (OSMHeader in first blob, OSMData in following blobs)");
+                        throw osrm_osmium::pbf_error("blob does not have expected type (OSMHeader in first blob, OSMData in following blobs)");
                     }
 
                     return blob_header_datasize;
@@ -165,7 +165,7 @@ namespace osmium {
 
                 std::string read_from_input_queue_with_check(size_t size) {
                     if (size > max_uncompressed_blob_size) {
-                        throw osmium::pbf_error(std::string("invalid blob size: " +
+                        throw osrm_osmium::pbf_error(std::string("invalid blob size: " +
                                                 std::to_string(size)));
                     }
                     return read_from_input_queue(size);
@@ -173,7 +173,7 @@ namespace osmium {
 
                 // Parse the header in the PBF OSMHeader blob.
                 void parse_header_blob() {
-                    osmium::io::Header header;
+                    osrm_osmium::io::Header header;
                     const auto size = check_type_and_get_blob_size("OSMHeader");
                     header = decode_header(read_from_input_queue_with_check(size));
                     set_header_value(header);
@@ -185,8 +185,8 @@ namespace osmium {
 
                         PBFDataBlobDecoder data_blob_parser{ std::move(input_buffer), read_types() };
 
-                        if (osmium::config::use_pool_threads_for_pbf_parsing()) {
-                            send_to_output_queue(osmium::thread::Pool::instance().submit(std::move(data_blob_parser)));
+                        if (osrm_osmium::config::use_pool_threads_for_pbf_parsing()) {
+                            send_to_output_queue(osrm_osmium::thread::Pool::instance().submit(std::move(data_blob_parser)));
                         } else {
                             send_to_output_queue(data_blob_parser());
                         }
@@ -197,8 +197,8 @@ namespace osmium {
 
                 PBFParser(future_string_queue_type& input_queue,
                           future_buffer_queue_type& output_queue,
-                          std::promise<osmium::io::Header>& header_promise,
-                          osmium::osm_entity_bits::type read_types) :
+                          std::promise<osrm_osmium::io::Header>& header_promise,
+                          osrm_osmium::osm_entity_bits::type read_types) :
                     Parser(input_queue, output_queue, header_promise, read_types),
                     m_input_buffer() {
                 }
@@ -206,11 +206,11 @@ namespace osmium {
                 ~PBFParser() noexcept final = default;
 
                 void run() final {
-                    osmium::thread::set_thread_name("_osmium_pbf_in");
+                    osrm_osmium::thread::set_thread_name("_osmium_pbf_in");
 
                     parse_header_blob();
 
-                    if (read_types() != osmium::osm_entity_bits::nothing) {
+                    if (read_types() != osrm_osmium::osm_entity_bits::nothing) {
                         parse_data_blobs();
                     }
                 }
@@ -223,8 +223,8 @@ namespace osmium {
                 file_format::pbf,
                 [](future_string_queue_type& input_queue,
                     future_buffer_queue_type& output_queue,
-                    std::promise<osmium::io::Header>& header_promise,
-                    osmium::osm_entity_bits::type read_which_entities) {
+                    std::promise<osrm_osmium::io::Header>& header_promise,
+                    osrm_osmium::osm_entity_bits::type read_which_entities) {
                     return std::unique_ptr<Parser>(new PBFParser(input_queue, output_queue, header_promise, read_which_entities));
             });
 
@@ -237,6 +237,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_PBF_INPUT_FORMAT_HPP

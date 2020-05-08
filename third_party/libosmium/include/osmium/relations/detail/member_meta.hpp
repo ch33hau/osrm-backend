@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace relations {
 
@@ -57,7 +57,7 @@ namespace osmium {
              * It depends on the vector in which this object is stored which kind of
              * object is referenced here.
              */
-            osmium::object_id_type m_member_id;
+            osrm_osmium::object_id_type m_member_id;
 
             /**
              * Position of the relation this member is a part of in the
@@ -85,13 +85,13 @@ namespace osmium {
              * member_pos is used to create dummy MemberMeta that can be compared
              * to the MemberMeta in the vectors using the equal_range algorithm.
              */
-            explicit MemberMeta(osmium::object_id_type member_id, size_t relation_pos=0, size_t member_pos=0) noexcept :
+            explicit MemberMeta(osrm_osmium::object_id_type member_id, size_t relation_pos=0, size_t member_pos=0) noexcept :
                 m_member_id(member_id),
                 m_relation_pos(relation_pos),
                 m_member_pos(member_pos) {
             }
 
-            osmium::object_id_type member_id() const noexcept {
+            osrm_osmium::object_id_type member_id() const noexcept {
                 return m_member_id;
             }
 
@@ -138,6 +138,6 @@ namespace osmium {
 
     } // namespace relations
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_RELATIONS_DETAIL_MEMBER_META_HPP

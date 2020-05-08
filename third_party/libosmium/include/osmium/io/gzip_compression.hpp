@@ -55,7 +55,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/cast.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when there are problems compressing or
@@ -88,7 +88,7 @@ namespace osmium {
                 } else {
                     error += ::gzerror(gzfile, &errnum);
                 }
-                throw osmium::gzip_error(error, errnum);
+                throw osrm_osmium::gzip_error(error, errnum);
             }
 
         } // namespace detail
@@ -134,9 +134,9 @@ namespace osmium {
                         detail::throw_gzip_error(m_gzfile, "write close failed", result);
                     }
                     if (do_fsync()) {
-                        osmium::io::detail::reliable_fsync(m_fd);
+                        osrm_osmium::io::detail::reliable_fsync(m_fd);
                     }
-                    osmium::io::detail::reliable_close(m_fd);
+                    osrm_osmium::io::detail::reliable_close(m_fd);
                 }
             }
 
@@ -165,7 +165,7 @@ namespace osmium {
             }
 
             std::string read() final {
-                std::string buffer(osmium::io::Decompressor::input_buffer_size, '\0');
+                std::string buffer(osrm_osmium::io::Decompressor::input_buffer_size, '\0');
                 int nread = ::gzread(m_gzfile, const_cast<char*>(buffer.data()), static_cast_with_assert<unsigned int>(buffer.size()));
                 if (nread < 0) {
                     detail::throw_gzip_error(m_gzfile, "read failed");
@@ -206,7 +206,7 @@ namespace osmium {
                     if (m_zstream.msg) {
                         message.append(m_zstream.msg);
                     }
-                    throw osmium::gzip_error(message, result);
+                    throw osrm_osmium::gzip_error(message, result);
                 }
             }
 
@@ -238,7 +238,7 @@ namespace osmium {
                         if (m_zstream.msg) {
                             message.append(m_zstream.msg);
                         }
-                        throw osmium::gzip_error(message, result);
+                        throw osrm_osmium::gzip_error(message, result);
                     }
 
                     output.resize(static_cast<unsigned long>(m_zstream.next_out - reinterpret_cast<const unsigned char*>(output.data())));
@@ -257,10 +257,10 @@ namespace osmium {
 
             // we want the register_compression() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_gzip_compression = osmium::io::CompressionFactory::instance().register_compression(osmium::io::file_compression::gzip,
-                [](int fd, fsync sync) { return new osmium::io::GzipCompressor(fd, sync); },
-                [](int fd) { return new osmium::io::GzipDecompressor(fd); },
-                [](const char* buffer, size_t size) { return new osmium::io::GzipBufferDecompressor(buffer, size); }
+            const bool registered_gzip_compression = osrm_osmium::io::CompressionFactory::instance().register_compression(osrm_osmium::io::file_compression::gzip,
+                [](int fd, fsync sync) { return new osrm_osmium::io::GzipCompressor(fd, sync); },
+                [](int fd) { return new osrm_osmium::io::GzipDecompressor(fd); },
+                [](const char* buffer, size_t size) { return new osrm_osmium::io::GzipBufferDecompressor(buffer, size); }
             );
 
             // dummy function to silence the unused variable warning from above
@@ -272,6 +272,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_GZIP_COMPRESSION_HPP

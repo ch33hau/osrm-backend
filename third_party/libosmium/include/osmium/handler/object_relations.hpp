@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/osm/way.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace handler {
 
@@ -50,9 +50,9 @@ namespace osmium {
          * Note: This handler will only work if either all object IDs are
          *       positive or all object IDs are negative.
          */
-        class ObjectRelations : public osmium::handler::Handler {
+        class ObjectRelations : public osrm_osmium::handler::Handler {
 
-            typedef osmium::index::multimap::Multimap<unsigned_object_id_type, unsigned_object_id_type> index_type;
+            typedef osrm_osmium::index::multimap::Multimap<unsigned_object_id_type, unsigned_object_id_type> index_type;
 
             index_type& m_index_n2w;
             index_type& m_index_n2r;
@@ -73,22 +73,22 @@ namespace osmium {
 
             ~ObjectRelations() noexcept = default;
 
-            void way(const osmium::Way& way) {
+            void way(const osrm_osmium::Way& way) {
                 for (const auto& node_ref : way.nodes()) {
                     m_index_n2w.set(node_ref.positive_ref(), way.positive_id());
                 }
             }
 
-            void relation(const osmium::Relation& relation) {
+            void relation(const osrm_osmium::Relation& relation) {
                 for (const auto& member : relation.members()) {
                     switch (member.type()) {
-                        case osmium::item_type::node:
+                        case osrm_osmium::item_type::node:
                             m_index_n2r.set(member.positive_ref(), relation.positive_id());
                             break;
-                        case osmium::item_type::way:
+                        case osrm_osmium::item_type::way:
                             m_index_w2r.set(member.positive_ref(), relation.positive_id());
                             break;
-                        case osmium::item_type::relation:
+                        case osrm_osmium::item_type::relation:
                             m_index_r2r.set(member.positive_ref(), relation.positive_id());
                             break;
                         default:
@@ -101,6 +101,6 @@ namespace osmium {
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_OBJECT_RELATIONS_HPP

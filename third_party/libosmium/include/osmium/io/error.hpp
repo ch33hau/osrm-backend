@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 #include <string>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when some kind of input/output operation failed.
@@ -65,6 +65,6 @@ namespace osmium {
 
     }; // struct unsupported_file_format_error
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_ERROR_HPP

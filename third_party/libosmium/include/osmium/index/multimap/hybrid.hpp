@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/multimap/sparse_mem_array.hpp>
 #include <osmium/index/multimap/sparse_mem_multimap.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -79,7 +79,7 @@ namespace osmium {
                         ++m_begin_extra;
                     } else {
                         ++m_begin_main;
-                        while (m_begin_main != m_end_main && m_begin_main->second == osmium::index::empty_value<TValue>()) { // ignore removed elements
+                        while (m_begin_main != m_end_main && m_begin_main->second == osrm_osmium::index::empty_value<TValue>()) { // ignore removed elements
                             ++m_begin_main;
                         }
                     }
@@ -199,6 +199,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MULTIMAP_HYBRID_HPP

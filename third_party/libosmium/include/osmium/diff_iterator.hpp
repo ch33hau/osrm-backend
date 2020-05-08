@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/osm/diff_object.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     class OSMObject;
 
@@ -49,9 +49,9 @@ namespace osmium {
      * underlying OSMObjects.
      */
     template <typename TBasicIterator>
-    class DiffIterator : public std::iterator<std::input_iterator_tag, const osmium::DiffObject> {
+    class DiffIterator : public std::iterator<std::input_iterator_tag, const osrm_osmium::DiffObject> {
 
-        static_assert(std::is_base_of<osmium::OSMObject, typename TBasicIterator::value_type>::value, "TBasicIterator::value_type must derive from osmium::OSMObject");
+        static_assert(std::is_base_of<osrm_osmium::OSMObject, typename TBasicIterator::value_type>::value, "TBasicIterator::value_type must derive from osrm_osmium::OSMObject");
 
         TBasicIterator m_prev;
         TBasicIterator m_curr;
@@ -59,7 +59,7 @@ namespace osmium {
 
         const TBasicIterator m_end;
 
-        mutable osmium::DiffObject m_diff;
+        mutable osrm_osmium::DiffObject m_diff;
 
         void set_diff() const noexcept {
             assert(m_curr != m_end);
@@ -67,7 +67,7 @@ namespace osmium {
             bool use_curr_for_prev =                    m_prev->type() != m_curr->type() || m_prev->id() != m_curr->id();
             bool use_curr_for_next = m_next == m_end || m_next->type() != m_curr->type() || m_next->id() != m_curr->id();
 
-            m_diff = std::move(osmium::DiffObject{
+            m_diff = std::move(osrm_osmium::DiffObject{
                 *(use_curr_for_prev ? m_curr : m_prev),
                 *m_curr,
                 *(use_curr_for_next ? m_curr : m_next)
@@ -130,6 +130,6 @@ namespace osmium {
         return DiffIterator<TBasicIterator>{begin, end};
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_DIFF_ITERATOR_HPP

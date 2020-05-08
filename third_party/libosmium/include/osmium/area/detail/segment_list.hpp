@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/relation.hpp>
 #include <osmium/osm/way.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -133,9 +133,9 @@ namespace osmium {
                  *
                  * XXX should two nodes with same location be reported?
                  */
-                void extract_segments_from_way(const osmium::Way& way, const char* role) {
-                    osmium::NodeRef last_nr;
-                    for (const osmium::NodeRef& nr : way.nodes()) {
+                void extract_segments_from_way(const osrm_osmium::Way& way, const char* role) {
+                    osrm_osmium::NodeRef last_nr;
+                    for (const osrm_osmium::NodeRef& nr : way.nodes()) {
                         if (last_nr.location() && last_nr.location() != nr.location()) {
                             m_segments.emplace_back(last_nr, nr, role, &way);
                         }
@@ -147,10 +147,10 @@ namespace osmium {
                  * Extract all segments from all ways that make up this
                  * multipolygon relation and add them to the list.
                  */
-                void extract_segments_from_ways(const osmium::Relation& relation, const std::vector<size_t>& members, const osmium::memory::Buffer& in_buffer) {
+                void extract_segments_from_ways(const osrm_osmium::Relation& relation, const std::vector<size_t>& members, const osrm_osmium::memory::Buffer& in_buffer) {
                     auto member_it = relation.members().begin();
                     for (size_t offset : members) {
-                        const osmium::Way& way = in_buffer.get<const osmium::Way>(offset);
+                        const osrm_osmium::Way& way = in_buffer.get<const osrm_osmium::Way>(offset);
                         extract_segments_from_way(way, member_it->role());
                         ++member_it;
                     }
@@ -182,7 +182,7 @@ namespace osmium {
                  *                         reported to this object.
                  * @returns true if there are intersections.
                  */
-                bool find_intersections(osmium::area::ProblemReporter* problem_reporter) const {
+                bool find_intersections(osrm_osmium::area::ProblemReporter* problem_reporter) const {
                     if (m_segments.empty()) {
                         return false;
                     }
@@ -201,7 +201,7 @@ namespace osmium {
                             }
 
                             if (y_range_overlap(s1, s2)) {
-                                osmium::Location intersection = calculate_intersection(s1, s2);
+                                osrm_osmium::Location intersection = calculate_intersection(s1, s2);
                                 if (intersection) {
                                     found_intersections = true;
                                     if (m_debug) {
@@ -224,6 +224,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_DETAIL_SEGMENT_LIST_HPP

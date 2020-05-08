@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/tags/filter.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace tags {
 
@@ -53,6 +53,6 @@ namespace osmium {
 
     } // namespace tags
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_TAGS_REGEX_FILTER_HPP

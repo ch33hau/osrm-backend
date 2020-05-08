@@ -30,35 +30,35 @@ int main(int argc, char* argv[]) {
     }
 
     // The input file, deduce file format from file suffix
-    osmium::io::File infile(argv[1]);
+    osrm_osmium::io::File infile(argv[1]);
 
     // The output file, force class XML OSM file format
-    osmium::io::File outfile(argv[2], "osm");
+    osrm_osmium::io::File outfile(argv[2], "osm");
 
     // Initialize Reader for the input file.
     // Read only changesets (will ignore nodes, ways, and
     // relations if there are any).
-    osmium::io::Reader reader(infile, osmium::osm_entity_bits::changeset);
+    osrm_osmium::io::Reader reader(infile, osrm_osmium::osm_entity_bits::changeset);
 
     // Get the header from the input file
-    osmium::io::Header header = reader.header();
+    osrm_osmium::io::Header header = reader.header();
 
     // Initialize writer for the output file. Use the header from the input
     // file for the output file. This will copy over some header information.
     // The last parameter will tell the writer that it is allowed to overwrite
     // an existing file. Without it, it will refuse to do so.
-    osmium::io::Writer writer(outfile, header, osmium::io::overwrite::allow);
+    osrm_osmium::io::Writer writer(outfile, header, osrm_osmium::io::overwrite::allow);
 
     // Create range of input iterators that will iterator over all changesets
     // delivered from input file through the "reader".
-    auto input_range = osmium::io::make_input_iterator_range<osmium::Changeset>(reader);
+    auto input_range = osrm_osmium::io::make_input_iterator_range<osrm_osmium::Changeset>(reader);
 
     // Create an output iterator writing through the "writer" object to the
     // output file.
-    auto output_iterator = osmium::io::make_output_iterator(writer);
+    auto output_iterator = osrm_osmium::io::make_output_iterator(writer);
 
     // Copy all changesets from input to output that have at least one comment.
-    std::copy_if(input_range.begin(), input_range.end(), output_iterator, [](const osmium::Changeset& changeset) {
+    std::copy_if(input_range.begin(), input_range.end(), output_iterator, [](const osrm_osmium::Changeset& changeset) {
         return changeset.num_comments() > 0;
     });
 

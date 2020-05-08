@@ -33,7 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- The new handler osmium::handler::CheckOrder can be used to check that a
+- The new handler osrm_osmium::handler::CheckOrder can be used to check that a
   file is properly ordered.
 - Add new method to build OSM nodes, ways, relations, changesets, and areas
   in buffers that wraps the older Builder classes. The new code is much easier
@@ -48,7 +48,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- osmium::Box::extend() function now ignores invalid locations.
+- osrm_osmium::Box::extend() function now ignores invalid locations.
 - Install of external library headers.
 - Check way has at least one node before calling `is_closed()` in area
   assembler.
@@ -79,11 +79,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- `osmium::make_diff_iterator()` helper function.
+- `osrm_osmium::make_diff_iterator()` helper function.
 
 ### Changed
 
-- Deprecated `osmium::Buffer::set_full_callback()`.
+- Deprecated `osrm_osmium::Buffer::set_full_callback()`.
 - Removed DataFile class which was never used anywhere.
 - Removed unused and obscure `Buffer::value_type` typedef.
 
@@ -120,7 +120,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Helper functions to make input iterator ranges and output iterators.
 - Add support for reading o5m and o5c files.
-- Option for osmium::io::Writer to fsync file after writing.
+- Option for osrm_osmium::io::Writer to fsync file after writing.
 - Lots of internal asserts() and other robustness checks.
 
 ### Changed
@@ -134,8 +134,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   more.
 - Reader now throws when trying to read after eof or an error.
 - I/O functions that used to throw std::runtime_error now throw
-  osmium::io_error or derived.
-- Optional parameters on osmium::io::Writer now work in any order.
+  osrm_osmium::io_error or derived.
+- Optional parameters on osrm_osmium::io::Writer now work in any order.
 
 ### Fixed
 
@@ -184,7 +184,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Allow instantiating osmium::geom::GEOSFactory with existing GEOS factory.
+- Allow instantiating osrm_osmium::geom::GEOSFactory with existing GEOS factory.
 - Low-level functions to support generating a architecture- and endian-
   independant CRC from OSM data. This is intended to be uses with boost::crc.
 - Add new debug output format. This format is not intended to be read
@@ -236,7 +236,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `MemoryMapping` and `TypedMemoryMapping` helper classes.
 - `close()` function to `mmap_vector_base` class.
 - Function on `Buffer` class to get iterator to specific offset.
-- Explicit cast operator from `osmium::Timestamp` to `uint32_t`.
+- Explicit cast operator from `osrm_osmium::Timestamp` to `uint32_t`.
 
 ### Changed
 

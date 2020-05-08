@@ -43,7 +43,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/item.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -52,20 +52,20 @@ namespace osmium {
          * source. It hides all the buffer handling and makes the contents of a
          * source accessible as a normal STL input iterator.
          */
-        template <typename TSource, typename TItem = osmium::memory::Item>
+        template <typename TSource, typename TItem = osrm_osmium::memory::Item>
         class InputIterator {
 
-            static_assert(std::is_base_of<osmium::memory::Item, TItem>::value, "TItem must derive from osmium::buffer::Item");
+            static_assert(std::is_base_of<osrm_osmium::memory::Item, TItem>::value, "TItem must derive from osrm_osmium::buffer::Item");
 
-            typedef typename osmium::memory::Buffer::t_iterator<TItem> item_iterator;
+            typedef typename osrm_osmium::memory::Buffer::t_iterator<TItem> item_iterator;
 
             TSource* m_source;
-            std::shared_ptr<osmium::memory::Buffer> m_buffer;
+            std::shared_ptr<osrm_osmium::memory::Buffer> m_buffer;
             item_iterator m_iter {};
 
             void update_buffer() {
                 do {
-                    m_buffer = std::make_shared<osmium::memory::Buffer>(std::move(m_source->read()));
+                    m_buffer = std::make_shared<osrm_osmium::memory::Buffer>(std::move(m_source->read()));
                     if (!m_buffer || !*m_buffer) { // end of input
                         m_source = nullptr;
                         m_buffer.reset();
@@ -133,7 +133,7 @@ namespace osmium {
 
         }; // class InputIterator
 
-        template <typename TSource, typename TItem = osmium::memory::Item>
+        template <typename TSource, typename TItem = osrm_osmium::memory::Item>
         class InputIteratorRange {
 
             InputIterator<TSource, TItem> m_begin;
@@ -173,6 +173,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_INPUT_ITERATOR_HPP

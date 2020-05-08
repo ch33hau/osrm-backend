@@ -5,8 +5,8 @@
 
 #include <string>
 
-// Forward Declaration to allow usage of external osmium::Way
-namespace osmium
+// Forward Declaration to allow usage of external osrm_osmium::Way
+namespace osrm_osmium
 {
 class Way;
 }
@@ -69,7 +69,7 @@ struct RoadClassificationData
 {
     FunctionalRoadClass road_class = FunctionalRoadClass::UNKNOWN;
 
-    void augment(const osmium::Way &way);
+    void augment(const osrm_osmium::Way &way);
 };
 
 inline bool operator==(const RoadClassificationData lhs, const RoadClassificationData rhs)

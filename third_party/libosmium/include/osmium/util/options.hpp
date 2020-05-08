@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <utility>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace util {
 
@@ -200,6 +200,6 @@ namespace osmium {
 
     } // namespace util
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_OPTIONS_HPP

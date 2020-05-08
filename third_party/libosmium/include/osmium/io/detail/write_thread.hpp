@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/io/detail/queue_util.hpp>
 #include <osmium/thread/util.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -56,13 +56,13 @@ namespace osmium {
             class WriteThread {
 
                 queue_wrapper<std::string> m_queue;
-                std::unique_ptr<osmium::io::Compressor> m_compressor;
+                std::unique_ptr<osrm_osmium::io::Compressor> m_compressor;
                 std::promise<bool> m_promise;
 
             public:
 
                 WriteThread(future_string_queue_type& input_queue,
-                            std::unique_ptr<osmium::io::Compressor>&& compressor,
+                            std::unique_ptr<osrm_osmium::io::Compressor>&& compressor,
                             std::promise<bool>&& promise) :
                     m_queue(input_queue),
                     m_compressor(std::move(compressor)),
@@ -78,7 +78,7 @@ namespace osmium {
                 ~WriteThread() noexcept = default;
 
                 void operator()() {
-                    osmium::thread::set_thread_name("_osmium_write");
+                    osrm_osmium::thread::set_thread_name("_osmium_write");
 
                     try {
                         while (true) {
@@ -102,6 +102,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_WRITE_THREAD_HPP

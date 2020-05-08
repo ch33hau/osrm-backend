@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/compatibility.hpp>
 #include <osmium/osm/location.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Bounding box. A box is defined by two locations (bottom left location
@@ -49,8 +49,8 @@ namespace osmium {
      */
     class Box {
 
-        osmium::Location m_bottom_left;
-        osmium::Location m_top_right;
+        osrm_osmium::Location m_bottom_left;
+        osrm_osmium::Location m_top_right;
 
     public:
 
@@ -83,7 +83,7 @@ namespace osmium {
          *      the top right location. Same coordinates for bottom/top or
          *      left/right are also okay.
          */
-        Box(const osmium::Location& bottom_left, const osmium::Location& top_right) :
+        Box(const osrm_osmium::Location& bottom_left, const osrm_osmium::Location& top_right) :
             m_bottom_left(bottom_left),
             m_top_right(top_right) {
             assert(
@@ -192,7 +192,7 @@ namespace osmium {
          * @pre Location must be defined.
          * @pre Box must be defined.
          */
-        bool contains(const osmium::Location& location) const noexcept {
+        bool contains(const osrm_osmium::Location& location) const noexcept {
             assert(bottom_left());
             assert(top_right());
             assert(location);
@@ -206,7 +206,7 @@ namespace osmium {
          * Note that this measure isn't very useful if you want to know the
          * real-world size of the bounding box!
          *
-         * @throws osmium::invalid_location unless all coordinates are valid.
+         * @throws osrm_osmium::invalid_location unless all coordinates are valid.
          */
         double size() const {
             return (m_top_right.lon() - m_bottom_left.lon()) *
@@ -231,7 +231,7 @@ namespace osmium {
      * @returns Reference to basic_ostream given as first parameter.
      */
     template <typename TChar, typename TTraits>
-    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osmium::Box& box) {
+    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osrm_osmium::Box& box) {
         if (box) {
             out << '('
                 << box.bottom_left().lon()
@@ -248,6 +248,6 @@ namespace osmium {
         return out;
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_BOX_HPP

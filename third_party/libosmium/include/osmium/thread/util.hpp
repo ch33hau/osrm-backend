@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 # include <sys/prctl.h>
 #endif
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace thread {
 
@@ -111,6 +111,6 @@ namespace osmium {
 
     } // namespace thread
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif //  OSMIUM_THREAD_UTIL_HPP

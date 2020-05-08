@@ -40,20 +40,20 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_DENSE_MMAP_ARRAY
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
         namespace map {
 
             template <typename TId, typename TValue>
-            using DenseMmapArray = VectorBasedDenseMap<osmium::detail::mmap_vector_anon<TValue>, TId, TValue>;
+            using DenseMmapArray = VectorBasedDenseMap<osrm_osmium::detail::mmap_vector_anon<TValue>, TId, TValue>;
 
         } // namespace map
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // __linux__
 

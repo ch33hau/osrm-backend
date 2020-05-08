@@ -72,7 +72,7 @@ void RestrictionParser::ReadRestrictionExceptions(lua_State *lua_state)
  * in the corresponding profile.
  */
 boost::optional<InputRestrictionContainer>
-RestrictionParser::TryParse(const osmium::Relation &relation) const
+RestrictionParser::TryParse(const osrm_osmium::Relation &relation) const
 {
     // return if turn restrictions should be ignored
     if (!use_turn_restrictions)
@@ -80,13 +80,13 @@ RestrictionParser::TryParse(const osmium::Relation &relation) const
         return {};
     }
 
-    osmium::tags::KeyPrefixFilter filter(false);
+    osrm_osmium::tags::KeyPrefixFilter filter(false);
     filter.add(true, "restriction");
 
-    const osmium::TagList &tag_list = relation.tags();
+    const osrm_osmium::TagList &tag_list = relation.tags();
 
-    osmium::tags::KeyPrefixFilter::iterator fi_begin(filter, tag_list.begin(), tag_list.end());
-    osmium::tags::KeyPrefixFilter::iterator fi_end(filter, tag_list.end(), tag_list.end());
+    osrm_osmium::tags::KeyPrefixFilter::iterator fi_begin(filter, tag_list.begin(), tag_list.end());
+    osrm_osmium::tags::KeyPrefixFilter::iterator fi_end(filter, tag_list.end(), tag_list.end());
 
     // if it's a restriction, continue;
     if (std::distance(fi_begin, fi_end) == 0)
@@ -142,7 +142,7 @@ RestrictionParser::TryParse(const osmium::Relation &relation) const
 
         switch (member.type())
         {
-        case osmium::item_type::node:
+        case osrm_osmium::item_type::node:
             // Make sure nodes appear only in the role if a via node
             if (0 == strcmp("from", role) || 0 == strcmp("to", role))
             {
@@ -154,7 +154,7 @@ RestrictionParser::TryParse(const osmium::Relation &relation) const
             restriction_container.restriction.via.node = member.ref();
             break;
 
-        case osmium::item_type::way:
+        case osrm_osmium::item_type::way:
             BOOST_ASSERT(0 == strcmp("from", role) || 0 == strcmp("to", role) ||
                          0 == strcmp("via", role));
             if (0 == strcmp("from", role))
@@ -171,7 +171,7 @@ RestrictionParser::TryParse(const osmium::Relation &relation) const
             //     restriction_container.restriction.via.way = member.ref();
             // }
             break;
-        case osmium::item_type::relation:
+        case osrm_osmium::item_type::relation:
             // not yet supported, but who knows what the future holds...
             break;
         default:

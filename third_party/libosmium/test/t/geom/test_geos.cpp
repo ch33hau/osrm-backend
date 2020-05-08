@@ -6,18 +6,18 @@
 #include "wnl_helper.hpp"
 
 TEST_CASE("GEOS geometry factory - create point") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    std::unique_ptr<geos::geom::Point> point {factory.create_point(osmium::Location(3.2, 4.2))};
+    std::unique_ptr<geos::geom::Point> point {factory.create_point(osrm_osmium::Location(3.2, 4.2))};
     REQUIRE(3.2 == point->getX());
     REQUIRE(4.2 == point->getY());
     REQUIRE(-1 == point->getSRID());
 }
 
 TEST_CASE("GEOS geometry factory - create point with non-default srid") {
-    osmium::geom::GEOSFactory<> factory(4326);
+    osrm_osmium::geom::GEOSFactory<> factory(4326);
 
-    std::unique_ptr<geos::geom::Point> point {factory.create_point(osmium::Location(3.2, 4.2))};
+    std::unique_ptr<geos::geom::Point> point {factory.create_point(osrm_osmium::Location(3.2, 4.2))};
     REQUIRE(3.2 == point->getX());
     REQUIRE(4.2 == point->getY());
     REQUIRE(4326 == point->getSRID());
@@ -25,24 +25,24 @@ TEST_CASE("GEOS geometry factory - create point with non-default srid") {
 
 TEST_CASE("GEOS geometry factory - create point with externally created GEOS factory") {
     geos::geom::GeometryFactory geos_factory;
-    osmium::geom::GEOSFactory<> factory(geos_factory);
+    osrm_osmium::geom::GEOSFactory<> factory(geos_factory);
 
-    std::unique_ptr<geos::geom::Point> point {factory.create_point(osmium::Location(3.2, 4.2))};
+    std::unique_ptr<geos::geom::Point> point {factory.create_point(osrm_osmium::Location(3.2, 4.2))};
     REQUIRE(3.2 == point->getX());
     REQUIRE(4.2 == point->getY());
     REQUIRE(0 == point->getSRID());
 }
 
 TEST_CASE("GEOS geometry factory - can not create from invalid location") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    REQUIRE_THROWS_AS(factory.create_point(osmium::Location()), osmium::invalid_location);
+    REQUIRE_THROWS_AS(factory.create_point(osrm_osmium::Location()), osrm_osmium::invalid_location);
 }
 
 TEST_CASE("GEOS geometry factory - create linestring") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
     auto &wnl = create_test_wnl_okay(buffer);
 
     SECTION("from way node list") {
@@ -56,7 +56,7 @@ TEST_CASE("GEOS geometry factory - create linestring") {
     }
 
     SECTION("without duplicates and backwards") {
-        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::unique, osmium::geom::direction::backward)};
+        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::unique, osrm_osmium::geom::direction::backward)};
         REQUIRE(3 == linestring->getNumPoints());
         std::unique_ptr<geos::geom::Point> p0 = std::unique_ptr<geos::geom::Point>(linestring->getPointN(0));
         REQUIRE(3.6 == p0->getX());
@@ -65,14 +65,14 @@ TEST_CASE("GEOS geometry factory - create linestring") {
     }
 
     SECTION("with duplicates") {
-        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::all)};
+        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::all)};
         REQUIRE(4 == linestring->getNumPoints());
         std::unique_ptr<geos::geom::Point> p0 = std::unique_ptr<geos::geom::Point>(linestring->getPointN(0));
         REQUIRE(3.2 == p0->getX());
     }
 
     SECTION("with duplicates and backwards") {
-        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::all, osmium::geom::direction::backward)};
+        std::unique_ptr<geos::geom::LineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::all, osrm_osmium::geom::direction::backward)};
         REQUIRE(4 == linestring->getNumPoints());
         std::unique_ptr<geos::geom::Point> p0 = std::unique_ptr<geos::geom::Point>(linestring->getPointN(0));
         REQUIRE(3.6 == p0->getX());
@@ -80,10 +80,10 @@ TEST_CASE("GEOS geometry factory - create linestring") {
 }
 
 TEST_CASE("GEOS geometry factory - create area with one outer and no inner rings") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_1outer_0inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_1outer_0inner(buffer);
 
     std::unique_ptr<geos::geom::MultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(1 == mp->getNumGeometries());
@@ -99,10 +99,10 @@ TEST_CASE("GEOS geometry factory - create area with one outer and no inner rings
 }
 
 TEST_CASE("GEOS geometry factory - create area with one outer and one inner ring") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_1outer_1inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_1outer_1inner(buffer);
 
     std::unique_ptr<geos::geom::MultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(1 == mp->getNumGeometries());
@@ -118,10 +118,10 @@ TEST_CASE("GEOS geometry factory - create area with one outer and one inner ring
 }
 
 TEST_CASE("GEOS geometry factory - create area with two outer and two inner rings") {
-    osmium::geom::GEOSFactory<> factory;
+    osrm_osmium::geom::GEOSFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_2outer_2inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_2outer_2inner(buffer);
 
     std::unique_ptr<geos::geom::MultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(2 == mp->getNumGeometries());

@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -57,10 +57,10 @@ namespace osmium {
         protected:
 
             // Type of object we are currently working on
-            osmium::item_type m_object_type;
+            osrm_osmium::item_type m_object_type;
 
             // ID of the relation/way we are currently working on
-            osmium::object_id_type m_object_id;
+            osrm_osmium::object_id_type m_object_id;
 
         public:
 
@@ -74,7 +74,7 @@ namespace osmium {
              * @param object_type The type of the object.
              * @param object_id The ID of the object.
              */
-            void set_object(osmium::item_type object_type, osmium::object_id_type object_id) noexcept {
+            void set_object(osrm_osmium::item_type object_type, osrm_osmium::object_id_type object_id) noexcept {
                 m_object_type = object_type;
                 m_object_id = object_id;
             }
@@ -91,7 +91,7 @@ namespace osmium {
              * @param node_id2       ID of the second node.
              * @param location       Location of both nodes.
              */
-            virtual void report_duplicate_node(osmium::object_id_type node_id1, osmium::object_id_type node_id2, osmium::Location location) {
+            virtual void report_duplicate_node(osrm_osmium::object_id_type node_id1, osrm_osmium::object_id_type node_id2, osrm_osmium::Location location) {
             }
 
             /**
@@ -105,8 +105,8 @@ namespace osmium {
              * @param way2_seg_end   Location where the segment of the second way with the intersection ends
              * @param intersection   Location of the intersection. This might be slightly off the correct location due to rounding.
              */
-            virtual void report_intersection(osmium::object_id_type way1_id, osmium::Location way1_seg_start, osmium::Location way1_seg_end,
-                                             osmium::object_id_type way2_id, osmium::Location way2_seg_start, osmium::Location way2_seg_end, osmium::Location intersection) {
+            virtual void report_intersection(osrm_osmium::object_id_type way1_id, osrm_osmium::Location way1_seg_start, osrm_osmium::Location way1_seg_end,
+                                             osrm_osmium::object_id_type way2_id, osrm_osmium::Location way2_seg_start, osrm_osmium::Location way2_seg_end, osrm_osmium::Location intersection) {
             }
 
             /**
@@ -115,7 +115,7 @@ namespace osmium {
              * @param end1           Location of the first open end.
              * @param end2           Location of the second open end.
              */
-            virtual void report_ring_not_closed(osmium::Location end1, osmium::Location end2) {
+            virtual void report_ring_not_closed(osrm_osmium::Location end1, osrm_osmium::Location end2) {
             }
 
             /**
@@ -125,7 +125,7 @@ namespace osmium {
              * @param seg_start      Start of the segment with the wrong role.
              * @param seg_end        End of the segment with the wrong role.
              */
-            virtual void report_role_should_be_outer(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) {
+            virtual void report_role_should_be_outer(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) {
             }
 
             /**
@@ -135,7 +135,7 @@ namespace osmium {
              * @param seg_start      Start of the segment with the wrong role.
              * @param seg_end        End of the segment with the wrong role.
              */
-            virtual void report_role_should_be_inner(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) {
+            virtual void report_role_should_be_inner(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) {
             }
 
 #pragma GCC diagnostic pop
@@ -144,6 +144,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_PROBLEM_REPORTER_HPP

@@ -17,9 +17,9 @@
 #include <osmium/io/xml_input.hpp>
 #include <osmium/visitor.hpp>
 
-typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
+typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
-typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 
 struct less_charptr {
 
@@ -31,7 +31,7 @@ struct less_charptr {
 
 typedef std::map<const char*, const char*, less_charptr> tagmap_type;
 
-inline tagmap_type create_map(const osmium::TagList& taglist) {
+inline tagmap_type create_map(const osrm_osmium::TagList& taglist) {
     tagmap_type map;
 
     for (auto& tag : taglist) {
@@ -41,14 +41,14 @@ inline tagmap_type create_map(const osmium::TagList& taglist) {
     return map;
 }
 
-class TestHandler : public osmium::handler::Handler {
+class TestHandler : public osrm_osmium::handler::Handler {
 
     gdalcpp::Layer m_layer_point;
     gdalcpp::Layer m_layer_lines;
     gdalcpp::Layer m_layer_mpoly;
 
-    osmium::geom::OGRFactory<> m_ogr_factory;
-    osmium::geom::WKTFactory<> m_wkt_factory;
+    osrm_osmium::geom::OGRFactory<> m_ogr_factory;
+    osrm_osmium::geom::WKTFactory<> m_wkt_factory;
 
     std::ofstream m_out;
 
@@ -76,25 +76,25 @@ public:
         m_out << "\n]\n";
     }
 
-    void node(const osmium::Node& node) {
+    void node(const osrm_osmium::Node& node) {
         gdalcpp::Feature feature(m_layer_point, m_ogr_factory.create_point(node));
         feature.set_field("id", static_cast<double>(node.id()));
         feature.set_field("type", node.tags().get_value_by_key("type"));
         feature.add_to_layer();
     }
 
-    void way(const osmium::Way& way) {
+    void way(const osrm_osmium::Way& way) {
         try {
             gdalcpp::Feature feature(m_layer_lines, m_ogr_factory.create_linestring(way));
             feature.set_field("id", static_cast<double>(way.id()));
             feature.set_field("type", way.tags().get_value_by_key("type"));
             feature.add_to_layer();
-        } catch (osmium::geometry_error&) {
+        } catch (osrm_osmium::geometry_error&) {
             std::cerr << "Ignoring illegal geometry for way " << way.id() << ".\n";
         }
     }
 
-    void area(const osmium::Area& area) {
+    void area(const osrm_osmium::Area& area) {
         if (m_first_out) {
             m_out << "[\n";
             m_first_out = false;
@@ -117,7 +117,7 @@ public:
                 m_out << '"' << tag.first << "\": \"" << tag.second << '"';
             }
             m_out << "}\n}";
-        } catch (osmium::geometry_error&) {
+        } catch (osrm_osmium::geometry_error&) {
             m_out << "INVALID\"\n}";
         }
         try {
@@ -132,7 +132,7 @@ public:
             }
             feature.set_field("from_type", from_type.c_str());
             feature.add_to_layer();
-        } catch (osmium::geometry_error&) {
+        } catch (osrm_osmium::geometry_error&) {
             std::cerr << "Ignoring illegal geometry for area " << area.id() << " created from " << (area.from_way() ? "way" : "relation") << " with id=" << area.orig_id() << ".\n";
         }
     }
@@ -154,13 +154,13 @@ int main(int argc, char* argv[]) {
     CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
     gdalcpp::Dataset dataset{output_format, output_filename, gdalcpp::SRS{}, { "SPATIALITE=TRUE" }};
 
-    osmium::area::ProblemReporterOGR problem_reporter(dataset);
-    osmium::area::Assembler::config_type assembler_config(&problem_reporter);
+    osrm_osmium::area::ProblemReporterOGR problem_reporter(dataset);
+    osrm_osmium::area::Assembler::config_type assembler_config(&problem_reporter);
     assembler_config.enable_debug_output();
-    osmium::area::MultipolygonCollector<osmium::area::Assembler> collector(assembler_config);
+    osrm_osmium::area::MultipolygonCollector<osrm_osmium::area::Assembler> collector(assembler_config);
 
     std::cerr << "Pass 1...\n";
-    osmium::io::Reader reader1(input_filename);
+    osrm_osmium::io::Reader reader1(input_filename);
     collector.read_relations(reader1);
     reader1.close();
     std::cerr << "Pass 1 done\n";
@@ -172,9 +172,9 @@ int main(int argc, char* argv[]) {
     TestHandler test_handler(dataset);
 
     std::cerr << "Pass 2...\n";
-    osmium::io::Reader reader2(input_filename);
-    osmium::apply(reader2, location_handler, test_handler, collector.handler([&test_handler](const osmium::memory::Buffer& area_buffer) {
-        osmium::apply(area_buffer, test_handler);
+    osrm_osmium::io::Reader reader2(input_filename);
+    osrm_osmium::apply(reader2, location_handler, test_handler, collector.handler([&test_handler](const osrm_osmium::memory::Buffer& area_buffer) {
+        osrm_osmium::apply(area_buffer, test_handler);
     }));
     reader2.close();
     std::cerr << "Pass 2 done\n";

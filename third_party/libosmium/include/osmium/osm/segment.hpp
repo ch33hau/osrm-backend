@@ -39,19 +39,19 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * A Segment is the directed connection between two Locations.
      */
     class Segment {
 
-        osmium::Location m_first;
-        osmium::Location m_second;
+        osrm_osmium::Location m_first;
+        osrm_osmium::Location m_second;
 
     public:
 
-        explicit constexpr Segment(const osmium::Location& location1, const osmium::Location& location2) noexcept :
+        explicit constexpr Segment(const osrm_osmium::Location& location1, const osrm_osmium::Location& location2) noexcept :
             m_first(location1),
             m_second(location2) {
         }
@@ -65,12 +65,12 @@ namespace osmium {
         ~Segment() = default;
 
         /// Return first Location of Segment.
-        constexpr osmium::Location first() const noexcept {
+        constexpr osrm_osmium::Location first() const noexcept {
             return m_first;
         }
 
         /// Return second Location of Segment.
-        constexpr osmium::Location second() const noexcept {
+        constexpr osrm_osmium::Location second() const noexcept {
             return m_second;
         }
 
@@ -96,10 +96,10 @@ namespace osmium {
      * Output Segment to a stream.
      */
     template <typename TChar, typename TTraits>
-    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osmium::Segment& segment) {
+    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osrm_osmium::Segment& segment) {
         return out << segment.first() << "->" << segment.second();
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_SEGMENT_HPP

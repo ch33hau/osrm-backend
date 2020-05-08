@@ -9,14 +9,14 @@
 #include <osmium/io/xml_input.hpp>
 #include <osmium/io/xml_output.hpp>
 
-class MockCompressor : public osmium::io::Compressor {
+class MockCompressor : public osrm_osmium::io::Compressor {
 
     std::string m_fail_in;
 
 public:
 
     MockCompressor(const std::string& fail_in) :
-        Compressor(osmium::io::fsync::no),
+        Compressor(osrm_osmium::io::fsync::no),
         m_fail_in(fail_in) {
         if (m_fail_in == "constructor") {
             throw std::logic_error("constructor");
@@ -43,20 +43,20 @@ TEST_CASE("Write with mock compressor") {
 
     std::string fail_in;
 
-    osmium::io::CompressionFactory::instance().register_compression(osmium::io::file_compression::gzip,
-        [&](int, osmium::io::fsync) { return new MockCompressor(fail_in); },
+    osrm_osmium::io::CompressionFactory::instance().register_compression(osrm_osmium::io::file_compression::gzip,
+        [&](int, osrm_osmium::io::fsync) { return new MockCompressor(fail_in); },
         [](int) { return nullptr; },
         [](const char*, size_t) { return nullptr; }
     );
 
-    osmium::io::Header header;
+    osrm_osmium::io::Header header;
     header.set("generator", "test_writer_with_mock_compression.cpp");
 
-    osmium::io::Reader reader(with_data_dir("t/io/data.osm"));
-    osmium::memory::Buffer buffer = reader.read();
+    osrm_osmium::io::Reader reader(with_data_dir("t/io/data.osm"));
+    osrm_osmium::memory::Buffer buffer = reader.read();
     REQUIRE(buffer);
     REQUIRE(buffer.committed() > 0);
-    auto num = std::distance(buffer.cbegin<osmium::OSMObject>(), buffer.cend<osmium::OSMObject>());
+    auto num = std::distance(buffer.cbegin<osrm_osmium::OSMObject>(), buffer.cend<osrm_osmium::OSMObject>());
     REQUIRE(num > 0);
 
     SECTION("fail on construction") {
@@ -64,7 +64,7 @@ TEST_CASE("Write with mock compressor") {
         fail_in = "constructor";
 
         REQUIRE_THROWS_AS({
-            osmium::io::Writer writer("test-writer-mock-fail-on-construction.osm.gz", header, osmium::io::overwrite::allow);
+            osrm_osmium::io::Writer writer("test-writer-mock-fail-on-construction.osm.gz", header, osrm_osmium::io::overwrite::allow);
             writer(std::move(buffer));
             writer.close();
         }, std::logic_error);
@@ -76,7 +76,7 @@ TEST_CASE("Write with mock compressor") {
         fail_in = "write";
 
         REQUIRE_THROWS_AS({
-            osmium::io::Writer writer("test-writer-mock-fail-on-write.osm.gz", header, osmium::io::overwrite::allow);
+            osrm_osmium::io::Writer writer("test-writer-mock-fail-on-write.osm.gz", header, osrm_osmium::io::overwrite::allow);
             writer(std::move(buffer));
             writer.close();
         }, std::logic_error);
@@ -88,7 +88,7 @@ TEST_CASE("Write with mock compressor") {
         fail_in = "close";
 
         REQUIRE_THROWS_AS({
-            osmium::io::Writer writer("test-writer-mock-fail-on-close.osm.gz", header, osmium::io::overwrite::allow);
+            osrm_osmium::io::Writer writer("test-writer-mock-fail-on-close.osm.gz", header, osrm_osmium::io::overwrite::allow);
             writer(std::move(buffer));
             writer.close();
         }, std::logic_error);

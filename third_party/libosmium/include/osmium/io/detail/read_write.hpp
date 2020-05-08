@@ -48,7 +48,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/io/writer_options.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -67,7 +67,7 @@ namespace osmium {
              * @returns File descriptor of open file.
              * @throws system_error if the file can't be opened.
              */
-            inline int open_for_writing(const std::string& filename, osmium::io::overwrite allow_overwrite = osmium::io::overwrite::no) {
+            inline int open_for_writing(const std::string& filename, osrm_osmium::io::overwrite allow_overwrite = osrm_osmium::io::overwrite::no) {
                 if (filename == "" || filename == "-") {
 #ifdef _WIN32
                     _setmode(1, _O_BINARY);
@@ -76,7 +76,7 @@ namespace osmium {
                 }
 
                 int flags = O_WRONLY | O_CREAT;
-                if (allow_overwrite == osmium::io::overwrite::allow) {
+                if (allow_overwrite == osrm_osmium::io::overwrite::allow) {
                     flags |= O_TRUNC;
                 } else {
                     flags |= O_EXCL;
@@ -175,6 +175,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_READ_WRITE_HPP

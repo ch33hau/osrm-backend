@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <type_traits>
 #include <vector>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -80,6 +80,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_BOOL_VECTOR_HPP

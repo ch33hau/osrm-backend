@@ -9,7 +9,7 @@
 #include <vector>
 
 struct lua_State;
-namespace osmium
+namespace osrm_osmium
 {
 class Relation;
 }
@@ -43,7 +43,7 @@ class RestrictionParser
 {
   public:
     RestrictionParser(lua_State *lua_state, const ProfileProperties &properties);
-    boost::optional<InputRestrictionContainer> TryParse(const osmium::Relation &relation) const;
+    boost::optional<InputRestrictionContainer> TryParse(const osrm_osmium::Relation &relation) const;
 
   private:
     void ReadRestrictionExceptions(lua_State *lua_state);

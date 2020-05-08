@@ -43,9 +43,9 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/item.hpp>
 #include <osmium/osm/item_type.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
-    class Tag : public osmium::memory::detail::ItemHelper {
+    class Tag : public osrm_osmium::memory::detail::ItemHelper {
 
         Tag(const Tag&) = delete;
         Tag(Tag&&) = delete;
@@ -54,7 +54,7 @@ namespace osmium {
         Tag& operator=(Tag&&) = delete;
 
         template <typename TMember>
-        friend class osmium::memory::CollectionIterator;
+        friend class osrm_osmium::memory::CollectionIterator;
 
         static unsigned char* after_null(unsigned char* ptr) {
             return reinterpret_cast<unsigned char*>(std::strchr(reinterpret_cast<char*>(ptr), 0) + 1);
@@ -102,14 +102,14 @@ namespace osmium {
         return out << tag.key() << '=' << tag.value();
     }
 
-    class TagList : public osmium::memory::Collection<Tag, osmium::item_type::tag_list> {
+    class TagList : public osrm_osmium::memory::Collection<Tag, osrm_osmium::item_type::tag_list> {
 
     public:
 
         typedef size_t size_type;
 
         TagList() :
-            osmium::memory::Collection<Tag, osmium::item_type::tag_list>() {
+            osrm_osmium::memory::Collection<Tag, osrm_osmium::item_type::tag_list>() {
         }
 
         size_type size() const noexcept {
@@ -132,8 +132,8 @@ namespace osmium {
 
     }; // class TagList
 
-    static_assert(sizeof(TagList) % osmium::memory::align_bytes == 0, "Class osmium::TagList has wrong size to be aligned properly!");
+    static_assert(sizeof(TagList) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::TagList has wrong size to be aligned properly!");
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_TAG_HPP

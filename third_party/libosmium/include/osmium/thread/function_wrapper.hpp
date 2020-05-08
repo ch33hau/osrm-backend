@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <algorithm>
 #include <memory>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace thread {
 
@@ -118,6 +118,6 @@ namespace osmium {
 
     } // namespace thread
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_THREAD_FUNCTION_WRAPPER_HPP

@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 #include <string>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when a projection object can not be initialized or the
@@ -70,6 +70,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_UTIL_HPP

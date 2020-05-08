@@ -20,19 +20,19 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    osmium::osm_entity_bits::type read_types = osmium::osm_entity_bits::all;
+    osrm_osmium::osm_entity_bits::type read_types = osrm_osmium::osm_entity_bits::all;
 
     if (argc == 3) {
-        read_types = osmium::osm_entity_bits::nothing;
+        read_types = osrm_osmium::osm_entity_bits::nothing;
         std::string types = argv[2];
-        if (types.find('n') != std::string::npos) read_types |= osmium::osm_entity_bits::node;
-        if (types.find('w') != std::string::npos) read_types |= osmium::osm_entity_bits::way;
-        if (types.find('r') != std::string::npos) read_types |= osmium::osm_entity_bits::relation;
-        if (types.find('c') != std::string::npos) read_types |= osmium::osm_entity_bits::changeset;
+        if (types.find('n') != std::string::npos) read_types |= osrm_osmium::osm_entity_bits::node;
+        if (types.find('w') != std::string::npos) read_types |= osrm_osmium::osm_entity_bits::way;
+        if (types.find('r') != std::string::npos) read_types |= osrm_osmium::osm_entity_bits::relation;
+        if (types.find('c') != std::string::npos) read_types |= osrm_osmium::osm_entity_bits::changeset;
     }
 
-    osmium::io::Reader reader(argv[1], read_types);
-    osmium::io::Header header = reader.header();
+    osrm_osmium::io::Reader reader(argv[1], read_types);
+    osrm_osmium::io::Header header = reader.header();
 
     std::cout << "HEADER:\n  generator=" << header.get("generator") << "\n";
 
@@ -40,9 +40,9 @@ int main(int argc, char* argv[]) {
         std::cout << "  bbox=" << bbox << "\n";
     }
 
-    osmium::handler::Dump dump(std::cout);
-    while (osmium::memory::Buffer buffer = reader.read()) {
-        osmium::apply(buffer, dump);
+    osrm_osmium::handler::Dump dump(std::cout);
+    while (osrm_osmium::memory::Buffer buffer = reader.read()) {
+        osrm_osmium::apply(buffer, dump);
     }
 
     reader.close();

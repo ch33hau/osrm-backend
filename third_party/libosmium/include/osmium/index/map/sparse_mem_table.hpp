@@ -47,7 +47,7 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_SPARSE_MEM_TABLE
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -65,7 +65,7 @@ namespace osmium {
             * This will only work on 64 bit machines.
             */
             template <typename TId, typename TValue>
-            class SparseMemTable : public osmium::index::map::Map<TId, TValue> {
+            class SparseMemTable : public osrm_osmium::index::map::Map<TId, TValue> {
 
                 TId m_grow_size;
 
@@ -101,7 +101,7 @@ namespace osmium {
                     if (id >= m_elements.size()) {
                         not_found_error(id);
                     }
-                    if (m_elements[id] == osmium::index::empty_value<TValue>()) {
+                    if (m_elements[id] == osrm_osmium::index::empty_value<TValue>()) {
                         not_found_error(id);
                     }
                     return m_elements[id];
@@ -126,12 +126,12 @@ namespace osmium {
                     v.reserve(m_elements.size());
                     int n = 0;
                     for (const TValue value : m_elements) {
-                        if (value != osmium::index::empty_value<TValue>()) {
+                        if (value != osrm_osmium::index::empty_value<TValue>()) {
                             v.emplace_back(n, value);
                         }
                         ++n;
                     }
-                    osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(std::pair<TId, TValue>) * v.size());
+                    osrm_osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(std::pair<TId, TValue>) * v.size());
                 }
 
             }; // class SparseMemTable
@@ -140,7 +140,7 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_WITH_SPARSEHASH
 

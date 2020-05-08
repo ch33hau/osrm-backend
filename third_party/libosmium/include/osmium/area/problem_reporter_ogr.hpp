@@ -52,7 +52,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -62,12 +62,12 @@ namespace osmium {
          */
         class ProblemReporterOGR : public ProblemReporter {
 
-            osmium::geom::OGRFactory<> m_ogr_factory;
+            osrm_osmium::geom::OGRFactory<> m_ogr_factory;
 
             gdalcpp::Layer m_layer_perror;
             gdalcpp::Layer m_layer_lerror;
 
-            void write_point(const char* problem_type, osmium::object_id_type id1, osmium::object_id_type id2, osmium::Location location) {
+            void write_point(const char* problem_type, osrm_osmium::object_id_type id1, osrm_osmium::object_id_type id2, osrm_osmium::Location location) {
                 gdalcpp::Feature feature(m_layer_perror, m_ogr_factory.create_point(location));
                 feature.set_field("id1", static_cast<double>(id1));
                 feature.set_field("id2", static_cast<double>(id2));
@@ -75,7 +75,7 @@ namespace osmium {
                 feature.add_to_layer();
             }
 
-            void write_line(const char* problem_type, osmium::object_id_type id1, osmium::object_id_type id2, osmium::Location loc1, osmium::Location loc2) {
+            void write_line(const char* problem_type, osrm_osmium::object_id_type id1, osrm_osmium::object_id_type id2, osrm_osmium::Location loc1, osrm_osmium::Location loc2) {
                 std::unique_ptr<OGRPoint> ogr_point1 = m_ogr_factory.create_point(loc1);
                 std::unique_ptr<OGRPoint> ogr_point2 = m_ogr_factory.create_point(loc2);
                 std::unique_ptr<OGRLineString> ogr_linestring = std::unique_ptr<OGRLineString>(new OGRLineString());
@@ -106,27 +106,27 @@ namespace osmium {
 
             ~ProblemReporterOGR() override = default;
 
-            void report_duplicate_node(osmium::object_id_type node_id1, osmium::object_id_type node_id2, osmium::Location location) override {
+            void report_duplicate_node(osrm_osmium::object_id_type node_id1, osrm_osmium::object_id_type node_id2, osrm_osmium::Location location) override {
                 write_point("duplicate_node", node_id1, node_id2, location);
             }
 
-            void report_intersection(osmium::object_id_type way1_id, osmium::Location way1_seg_start, osmium::Location way1_seg_end,
-                                     osmium::object_id_type way2_id, osmium::Location way2_seg_start, osmium::Location way2_seg_end, osmium::Location intersection) override {
+            void report_intersection(osrm_osmium::object_id_type way1_id, osrm_osmium::Location way1_seg_start, osrm_osmium::Location way1_seg_end,
+                                     osrm_osmium::object_id_type way2_id, osrm_osmium::Location way2_seg_start, osrm_osmium::Location way2_seg_end, osrm_osmium::Location intersection) override {
                 write_point("intersection", m_object_id, 0, intersection);
                 write_line("intersection", m_object_id, way1_id, way1_seg_start, way1_seg_end);
                 write_line("intersection", m_object_id, way2_id, way2_seg_start, way2_seg_end);
             }
 
-            void report_ring_not_closed(osmium::Location end1, osmium::Location end2) override {
+            void report_ring_not_closed(osrm_osmium::Location end1, osrm_osmium::Location end2) override {
                 write_point("ring_not_closed", m_object_id, 0, end1);
                 write_point("ring_not_closed", m_object_id, 0, end2);
             }
 
-            void report_role_should_be_outer(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_outer(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 write_line("role_should_be_outer", m_object_id, way_id, seg_start, seg_end);
             }
 
-            void report_role_should_be_inner(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_inner(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 write_line("role_should_be_inner", m_object_id, way_id, seg_start, seg_end);
             }
 
@@ -134,6 +134,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_PROBLEM_REPORTER_OGR_HPP

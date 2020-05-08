@@ -6,7 +6,7 @@
 
 TEST_CASE("CRC of basic datatypes") {
 
-    osmium::CRC<boost::crc_32_type> crc32;
+    osrm_osmium::CRC<boost::crc_32_type> crc32;
 
     SECTION("Bool") {
         crc32.update_bool(true);
@@ -51,14 +51,14 @@ TEST_CASE("CRC of basic datatypes") {
     }
 
     SECTION("Timestamp") {
-        osmium::Timestamp t("2015-07-12T13:10:46Z");
+        osrm_osmium::Timestamp t("2015-07-12T13:10:46Z");
         crc32.update(t);
 
         REQUIRE(crc32().checksum() == 0x58a29d7);
     }
 
     SECTION("Location") {
-        osmium::Location loc { 3.46, 2.001 };
+        osrm_osmium::Location loc { 3.46, 2.001 };
         crc32.update(loc);
 
         REQUIRE(crc32().checksum() == 0xddee042c);

@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/node_ref.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     class Way;
 
@@ -62,14 +62,14 @@ namespace osmium {
              */
             class NodeRefSegment {
 
-                osmium::NodeRef m_first;
-                osmium::NodeRef m_second;
+                osrm_osmium::NodeRef m_first;
+                osrm_osmium::NodeRef m_second;
 
                 /// Role of the member this segment was from.
                 const char* m_role;
 
                 /// Way this segment was from.
-                const osmium::Way* m_way;
+                const osrm_osmium::Way* m_way;
 
             public:
 
@@ -85,7 +85,7 @@ namespace osmium {
                     m_way(nullptr) {
                 }
 
-                explicit NodeRefSegment(const osmium::NodeRef& nr1, const osmium::NodeRef& nr2, const char* role, const osmium::Way* way) :
+                explicit NodeRefSegment(const osrm_osmium::NodeRef& nr1, const osrm_osmium::NodeRef& nr2, const char* role, const osrm_osmium::Way* way) :
                     m_first(nr1),
                     m_second(nr2),
                     m_role(role),
@@ -104,23 +104,23 @@ namespace osmium {
                 ~NodeRefSegment() = default;
 
                 /// Return first NodeRef of Segment according to sorting order (bottom left to top right).
-                const osmium::NodeRef& first() const noexcept {
+                const osrm_osmium::NodeRef& first() const noexcept {
                     return m_first;
                 }
 
                 /// Return second NodeRef of Segment according to sorting order (bottom left to top right).
-                const osmium::NodeRef& second() const noexcept {
+                const osrm_osmium::NodeRef& second() const noexcept {
                     return m_second;
                 }
 
-                bool to_left_of(const osmium::Location& location) const {
+                bool to_left_of(const osrm_osmium::Location& location) const {
     //                std::cerr << "segment " << first() << "--" << second() << " to_left_of(" << location << "\n";
 
                     if (first().location() == location || second().location() == location) {
                         return false;
                     }
 
-                    const std::pair<osmium::Location, osmium::Location> mm = std::minmax(first().location(), second().location(), [](const osmium::Location a, const osmium::Location b) {
+                    const std::pair<osrm_osmium::Location, osrm_osmium::Location> mm = std::minmax(first().location(), second().location(), [](const osrm_osmium::Location a, const osrm_osmium::Location b) {
                         return a.y() < b.y();
                     });
 
@@ -146,7 +146,7 @@ namespace osmium {
                     return !strcmp(m_role, "inner");
                 }
 
-                const osmium::Way* way() const noexcept {
+                const osrm_osmium::Way* way() const noexcept {
                     return m_way;
                 }
 
@@ -221,15 +221,15 @@ namespace osmium {
              * If the segments intersect not in a single point but in multiple
              * points, ie if they overlap, this is NOT detected.
              *
-             * @returns Undefined osmium::Location if there is no intersection
+             * @returns Undefined osrm_osmium::Location if there is no intersection
              *          or a defined Location if the segments intersect.
              */
-            inline osmium::Location calculate_intersection(const NodeRefSegment& s1, const NodeRefSegment& s2) {
+            inline osrm_osmium::Location calculate_intersection(const NodeRefSegment& s1, const NodeRefSegment& s2) {
                 if (s1.first().location()  == s2.first().location()  ||
                     s1.first().location()  == s2.second().location() ||
                     s1.second().location() == s2.first().location()  ||
                     s1.second().location() == s2.second().location()) {
-                    return osmium::Location();
+                    return osrm_osmium::Location();
                 }
 
                 int64_t s1ax = s1.first().x();
@@ -258,17 +258,17 @@ namespace osmium {
                         int32_t ix = int32_t(s1ax + ua*(s1bx - s1ax));
                         int32_t iy = int32_t(s1ay + ua*(s1by - s1ay));
 
-                        return osmium::Location(ix, iy);
+                        return osrm_osmium::Location(ix, iy);
                     }
                 }
 
-                return osmium::Location();
+                return osrm_osmium::Location();
             }
 
         } // namespace detail
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_DETAIL_NODE_REF_SEGMENT_HPP

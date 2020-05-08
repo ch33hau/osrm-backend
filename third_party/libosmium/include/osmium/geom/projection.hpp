@@ -51,7 +51,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/geom/util.hpp>
 #include <osmium/osm/location.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -73,7 +73,7 @@ namespace osmium {
             CRS(const std::string& crs) :
                 m_crs(pj_init_plus(crs.c_str()), ProjCRSDeleter()) {
                 if (!m_crs) {
-                    throw osmium::projection_error(std::string("creation of CRS failed: ") + pj_strerrno(*pj_get_errno_ref()));
+                    throw osrm_osmium::projection_error(std::string("creation of CRS failed: ") + pj_strerrno(*pj_get_errno_ref()));
                 }
             }
 
@@ -109,7 +109,7 @@ namespace osmium {
         inline Coordinates transform(const CRS& src, const CRS& dest, Coordinates c) {
             int result = pj_transform(src.get(), dest.get(), 1, 1, &c.x, &c.y, nullptr);
             if (result != 0) {
-                throw osmium::projection_error(std::string("projection failed: ") + pj_strerrno(result));
+                throw osrm_osmium::projection_error(std::string("projection failed: ") + pj_strerrno(result));
             }
             return c;
         }
@@ -139,7 +139,7 @@ namespace osmium {
                 m_crs_user(epsg) {
             }
 
-            Coordinates operator()(osmium::Location location) const {
+            Coordinates operator()(osrm_osmium::Location location) const {
                 Coordinates c {location.lon(), location.lat()};
 
                 if (m_epsg != 4326) {
@@ -165,6 +165,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_PROJECTION_HPP

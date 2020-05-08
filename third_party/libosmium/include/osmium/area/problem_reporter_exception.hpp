@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -56,32 +56,32 @@ namespace osmium {
 
             ~ProblemReporterException() override = default;
 
-            void report_duplicate_node(osmium::object_id_type node_id1, osmium::object_id_type node_id2, osmium::Location location) override {
+            void report_duplicate_node(osrm_osmium::object_id_type node_id1, osrm_osmium::object_id_type node_id2, osrm_osmium::Location location) override {
                 m_sstream.str();
                 ProblemReporterStream::report_duplicate_node(node_id1, node_id2, location);
                 throw std::runtime_error(m_sstream.str());
             }
 
-            void report_intersection(osmium::object_id_type way1_id, osmium::Location way1_seg_start, osmium::Location way1_seg_end,
-                                     osmium::object_id_type way2_id, osmium::Location way2_seg_start, osmium::Location way2_seg_end, osmium::Location intersection) override {
+            void report_intersection(osrm_osmium::object_id_type way1_id, osrm_osmium::Location way1_seg_start, osrm_osmium::Location way1_seg_end,
+                                     osrm_osmium::object_id_type way2_id, osrm_osmium::Location way2_seg_start, osrm_osmium::Location way2_seg_end, osrm_osmium::Location intersection) override {
                 m_sstream.str();
                 ProblemReporterStream::report_intersection(way1_id, way1_seg_start, way1_seg_end, way2_id, way2_seg_start, way2_seg_end, intersection);
                 throw std::runtime_error(m_sstream.str());
             }
 
-            void report_ring_not_closed(osmium::Location end1, osmium::Location end2) override {
+            void report_ring_not_closed(osrm_osmium::Location end1, osrm_osmium::Location end2) override {
                 m_sstream.str();
                 ProblemReporterStream::report_ring_not_closed(end1, end2);
                 throw std::runtime_error(m_sstream.str());
             }
 
-            void report_role_should_be_outer(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_outer(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 m_sstream.str();
                 ProblemReporterStream::report_role_should_be_outer(way_id, seg_start, seg_end);
                 throw std::runtime_error(m_sstream.str());
             }
 
-            void report_role_should_be_inner(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_inner(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 m_sstream.str();
                 ProblemReporterStream::report_role_should_be_inner(way_id, seg_start, seg_end);
                 throw std::runtime_error(m_sstream.str());
@@ -91,6 +91,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_PROBLEM_REPORTER_EXCEPTION_HPP

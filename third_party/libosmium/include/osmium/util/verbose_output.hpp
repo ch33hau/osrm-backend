@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <sstream>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Helpful utility classes and functions not strictly OSM related
@@ -139,6 +139,6 @@ namespace osmium {
 
     } // namespace util
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_VERBOSE_OUTPUT_HPP

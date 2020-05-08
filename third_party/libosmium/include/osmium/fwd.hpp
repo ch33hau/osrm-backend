@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
  *
  */
 
-namespace osmium {
+namespace osrm_osmium {
 
     class Area;
     class Box;
@@ -65,6 +65,6 @@ namespace osmium {
     class Way;
     class WayNodeList;
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_FWD_HPP

@@ -29,13 +29,13 @@
 #include <osmium/io/any_input.hpp>
 #include <osmium/handler.hpp>
 
-typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, osmium::Location> static_index_type;
+typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> static_index_type;
 const std::string location_store="sparse_mem_array";
 
-typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> dynamic_index_type;
+typedef osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> dynamic_index_type;
 
-typedef osmium::handler::NodeLocationsForWays<static_index_type> static_location_handler_type;
-typedef osmium::handler::NodeLocationsForWays<dynamic_index_type> dynamic_location_handler_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<static_index_type> static_location_handler_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<dynamic_index_type> dynamic_location_handler_type;
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -45,9 +45,9 @@ int main(int argc, char* argv[]) {
 
     std::string input_filename = argv[1];
 
-    osmium::memory::Buffer buffer = osmium::io::read_file(input_filename);
+    osrm_osmium::memory::Buffer buffer = osrm_osmium::io::read_file(input_filename);
 
-    const auto& map_factory = osmium::index::MapFactory<osmium::unsigned_object_id_type, osmium::Location>::instance();
+    const auto& map_factory = osrm_osmium::index::MapFactory<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>::instance();
 
     const auto buffer_size = buffer.committed() / (1024*1024); // buffer size in MBytes
     const int runs = std::max(10, static_cast<int>(5000ull / buffer_size));
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
         {
             // static index
-            osmium::memory::Buffer tmp_buffer(buffer.committed());
+            osrm_osmium::memory::Buffer tmp_buffer(buffer.committed());
             for (const auto& item : buffer) {
                 tmp_buffer.add_item(item);
                 tmp_buffer.commit();
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
             static_location_handler_type static_location_handler(static_index);
 
             auto start = std::chrono::steady_clock::now();
-            osmium::apply(tmp_buffer, static_location_handler);
+            osrm_osmium::apply(tmp_buffer, static_location_handler);
             auto end = std::chrono::steady_clock::now();
 
             double duration = std::chrono::duration<double, std::milli>(end-start).count();
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 
         {
             // dynamic index
-            osmium::memory::Buffer tmp_buffer(buffer.committed());
+            osrm_osmium::memory::Buffer tmp_buffer(buffer.committed());
             for (const auto& item : buffer) {
                 tmp_buffer.add_item(item);
                 tmp_buffer.commit();
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
             dynamic_location_handler.ignore_errors();
 
             auto start = std::chrono::steady_clock::now();
-            osmium::apply(tmp_buffer, dynamic_location_handler);
+            osrm_osmium::apply(tmp_buffer, dynamic_location_handler);
             auto end = std::chrono::steady_clock::now();
 
             double duration = std::chrono::duration<double, std::milli>(end-start).count();

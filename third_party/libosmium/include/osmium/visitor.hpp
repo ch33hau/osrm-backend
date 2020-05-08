@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/entity.hpp>
 #include <osmium/osm/item_type.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace memory {
         class Item;
@@ -56,148 +56,148 @@ namespace osmium {
         template <typename THandler, typename TItem>
         inline void apply_item_recurse(TItem& item, THandler& handler) {
             switch (item.type()) {
-                case osmium::item_type::undefined:
+                case osrm_osmium::item_type::undefined:
                     break;
-                case osmium::item_type::node:
-                    handler.osm_object(static_cast<ConstIfConst<TItem, osmium::OSMObject>&>(item));
-                    handler.node(static_cast<ConstIfConst<TItem, osmium::Node>&>(item));
+                case osrm_osmium::item_type::node:
+                    handler.osm_object(static_cast<ConstIfConst<TItem, osrm_osmium::OSMObject>&>(item));
+                    handler.node(static_cast<ConstIfConst<TItem, osrm_osmium::Node>&>(item));
                     break;
-                case osmium::item_type::way:
-                    handler.osm_object(static_cast<ConstIfConst<TItem, osmium::OSMObject>&>(item));
-                    handler.way(static_cast<ConstIfConst<TItem, osmium::Way>&>(item));
+                case osrm_osmium::item_type::way:
+                    handler.osm_object(static_cast<ConstIfConst<TItem, osrm_osmium::OSMObject>&>(item));
+                    handler.way(static_cast<ConstIfConst<TItem, osrm_osmium::Way>&>(item));
                     break;
-                case osmium::item_type::relation:
-                    handler.osm_object(static_cast<ConstIfConst<TItem, osmium::OSMObject>&>(item));
-                    handler.relation(static_cast<ConstIfConst<TItem, osmium::Relation>&>(item));
+                case osrm_osmium::item_type::relation:
+                    handler.osm_object(static_cast<ConstIfConst<TItem, osrm_osmium::OSMObject>&>(item));
+                    handler.relation(static_cast<ConstIfConst<TItem, osrm_osmium::Relation>&>(item));
                     break;
-                case osmium::item_type::area:
-                    handler.osm_object(static_cast<ConstIfConst<TItem, osmium::OSMObject>&>(item));
-                    handler.area(static_cast<ConstIfConst<TItem, osmium::Area>&>(item));
+                case osrm_osmium::item_type::area:
+                    handler.osm_object(static_cast<ConstIfConst<TItem, osrm_osmium::OSMObject>&>(item));
+                    handler.area(static_cast<ConstIfConst<TItem, osrm_osmium::Area>&>(item));
                     break;
-                case osmium::item_type::changeset:
-                    handler.changeset(static_cast<ConstIfConst<TItem, osmium::Changeset>&>(item));
+                case osrm_osmium::item_type::changeset:
+                    handler.changeset(static_cast<ConstIfConst<TItem, osrm_osmium::Changeset>&>(item));
                     break;
-                case osmium::item_type::tag_list:
-                    handler.tag_list(static_cast<ConstIfConst<TItem, osmium::TagList>&>(item));
+                case osrm_osmium::item_type::tag_list:
+                    handler.tag_list(static_cast<ConstIfConst<TItem, osrm_osmium::TagList>&>(item));
                     break;
-                case osmium::item_type::way_node_list:
-                    handler.way_node_list(static_cast<ConstIfConst<TItem, osmium::WayNodeList>&>(item));
+                case osrm_osmium::item_type::way_node_list:
+                    handler.way_node_list(static_cast<ConstIfConst<TItem, osrm_osmium::WayNodeList>&>(item));
                     break;
-                case osmium::item_type::relation_member_list:
-                case osmium::item_type::relation_member_list_with_full_members:
-                    handler.relation_member_list(static_cast<ConstIfConst<TItem, osmium::RelationMemberList>&>(item));
+                case osrm_osmium::item_type::relation_member_list:
+                case osrm_osmium::item_type::relation_member_list_with_full_members:
+                    handler.relation_member_list(static_cast<ConstIfConst<TItem, osrm_osmium::RelationMemberList>&>(item));
                     break;
-                case osmium::item_type::outer_ring:
-                    handler.outer_ring(static_cast<ConstIfConst<TItem, osmium::OuterRing>&>(item));
+                case osrm_osmium::item_type::outer_ring:
+                    handler.outer_ring(static_cast<ConstIfConst<TItem, osrm_osmium::OuterRing>&>(item));
                     break;
-                case osmium::item_type::inner_ring:
-                    handler.inner_ring(static_cast<ConstIfConst<TItem, osmium::InnerRing>&>(item));
+                case osrm_osmium::item_type::inner_ring:
+                    handler.inner_ring(static_cast<ConstIfConst<TItem, osrm_osmium::InnerRing>&>(item));
                     break;
-                case osmium::item_type::changeset_discussion:
-                    handler.changeset_discussion(static_cast<ConstIfConst<TItem, osmium::ChangesetDiscussion>&>(item));
+                case osrm_osmium::item_type::changeset_discussion:
+                    handler.changeset_discussion(static_cast<ConstIfConst<TItem, osrm_osmium::ChangesetDiscussion>&>(item));
                     break;
             }
         }
 
         template <typename THandler>
-        inline void apply_item_recurse(const osmium::OSMEntity& item, THandler& handler) {
+        inline void apply_item_recurse(const osrm_osmium::OSMEntity& item, THandler& handler) {
             switch (item.type()) {
-                case osmium::item_type::node:
-                    handler.osm_object(static_cast<const osmium::OSMObject&>(item));
-                    handler.node(static_cast<const osmium::Node&>(item));
+                case osrm_osmium::item_type::node:
+                    handler.osm_object(static_cast<const osrm_osmium::OSMObject&>(item));
+                    handler.node(static_cast<const osrm_osmium::Node&>(item));
                     break;
-                case osmium::item_type::way:
-                    handler.osm_object(static_cast<const osmium::OSMObject&>(item));
-                    handler.way(static_cast<const osmium::Way&>(item));
+                case osrm_osmium::item_type::way:
+                    handler.osm_object(static_cast<const osrm_osmium::OSMObject&>(item));
+                    handler.way(static_cast<const osrm_osmium::Way&>(item));
                     break;
-                case osmium::item_type::relation:
-                    handler.osm_object(static_cast<const osmium::OSMObject&>(item));
-                    handler.relation(static_cast<const osmium::Relation&>(item));
+                case osrm_osmium::item_type::relation:
+                    handler.osm_object(static_cast<const osrm_osmium::OSMObject&>(item));
+                    handler.relation(static_cast<const osrm_osmium::Relation&>(item));
                     break;
-                case osmium::item_type::area:
-                    handler.osm_object(static_cast<const osmium::OSMObject&>(item));
-                    handler.area(static_cast<const osmium::Area&>(item));
+                case osrm_osmium::item_type::area:
+                    handler.osm_object(static_cast<const osrm_osmium::OSMObject&>(item));
+                    handler.area(static_cast<const osrm_osmium::Area&>(item));
                     break;
-                case osmium::item_type::changeset:
-                    handler.changeset(static_cast<const osmium::Changeset&>(item));
+                case osrm_osmium::item_type::changeset:
+                    handler.changeset(static_cast<const osrm_osmium::Changeset&>(item));
                     break;
                 default:
-                    throw osmium::unknown_type();
+                    throw osrm_osmium::unknown_type();
             }
         }
 
         template <typename THandler>
-        inline void apply_item_recurse(osmium::OSMEntity& item, THandler& handler) {
+        inline void apply_item_recurse(osrm_osmium::OSMEntity& item, THandler& handler) {
             switch (item.type()) {
-                case osmium::item_type::node:
-                    handler.osm_object(static_cast<osmium::OSMObject&>(item));
-                    handler.node(static_cast<osmium::Node&>(item));
+                case osrm_osmium::item_type::node:
+                    handler.osm_object(static_cast<osrm_osmium::OSMObject&>(item));
+                    handler.node(static_cast<osrm_osmium::Node&>(item));
                     break;
-                case osmium::item_type::way:
-                    handler.osm_object(static_cast<osmium::OSMObject&>(item));
-                    handler.way(static_cast<osmium::Way&>(item));
+                case osrm_osmium::item_type::way:
+                    handler.osm_object(static_cast<osrm_osmium::OSMObject&>(item));
+                    handler.way(static_cast<osrm_osmium::Way&>(item));
                     break;
-                case osmium::item_type::relation:
-                    handler.osm_object(static_cast<osmium::OSMObject&>(item));
-                    handler.relation(static_cast<osmium::Relation&>(item));
+                case osrm_osmium::item_type::relation:
+                    handler.osm_object(static_cast<osrm_osmium::OSMObject&>(item));
+                    handler.relation(static_cast<osrm_osmium::Relation&>(item));
                     break;
-                case osmium::item_type::area:
-                    handler.osm_object(static_cast<osmium::OSMObject&>(item));
-                    handler.area(static_cast<osmium::Area&>(item));
+                case osrm_osmium::item_type::area:
+                    handler.osm_object(static_cast<osrm_osmium::OSMObject&>(item));
+                    handler.area(static_cast<osrm_osmium::Area&>(item));
                     break;
-                case osmium::item_type::changeset:
-                    handler.changeset(static_cast<osmium::Changeset&>(item));
+                case osrm_osmium::item_type::changeset:
+                    handler.changeset(static_cast<osrm_osmium::Changeset&>(item));
                     break;
                 default:
-                    throw osmium::unknown_type();
+                    throw osrm_osmium::unknown_type();
             }
         }
 
         template <typename THandler>
-        inline void apply_item_recurse(const osmium::OSMObject& item, THandler& handler) {
+        inline void apply_item_recurse(const osrm_osmium::OSMObject& item, THandler& handler) {
             switch (item.type()) {
-                case osmium::item_type::node:
+                case osrm_osmium::item_type::node:
                     handler.osm_object(item);
-                    handler.node(static_cast<const osmium::Node&>(item));
+                    handler.node(static_cast<const osrm_osmium::Node&>(item));
                     break;
-                case osmium::item_type::way:
+                case osrm_osmium::item_type::way:
                     handler.osm_object(item);
-                    handler.way(static_cast<const osmium::Way&>(item));
+                    handler.way(static_cast<const osrm_osmium::Way&>(item));
                     break;
-                case osmium::item_type::relation:
+                case osrm_osmium::item_type::relation:
                     handler.osm_object(item);
-                    handler.relation(static_cast<const osmium::Relation&>(item));
+                    handler.relation(static_cast<const osrm_osmium::Relation&>(item));
                     break;
-                case osmium::item_type::area:
+                case osrm_osmium::item_type::area:
                     handler.osm_object(item);
-                    handler.area(static_cast<const osmium::Area&>(item));
+                    handler.area(static_cast<const osrm_osmium::Area&>(item));
                     break;
                 default:
-                    throw osmium::unknown_type();
+                    throw osrm_osmium::unknown_type();
             }
         }
 
         template <typename THandler>
-        inline void apply_item_recurse(osmium::OSMObject& item, THandler& handler) {
+        inline void apply_item_recurse(osrm_osmium::OSMObject& item, THandler& handler) {
             switch (item.type()) {
-                case osmium::item_type::node:
+                case osrm_osmium::item_type::node:
                     handler.osm_object(item);
-                    handler.node(static_cast<osmium::Node&>(item));
+                    handler.node(static_cast<osrm_osmium::Node&>(item));
                     break;
-                case osmium::item_type::way:
+                case osrm_osmium::item_type::way:
                     handler.osm_object(item);
-                    handler.way(static_cast<osmium::Way&>(item));
+                    handler.way(static_cast<osrm_osmium::Way&>(item));
                     break;
-                case osmium::item_type::relation:
+                case osrm_osmium::item_type::relation:
                     handler.osm_object(item);
-                    handler.relation(static_cast<osmium::Relation&>(item));
+                    handler.relation(static_cast<osrm_osmium::Relation&>(item));
                     break;
-                case osmium::item_type::area:
+                case osrm_osmium::item_type::area:
                     handler.osm_object(item);
-                    handler.area(static_cast<osmium::Area&>(item));
+                    handler.area(static_cast<osrm_osmium::Area&>(item));
                     break;
                 default:
-                    throw osmium::unknown_type();
+                    throw osrm_osmium::unknown_type();
             }
         }
 
@@ -221,12 +221,12 @@ namespace osmium {
     } // namespace detail
 
     template <typename... THandlers>
-    inline void apply_item(const osmium::memory::Item& item, THandlers&... handlers) {
+    inline void apply_item(const osrm_osmium::memory::Item& item, THandlers&... handlers) {
         detail::apply_item_recurse(item, handlers...);
     }
 
     template <typename... THandlers>
-    inline void apply_item(osmium::memory::Item& item, THandlers&... handlers) {
+    inline void apply_item(osrm_osmium::memory::Item& item, THandlers&... handlers) {
         detail::apply_item_recurse(item, handlers...);
     }
 
@@ -244,10 +244,10 @@ namespace osmium {
     }
 
     template <typename... THandlers>
-    inline void apply(const osmium::memory::Buffer& buffer, THandlers&... handlers) {
+    inline void apply(const osrm_osmium::memory::Buffer& buffer, THandlers&... handlers) {
         apply(buffer.cbegin(), buffer.cend(), handlers...);
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_VISITOR_HPP

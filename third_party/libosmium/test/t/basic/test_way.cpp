@@ -7,12 +7,12 @@
 #include <osmium/osm/crc.hpp>
 #include <osmium/osm/way.hpp>
 
-using namespace osmium::builder::attr;
+using namespace osrm_osrm_osmium::builder::attr;
 
 TEST_CASE("Build way") {
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
 
-    osmium::builder::add_way(buffer,
+    osrm_osmium::builder::add_way(buffer,
         _id(17),
         _version(3),
         _visible(true),
@@ -25,11 +25,11 @@ TEST_CASE("Build way") {
         _nodes({1, 3, 2})
     );
 
-    const osmium::Way& way = buffer.get<osmium::Way>(0);
+    const osrm_osmium::Way& way = buffer.get<osrm_osmium::Way>(0);
 
-    REQUIRE(osmium::item_type::way == way.type());
-    REQUIRE(way.type_is_in(osmium::osm_entity_bits::way));
-    REQUIRE(way.type_is_in(osmium::osm_entity_bits::node | osmium::osm_entity_bits::way));
+    REQUIRE(osrm_osmium::item_type::way == way.type());
+    REQUIRE(way.type_is_in(osrm_osmium::osm_entity_bits::way));
+    REQUIRE(way.type_is_in(osrm_osmium::osm_entity_bits::node | osrm_osmium::osm_entity_bits::way));
     REQUIRE(17 == way.id());
     REQUIRE(3 == way.version());
     REQUIRE(true == way.visible());
@@ -44,30 +44,30 @@ TEST_CASE("Build way") {
     REQUIRE(2 == way.nodes()[2].ref());
     REQUIRE(! way.is_closed());
 
-    osmium::CRC<boost::crc_32_type> crc32;
+    osrm_osmium::CRC<boost::crc_32_type> crc32;
     crc32.update(way);
     REQUIRE(crc32().checksum() == 0x7676d0c2);
 }
 
 TEST_CASE("build closed way") {
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
 
-    osmium::builder::add_way(buffer,
+    osrm_osmium::builder::add_way(buffer,
         _tag("highway", "residential"),
         _tag("name", "High Street"),
         _nodes({1, 3, 1})
     );
 
-    const osmium::Way& way = buffer.get<osmium::Way>(0);
+    const osrm_osmium::Way& way = buffer.get<osrm_osmium::Way>(0);
 
     REQUIRE(way.is_closed());
 }
 
 TEST_CASE("build way with helpers") {
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
 
     {
-        osmium::builder::WayBuilder builder(buffer);
+        osrm_osmium::builder::WayBuilder builder(buffer);
         builder.add_user("username");
         builder.add_tags({
             {"amenity", "restaurant"},
@@ -80,7 +80,7 @@ TEST_CASE("build way with helpers") {
     }
     buffer.commit();
 
-    const osmium::Way& way = buffer.get<osmium::Way>(0);
+    const osrm_osmium::Way& way = buffer.get<osrm_osmium::Way>(0);
 
     REQUIRE(std::string("username") == way.user());
 

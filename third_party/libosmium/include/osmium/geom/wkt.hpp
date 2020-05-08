@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/geom/coordinates.hpp>
 #include <osmium/geom/factory.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -66,7 +66,7 @@ namespace osmium {
 
                 /* Point */
 
-                point_type make_point(const osmium::geom::Coordinates& xy) const {
+                point_type make_point(const osrm_osmium::geom::Coordinates& xy) const {
                     std::string str {"POINT"};
                     xy.append_to_string(str, '(', ' ', ')', m_precision);
                     return str;
@@ -78,7 +78,7 @@ namespace osmium {
                     m_str = "LINESTRING(";
                 }
 
-                void linestring_add_location(const osmium::geom::Coordinates& xy) {
+                void linestring_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     xy.append_to_string(m_str, ' ', m_precision);
                     m_str += ',';
                 }
@@ -126,7 +126,7 @@ namespace osmium {
                     m_str.back() = ')';
                 }
 
-                void multipolygon_add_location(const osmium::geom::Coordinates& xy) {
+                void multipolygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     xy.append_to_string(m_str, ' ', m_precision);
                     m_str += ',';
                 }
@@ -147,10 +147,10 @@ namespace osmium {
         } // namespace detail
 
         template <typename TProjection = IdentityProjection>
-        using WKTFactory = GeometryFactory<osmium::geom::detail::WKTFactoryImpl, TProjection>;
+        using WKTFactory = GeometryFactory<osrm_osmium::geom::detail::WKTFactoryImpl, TProjection>;
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_WKT_HPP

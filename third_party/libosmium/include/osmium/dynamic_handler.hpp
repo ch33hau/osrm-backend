@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/fwd.hpp>
 #include <osmium/handler.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace handler {
 
@@ -52,19 +52,19 @@ namespace osmium {
                 virtual ~HandlerWrapperBase() {
                 }
 
-                virtual void node(const osmium::Node&) {
+                virtual void node(const osrm_osmium::Node&) {
                 }
 
-                virtual void way(const osmium::Way&) {
+                virtual void way(const osrm_osmium::Way&) {
                 }
 
-                virtual void relation(const osmium::Relation&) {
+                virtual void relation(const osrm_osmium::Relation&) {
                 }
 
-                virtual void area(const osmium::Area&) {
+                virtual void area(const osrm_osmium::Area&) {
                 }
 
-                virtual void changeset(const osmium::Changeset&) {
+                virtual void changeset(const osrm_osmium::Changeset&) {
                 }
 
                 virtual void flush() {
@@ -79,11 +79,11 @@ namespace osmium {
 
 #define OSMIUM_DYNAMIC_HANDLER_DISPATCH(_name_, _type_) \
 template <typename THandler> \
-auto _name_##_dispatch(THandler& handler, const osmium::_type_& object, int) -> decltype(handler._name_(object), void()) { \
+auto _name_##_dispatch(THandler& handler, const osrm_osmium::_type_& object, int) -> decltype(handler._name_(object), void()) { \
     handler._name_(object); \
 } \
 template <typename THandler> \
-auto _name_##_dispatch(THandler& handler, const osmium::_type_& object, long) -> decltype(handler(object), void()) { \
+auto _name_##_dispatch(THandler& handler, const osrm_osmium::_type_& object, long) -> decltype(handler(object), void()) { \
     handler(object); \
 }
 
@@ -113,23 +113,23 @@ auto _name_##_dispatch(THandler& handler, const osmium::_type_& object, long) ->
                     m_handler(std::forward<TArgs>(args)...) {
                 }
 
-                void node(const osmium::Node& node) final {
+                void node(const osrm_osmium::Node& node) final {
                     node_dispatch(m_handler, node, 0);
                 }
 
-                void way(const osmium::Way& way) final {
+                void way(const osrm_osmium::Way& way) final {
                     way_dispatch(m_handler, way, 0);
                 }
 
-                void relation(const osmium::Relation& relation) final {
+                void relation(const osrm_osmium::Relation& relation) final {
                     relation_dispatch(m_handler, relation, 0);
                 }
 
-                void area(const osmium::Area& area) final {
+                void area(const osrm_osmium::Area& area) final {
                     area_dispatch(m_handler, area, 0);
                 }
 
-                void changeset(const osmium::Changeset& changeset) final {
+                void changeset(const osrm_osmium::Changeset& changeset) final {
                     changeset_dispatch(m_handler, changeset, 0);
                 }
 
@@ -141,39 +141,39 @@ auto _name_##_dispatch(THandler& handler, const osmium::_type_& object, long) ->
 
         } // namespace detail
 
-        class DynamicHandler : public osmium::handler::Handler {
+        class DynamicHandler : public osrm_osmium::handler::Handler {
 
-            typedef std::unique_ptr<osmium::handler::detail::HandlerWrapperBase> impl_ptr;
+            typedef std::unique_ptr<osrm_osmium::handler::detail::HandlerWrapperBase> impl_ptr;
             impl_ptr m_impl;
 
         public:
 
             DynamicHandler() :
-                m_impl(impl_ptr(new osmium::handler::detail::HandlerWrapperBase)) {
+                m_impl(impl_ptr(new osrm_osmium::handler::detail::HandlerWrapperBase)) {
             }
 
             template <typename THandler, typename... TArgs>
             void set(TArgs&&... args) {
-                m_impl = impl_ptr(new osmium::handler::detail::HandlerWrapper<THandler>(std::forward<TArgs>(args)...));
+                m_impl = impl_ptr(new osrm_osmium::handler::detail::HandlerWrapper<THandler>(std::forward<TArgs>(args)...));
             }
 
-            void node(const osmium::Node& node) {
+            void node(const osrm_osmium::Node& node) {
                 m_impl->node(node);
             }
 
-            void way(const osmium::Way& way) {
+            void way(const osrm_osmium::Way& way) {
                 m_impl->way(way);
             }
 
-            void relation(const osmium::Relation& relation) {
+            void relation(const osrm_osmium::Relation& relation) {
                 m_impl->relation(relation);
             }
 
-            void area(const osmium::Area& area) {
+            void area(const osrm_osmium::Area& area) {
                 m_impl->area(area);
             }
 
-            void changeset(const osmium::Changeset& changeset) {
+            void changeset(const osrm_osmium::Changeset& changeset) {
                 m_impl->changeset(changeset);
             }
 
@@ -185,6 +185,6 @@ auto _name_##_dispatch(THandler& handler, const osmium::_type_& object, long) ->
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_DYNAMIC_HANDLER_HPP

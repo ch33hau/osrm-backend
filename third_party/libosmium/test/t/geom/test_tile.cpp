@@ -11,9 +11,9 @@
 TEST_CASE("Tile") {
 
     SECTION("x0.0 y0.0 zoom 0") {
-        osmium::Location l(0.0, 0.0);
+        osrm_osmium::Location l(0.0, 0.0);
 
-        osmium::geom::Tile t(0, l);
+        osrm_osmium::geom::Tile t(0, l);
 
         REQUIRE(t.x == 0);
         REQUIRE(t.y == 0);
@@ -21,9 +21,9 @@ TEST_CASE("Tile") {
     }
 
     SECTION("x180.0 y90.0 zoom 0") {
-        osmium::Location l(180.0, 90.0);
+        osrm_osmium::Location l(180.0, 90.0);
 
-        osmium::geom::Tile t(0, l);
+        osrm_osmium::geom::Tile t(0, l);
 
         REQUIRE(t.x == 0);
         REQUIRE(t.y == 0);
@@ -31,9 +31,9 @@ TEST_CASE("Tile") {
     }
 
     SECTION("x180.0 y90.0 zoom 4") {
-        osmium::Location l(180.0, 90.0);
+        osrm_osmium::Location l(180.0, 90.0);
 
-        osmium::geom::Tile t(4, l);
+        osrm_osmium::geom::Tile t(4, l);
 
         REQUIRE(t.x == (1 << 4) - 1);
         REQUIRE(t.y == 0);
@@ -41,9 +41,9 @@ TEST_CASE("Tile") {
     }
 
     SECTION("x0.0 y0.0 zoom 4") {
-        osmium::Location l(0.0, 0.0);
+        osrm_osmium::Location l(0.0, 0.0);
 
-        osmium::geom::Tile t(4, l);
+        osrm_osmium::geom::Tile t(4, l);
 
         auto n = 1 << (4-1);
         REQUIRE(t.x == n);
@@ -52,19 +52,19 @@ TEST_CASE("Tile") {
     }
 
     SECTION("equality") {
-        osmium::geom::Tile a(4, 3, 4);
-        osmium::geom::Tile b(4, 3, 4);
-        osmium::geom::Tile c(4, 4, 3);
+        osrm_osmium::geom::Tile a(4, 3, 4);
+        osrm_osmium::geom::Tile b(4, 3, 4);
+        osrm_osmium::geom::Tile c(4, 4, 3);
         REQUIRE(a == b);
         REQUIRE(a != c);
         REQUIRE(b != c);
     }
 
     SECTION("order") {
-        osmium::geom::Tile a(2, 3, 4);
-        osmium::geom::Tile b(4, 3, 4);
-        osmium::geom::Tile c(4, 4, 3);
-        osmium::geom::Tile d(4, 4, 2);
+        osrm_osmium::geom::Tile a(2, 3, 4);
+        osrm_osmium::geom::Tile b(4, 3, 4);
+        osrm_osmium::geom::Tile c(4, 4, 3);
+        osrm_osmium::geom::Tile d(4, 4, 2);
         REQUIRE(a < b);
         REQUIRE(a < c);
         REQUIRE(b < c);
@@ -82,8 +82,8 @@ TEST_CASE("Tile") {
             input_data >> y;
             input_data >> zoom;
 
-            osmium::Location l(lon, lat);
-            osmium::geom::Tile t(zoom, l);
+            osrm_osmium::Location l(lon, lat);
+            osrm_osmium::geom::Tile t(zoom, l);
             REQUIRE(t.x == x);
             REQUIRE(t.y == y);
         }

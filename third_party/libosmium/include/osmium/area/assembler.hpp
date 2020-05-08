@@ -56,20 +56,20 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/area/detail/segment_list.hpp>
 #include <osmium/area/problem_reporter.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
-        using osmium::area::detail::ProtoRing;
+        using osrm_osmium::area::detail::ProtoRing;
 
         struct AssemblerConfig {
 
-            osmium::area::ProblemReporter* problem_reporter;
+            osrm_osmium::area::ProblemReporter* problem_reporter;
 
             // Enables debug output to stderr
             bool debug;
 
-            explicit AssemblerConfig(osmium::area::ProblemReporter* pr = nullptr, bool d = false) :
+            explicit AssemblerConfig(osrm_osmium::area::ProblemReporter* pr = nullptr, bool d = false) :
                 problem_reporter(pr),
                 debug(d) {
             }
@@ -94,7 +94,7 @@ namespace osmium {
             const AssemblerConfig m_config;
 
             // The way segments
-            osmium::area::detail::SegmentList m_segment_list;
+            osrm_osmium::area::detail::SegmentList m_segment_list;
 
             // The rings we are building from the way segments
             std::list<ProtoRing> m_rings;
@@ -114,7 +114,7 @@ namespace osmium {
              * have the same location, but not the same id, a problem
              * point will be added to the list of problem points.
              */
-            bool has_same_location(const osmium::NodeRef& nr1, const osmium::NodeRef& nr2) {
+            bool has_same_location(const osrm_osmium::NodeRef& nr1, const osrm_osmium::NodeRef& nr2) {
                 if (nr1.location() != nr2.location()) {
                     return false;
                 }
@@ -126,16 +126,16 @@ namespace osmium {
                 return true;
             }
 
-            void add_tags_to_area(osmium::builder::AreaBuilder& builder, const osmium::Way& way) const {
-                osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
-                for (const osmium::Tag& tag : way.tags()) {
+            void add_tags_to_area(osrm_osmium::builder::AreaBuilder& builder, const osrm_osmium::Way& way) const {
+                osrm_osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
+                for (const osrm_osmium::Tag& tag : way.tags()) {
                     tl_builder.add_tag(tag.key(), tag.value());
                 }
             }
 
-            void add_common_tags(osmium::builder::TagListBuilder& tl_builder, std::set<const osmium::Way*>& ways) const {
+            void add_common_tags(osrm_osmium::builder::TagListBuilder& tl_builder, std::set<const osrm_osmium::Way*>& ways) const {
                 std::map<std::string, size_t> counter;
-                for (const osmium::Way* way : ways) {
+                for (const osrm_osmium::Way* way : ways) {
                     for (const auto& tag : way->tags()) {
                         std::string kv {tag.key()};
                         kv.append(1, '\0');
@@ -156,9 +156,9 @@ namespace osmium {
                 }
             }
 
-            struct MPFilter : public osmium::tags::KeyFilter {
+            struct MPFilter : public osrm_osmium::tags::KeyFilter {
 
-                MPFilter() : osmium::tags::KeyFilter(true) {
+                MPFilter() : osrm_osmium::tags::KeyFilter(true) {
                     add(false, "type");
                     add(false, "created_by");
                     add(false, "source");
@@ -174,7 +174,7 @@ namespace osmium {
                 return filter;
             }
 
-            void add_tags_to_area(osmium::builder::AreaBuilder& builder, const osmium::Relation& relation) const {
+            void add_tags_to_area(osrm_osmium::builder::AreaBuilder& builder, const osrm_osmium::Relation& relation) const {
                 const auto count = std::count_if(relation.tags().begin(), relation.tags().end(), filter());
 
                 if (debug()) {
@@ -187,8 +187,8 @@ namespace osmium {
                     }
 
                     // write out all tags except type=*
-                    osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
-                    for (const osmium::Tag& tag : relation.tags()) {
+                    osrm_osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
+                    for (const osrm_osmium::Tag& tag : relation.tags()) {
                         if (strcmp(tag.key(), "type")) {
                             tl_builder.add_tag(tag.key(), tag.value());
                         }
@@ -197,7 +197,7 @@ namespace osmium {
                     if (debug()) {
                         std::cerr << "    use tags from outer ways\n";
                     }
-                    std::set<const osmium::Way*> ways;
+                    std::set<const osrm_osmium::Way*> ways;
                     for (const auto& ring : m_outer_rings) {
                         ring->get_ways(ways);
                     }
@@ -205,15 +205,15 @@ namespace osmium {
                         if (debug()) {
                             std::cerr << "      only one outer way\n";
                         }
-                        osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
-                        for (const osmium::Tag& tag : (*ways.begin())->tags()) {
+                        osrm_osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
+                        for (const osrm_osmium::Tag& tag : (*ways.begin())->tags()) {
                             tl_builder.add_tag(tag.key(), tag.value());
                         }
                     } else {
                         if (debug()) {
                             std::cerr << "      multiple outer ways, get common tags\n";
                         }
-                        osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
+                        osrm_osmium::builder::TagListBuilder tl_builder(builder.buffer(), &builder);
                         add_common_tags(tl_builder, ways);
                     }
                 }
@@ -248,7 +248,7 @@ namespace osmium {
              * true.
              */
             bool possibly_combine_rings_back(ProtoRing& ring) {
-                const osmium::NodeRef& nr = ring.get_node_ref_back();
+                const osrm_osmium::NodeRef& nr = ring.get_node_ref_back();
 
                 if (debug()) {
                     std::cerr << "      possibly_combine_rings_back()\n";
@@ -284,7 +284,7 @@ namespace osmium {
              * true.
              */
             bool possibly_combine_rings_front(ProtoRing& ring) {
-                const osmium::NodeRef& nr = ring.get_node_ref_front();
+                const osrm_osmium::NodeRef& nr = ring.get_node_ref_front();
 
                 if (debug()) {
                     std::cerr << "      possibly_combine_rings_front()\n";
@@ -314,7 +314,7 @@ namespace osmium {
                 return false;
             }
 
-            void split_off_subring(osmium::area::detail::ProtoRing& ring, osmium::area::detail::ProtoRing::segments_type::iterator it, osmium::area::detail::ProtoRing::segments_type::iterator it_begin, osmium::area::detail::ProtoRing::segments_type::iterator it_end) {
+            void split_off_subring(osrm_osmium::area::detail::ProtoRing& ring, osrm_osmium::area::detail::ProtoRing::segments_type::iterator it, osrm_osmium::area::detail::ProtoRing::segments_type::iterator it_begin, osrm_osmium::area::detail::ProtoRing::segments_type::iterator it_end) {
                 if (debug()) {
                     std::cerr << "        subring found at: " << *it << "\n";
                 }
@@ -367,10 +367,10 @@ namespace osmium {
                     std::cerr << "      check_for_closed_subring()\n";
                 }
 
-                osmium::area::detail::ProtoRing::segments_type segments(ring.segments().size());
+                osrm_osmium::area::detail::ProtoRing::segments_type segments(ring.segments().size());
                 std::copy(ring.segments().cbegin(), ring.segments().cend(), segments.begin());
                 std::sort(segments.begin(), segments.end());
-                const auto it = std::adjacent_find(segments.begin(), segments.end(), [this](const osmium::area::detail::NodeRefSegment& s1, const osmium::area::detail::NodeRefSegment& s2) {
+                const auto it = std::adjacent_find(segments.begin(), segments.end(), [this](const osrm_osmium::area::detail::NodeRefSegment& s1, const osrm_osmium::area::detail::NodeRefSegment& s2) {
                     return has_same_location(s1.first(), s2.first());
                 });
                 if (it == segments.end()) {
@@ -400,7 +400,7 @@ namespace osmium {
                 return true;
             }
 
-            void combine_rings_front(const osmium::area::detail::NodeRefSegment& segment, ProtoRing& ring) {
+            void combine_rings_front(const osrm_osmium::area::detail::NodeRefSegment& segment, ProtoRing& ring) {
                 if (debug()) {
                     std::cerr << " => match at front of ring\n";
                 }
@@ -411,7 +411,7 @@ namespace osmium {
                 }
             }
 
-            void combine_rings_back(const osmium::area::detail::NodeRefSegment& segment, ProtoRing& ring) {
+            void combine_rings_back(const osrm_osmium::area::detail::NodeRefSegment& segment, ProtoRing& ring) {
                 if (debug()) {
                     std::cerr << " => match at back of ring\n";
                 }
@@ -426,20 +426,20 @@ namespace osmium {
              * Append each outer ring together with its inner rings to the
              * area in the buffer.
              */
-            void add_rings_to_area(osmium::builder::AreaBuilder& builder) const {
+            void add_rings_to_area(osrm_osmium::builder::AreaBuilder& builder) const {
                 for (const ProtoRing* ring : m_outer_rings) {
                     if (debug()) {
                         std::cerr << "    ring " << *ring << " is outer\n";
                     }
                     {
-                        osmium::builder::OuterRingBuilder ring_builder(builder.buffer(), &builder);
+                        osrm_osmium::builder::OuterRingBuilder ring_builder(builder.buffer(), &builder);
                         ring_builder.add_node_ref(ring->get_node_ref_front());
                         for (const auto& segment : ring->segments()) {
                             ring_builder.add_node_ref(segment.second());
                         }
                     }
                     for (ProtoRing* inner : ring->inner_rings()) {
-                        osmium::builder::InnerRingBuilder ring_builder(builder.buffer(), &builder);
+                        osrm_osmium::builder::InnerRingBuilder ring_builder(builder.buffer(), &builder);
                         ring_builder.add_node_ref(inner->get_node_ref_front());
                         for (const auto& segment : inner->segments()) {
                             ring_builder.add_node_ref(segment.second());
@@ -448,7 +448,7 @@ namespace osmium {
                 }
             }
 
-            bool add_to_existing_ring(osmium::area::detail::NodeRefSegment segment) {
+            bool add_to_existing_ring(osrm_osmium::area::detail::NodeRefSegment segment) {
                 int n = 0;
                 for (auto& ring : m_rings) {
                     if (debug()) {
@@ -488,7 +488,7 @@ namespace osmium {
             }
 
             void check_inner_outer(ProtoRing& ring) {
-                const osmium::NodeRef& min_node = ring.min_node();
+                const osrm_osmium::NodeRef& min_node = ring.min_node();
                 if (debug()) {
                     std::cerr << "    check_inner_outer min_node=" << min_node << "\n";
                 }
@@ -665,7 +665,7 @@ namespace osmium {
 
         public:
 
-            typedef osmium::area::AssemblerConfig config_type;
+            typedef osrm_osmium::area::AssemblerConfig config_type;
 
             explicit Assembler(const config_type& config) :
                 m_config(config),
@@ -678,9 +678,9 @@ namespace osmium {
              * Assemble an area from the given way.
              * The resulting area is put into the out_buffer.
              */
-            void operator()(const osmium::Way& way, osmium::memory::Buffer& out_buffer) {
+            void operator()(const osrm_osmium::Way& way, osrm_osmium::memory::Buffer& out_buffer) {
                 if (m_config.problem_reporter) {
-                    m_config.problem_reporter->set_object(osmium::item_type::way, way.id());
+                    m_config.problem_reporter->set_object(osrm_osmium::item_type::way, way.id());
                 }
 
                 if (!way.ends_have_same_id()) {
@@ -698,7 +698,7 @@ namespace osmium {
                 // Now create the Area object and add the attributes and tags
                 // from the way.
                 {
-                    osmium::builder::AreaBuilder builder(out_buffer);
+                    osrm_osmium::builder::AreaBuilder builder(out_buffer);
                     builder.initialize_from_object(way);
 
                     if (create_rings()) {
@@ -715,9 +715,9 @@ namespace osmium {
              * given by the members parameter.
              * The resulting area is put into the out_buffer.
              */
-            void operator()(const osmium::Relation& relation, const std::vector<size_t>& members, const osmium::memory::Buffer& in_buffer, osmium::memory::Buffer& out_buffer) {
+            void operator()(const osrm_osmium::Relation& relation, const std::vector<size_t>& members, const osrm_osmium::memory::Buffer& in_buffer, osrm_osmium::memory::Buffer& out_buffer) {
                 if (m_config.problem_reporter) {
-                    m_config.problem_reporter->set_object(osmium::item_type::relation, relation.id());
+                    m_config.problem_reporter->set_object(osrm_osmium::item_type::relation, relation.id());
                 }
 
                 m_segment_list.extract_segments_from_ways(relation, members, in_buffer);
@@ -731,7 +731,7 @@ namespace osmium {
                 // Now create the Area object and add the attributes and tags
                 // from the relation.
                 {
-                    osmium::builder::AreaBuilder builder(out_buffer);
+                    osrm_osmium::builder::AreaBuilder builder(out_buffer);
                     builder.initialize_from_object(relation);
 
                     if (create_rings()) {
@@ -741,25 +741,25 @@ namespace osmium {
                 }
                 out_buffer.commit();
 
-                const osmium::TagList& area_tags = out_buffer.get<osmium::Area>(area_offset).tags(); // tags of the area we just built
+                const osrm_osmium::TagList& area_tags = out_buffer.get<osrm_osmium::Area>(area_offset).tags(); // tags of the area we just built
 
                 // Find all closed ways that are inner rings and check their
                 // tags. If they are not the same as the tags of the area we
                 // just built, add them to a list and later build areas for
                 // them, too.
-                std::vector<const osmium::Way*> ways_that_should_be_areas;
+                std::vector<const osrm_osmium::Way*> ways_that_should_be_areas;
                 if (m_inner_outer_mismatches == 0) {
                     auto memit = relation.members().begin();
                     for (size_t offset : members) {
                         if (!std::strcmp(memit->role(), "inner")) {
-                            const osmium::Way& way = in_buffer.get<const osmium::Way>(offset);
+                            const osrm_osmium::Way& way = in_buffer.get<const osrm_osmium::Way>(offset);
                             if (!way.nodes().empty() && way.is_closed() && way.tags().size() > 0) {
                                 auto d = std::count_if(way.tags().begin(), way.tags().end(), filter());
                                 if (d > 0) {
-                                    osmium::tags::KeyFilter::iterator way_fi_begin(filter(), way.tags().begin(), way.tags().end());
-                                    osmium::tags::KeyFilter::iterator way_fi_end(filter(), way.tags().end(), way.tags().end());
-                                    osmium::tags::KeyFilter::iterator area_fi_begin(filter(), area_tags.begin(), area_tags.end());
-                                    osmium::tags::KeyFilter::iterator area_fi_end(filter(), area_tags.end(), area_tags.end());
+                                    osrm_osmium::tags::KeyFilter::iterator way_fi_begin(filter(), way.tags().begin(), way.tags().end());
+                                    osrm_osmium::tags::KeyFilter::iterator way_fi_end(filter(), way.tags().end(), way.tags().end());
+                                    osrm_osmium::tags::KeyFilter::iterator area_fi_begin(filter(), area_tags.begin(), area_tags.end());
+                                    osrm_osmium::tags::KeyFilter::iterator area_fi_end(filter(), area_tags.end(), area_tags.end());
 
                                     if (!std::equal(way_fi_begin, way_fi_end, area_fi_begin) || d != std::distance(area_fi_begin, area_fi_end)) {
                                         ways_that_should_be_areas.push_back(&way);
@@ -772,7 +772,7 @@ namespace osmium {
                 }
 
                 // Now build areas for all ways found in the last step.
-                for (const osmium::Way* way : ways_that_should_be_areas) {
+                for (const osrm_osmium::Way* way : ways_that_should_be_areas) {
                     Assembler assembler(m_config);
                     assembler(*way, out_buffer);
                 }
@@ -782,6 +782,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_ASSEMBLER_HPP

@@ -43,7 +43,7 @@ DEALINGS IN THE SOFTWARE.
 #include <thread>
 #include <utility> // IWYU pragma: keep (for std::move)
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace thread {
 
@@ -194,6 +194,6 @@ namespace osmium {
 
     } // namespace thread
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_THREAD_QUEUE_HPP

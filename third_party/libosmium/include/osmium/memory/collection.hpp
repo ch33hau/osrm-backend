@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/memory/item.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace memory {
 
@@ -107,7 +107,7 @@ namespace osmium {
             return out;
         }
 
-        template <typename TMember, osmium::item_type TCollectionItemType>
+        template <typename TMember, osrm_osmium::item_type TCollectionItemType>
         class Collection : public Item {
 
         public:
@@ -116,7 +116,7 @@ namespace osmium {
             typedef CollectionIterator<const TMember> const_iterator;
             typedef TMember value_type;
 
-            static constexpr osmium::item_type itemtype = TCollectionItemType;
+            static constexpr osrm_osmium::item_type itemtype = TCollectionItemType;
 
             Collection() :
                 Item(sizeof(Collection<TMember, TCollectionItemType>), TCollectionItemType) {
@@ -154,6 +154,6 @@ namespace osmium {
 
     } // namespace memory
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_MEMORY_COLLECTION_HPP

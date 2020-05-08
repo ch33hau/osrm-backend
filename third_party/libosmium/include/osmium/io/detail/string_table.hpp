@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/io/detail/pbf.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -240,7 +240,7 @@ namespace osmium {
                     m_index[cs] = ++m_size;
 
                     if (m_size > max_entries) {
-                        throw osmium::pbf_error("string table has too many entries");
+                        throw osrm_osmium::pbf_error("string table has too many entries");
                     }
 
                     return m_size;
@@ -260,6 +260,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_STRING_TABLE_HPP

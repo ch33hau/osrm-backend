@@ -46,7 +46,7 @@ template <class T> double lonToDouble(T const &object)
 
 // Luabind does not like memr funs: instead of casting to the function's signature (mem fun ptr) we
 // simply wrap it
-auto get_nodes_for_way(const osmium::Way &way) -> decltype(way.nodes()) { return way.nodes(); }
+auto get_nodes_for_way(const osrm_osmium::Way &way) -> decltype(way.nodes()) { return way.nodes(); }
 
 // Error handler
 int luaErrorCallback(lua_State *state)
@@ -65,7 +65,7 @@ ScriptingEnvironment::ScriptingEnvironment(const std::string &file_name) : file_
 
 void ScriptingEnvironment::InitContext(ScriptingEnvironment::Context &context)
 {
-    typedef double (osmium::Location::*location_member_ptr_type)() const;
+    typedef double (osrm_osmium::Location::*location_member_ptr_type)() const;
 
     luabind::open(context.state);
     // open utility libraries string library;
@@ -116,16 +116,16 @@ void ScriptingEnvironment::InitContext(ScriptingEnvironment::Context &context)
              static_cast<void (std::vector<std::string>::*)(const std::string &)>(
                  &std::vector<std::string>::push_back)),
 
-         luabind::class_<osmium::Location>("Location")
-             .def<location_member_ptr_type>("lat", &osmium::Location::lat)
-             .def<location_member_ptr_type>("lon", &osmium::Location::lon),
+         luabind::class_<osrm_osmium::Location>("Location")
+             .def<location_member_ptr_type>("lat", &osrm_osmium::Location::lat)
+             .def<location_member_ptr_type>("lon", &osrm_osmium::Location::lon),
 
-         luabind::class_<osmium::Node>("Node")
-             // .def<node_member_ptr_type>("tags", &osmium::Node::tags)
-             .def("location", &osmium::Node::location)
-             .def("get_value_by_key", &osmium::Node::get_value_by_key)
-             .def("get_value_by_key", &get_value_by_key<osmium::Node>)
-             .def("id", &osmium::Node::id),
+         luabind::class_<osrm_osmium::Node>("Node")
+             // .def<node_member_ptr_type>("tags", &osrm_osmium::Node::tags)
+             .def("location", &osrm_osmium::Node::location)
+             .def("get_value_by_key", &osrm_osmium::Node::get_value_by_key)
+             .def("get_value_by_key", &get_value_by_key<osrm_osmium::Node>)
+             .def("id", &osrm_osmium::Node::id),
 
          luabind::class_<ExtractionNode>("ResultNode")
              .def_readwrite("traffic_lights", &ExtractionNode::traffic_lights)
@@ -149,18 +149,18 @@ void ScriptingEnvironment::InitContext(ScriptingEnvironment::Context &context)
              .property("backward_mode",
                        &ExtractionWay::get_backward_mode,
                        &ExtractionWay::set_backward_mode),
-         luabind::class_<osmium::WayNodeList>("WayNodeList").def(luabind::constructor<>()),
-         luabind::class_<osmium::NodeRef>("NodeRef")
+         luabind::class_<osrm_osmium::WayNodeList>("WayNodeList").def(luabind::constructor<>()),
+         luabind::class_<osrm_osmium::NodeRef>("NodeRef")
              .def(luabind::constructor<>())
              // Dear ambitious reader: registering .location() as in:
-             // .def("location", +[](const osmium::NodeRef& nref){ return nref.location(); })
+             // .def("location", +[](const osrm_osmium::NodeRef& nref){ return nref.location(); })
              // will crash at runtime, since we're not (yet?) using libosnmium's
              // NodeLocationsForWays cache
-             .def("id", &osmium::NodeRef::ref),
-         luabind::class_<osmium::Way>("Way")
-             .def("get_value_by_key", &osmium::Way::get_value_by_key)
-             .def("get_value_by_key", &get_value_by_key<osmium::Way>)
-             .def("id", &osmium::Way::id)
+             .def("id", &osrm_osmium::NodeRef::ref),
+         luabind::class_<osrm_osmium::Way>("Way")
+             .def("get_value_by_key", &osrm_osmium::Way::get_value_by_key)
+             .def("get_value_by_key", &get_value_by_key<osrm_osmium::Way>)
+             .def("id", &osrm_osmium::Way::id)
              .def("get_nodes", get_nodes_for_way, luabind::return_stl_iterator),
          luabind::class_<InternalExtractorEdge>("EdgeSource")
              .def_readonly("source_coordinate", &InternalExtractorEdge::source_coordinate)

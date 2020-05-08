@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/entity_bits.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Experimental code that is not "officially" supported.
@@ -57,19 +57,19 @@ namespace osmium {
         class FlexReader {
 
             bool m_with_areas;
-            osmium::osm_entity_bits::type m_entities;
+            osrm_osmium::osm_entity_bits::type m_entities;
 
             TLocationHandler& m_location_handler;
 
-            osmium::io::Reader m_reader;
-            osmium::area::Assembler::config_type m_assembler_config;
-            osmium::area::MultipolygonCollector<osmium::area::Assembler> m_collector;
+            osrm_osmium::io::Reader m_reader;
+            osrm_osmium::area::Assembler::config_type m_assembler_config;
+            osrm_osmium::area::MultipolygonCollector<osrm_osmium::area::Assembler> m_collector;
 
         public:
 
-            explicit FlexReader(const osmium::io::File& file, TLocationHandler& location_handler, osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::nwr) :
-                m_with_areas((entities & osmium::osm_entity_bits::area) != 0),
-                m_entities((entities & ~osmium::osm_entity_bits::area) | (m_with_areas ? osmium::osm_entity_bits::node | osmium::osm_entity_bits::way : osmium::osm_entity_bits::nothing)),
+            explicit FlexReader(const osrm_osmium::io::File& file, TLocationHandler& location_handler, osrm_osmium::osm_entity_bits::type entities = osrm_osmium::osm_entity_bits::nwr) :
+                m_with_areas((entities & osrm_osmium::osm_entity_bits::area) != 0),
+                m_entities((entities & ~osrm_osmium::osm_entity_bits::area) | (m_with_areas ? osrm_osmium::osm_entity_bits::node | osrm_osmium::osm_entity_bits::way : osrm_osmium::osm_entity_bits::nothing)),
                 m_location_handler(location_handler),
                 m_reader(file, m_entities),
                 m_assembler_config(),
@@ -77,42 +77,42 @@ namespace osmium {
             {
                 m_location_handler.ignore_errors();
                 if (m_with_areas) {
-                    osmium::io::Reader reader(file, osmium::osm_entity_bits::relation);
+                    osrm_osmium::io::Reader reader(file, osrm_osmium::osm_entity_bits::relation);
                     m_collector.read_relations(reader);
                     reader.close();
                 }
             }
 
-            explicit FlexReader(const std::string& filename, TLocationHandler& location_handler, osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::nwr) :
-                FlexReader(osmium::io::File(filename), location_handler, entities) {
+            explicit FlexReader(const std::string& filename, TLocationHandler& location_handler, osrm_osmium::osm_entity_bits::type entities = osrm_osmium::osm_entity_bits::nwr) :
+                FlexReader(osrm_osmium::io::File(filename), location_handler, entities) {
             }
 
-            explicit FlexReader(const char* filename, TLocationHandler& location_handler, osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::nwr) :
-                FlexReader(osmium::io::File(filename), location_handler, entities) {
+            explicit FlexReader(const char* filename, TLocationHandler& location_handler, osrm_osmium::osm_entity_bits::type entities = osrm_osmium::osm_entity_bits::nwr) :
+                FlexReader(osrm_osmium::io::File(filename), location_handler, entities) {
             }
 
-            osmium::memory::Buffer read() {
-                osmium::memory::Buffer buffer = m_reader.read();
+            osrm_osmium::memory::Buffer read() {
+                osrm_osmium::memory::Buffer buffer = m_reader.read();
 
                 if (buffer) {
                     if (m_with_areas) {
-                        std::vector<osmium::memory::Buffer> area_buffers;
-                        osmium::apply(buffer, m_location_handler, m_collector.handler([&area_buffers](osmium::memory::Buffer&& area_buffer) {
+                        std::vector<osrm_osmium::memory::Buffer> area_buffers;
+                        osrm_osmium::apply(buffer, m_location_handler, m_collector.handler([&area_buffers](osrm_osmium::memory::Buffer&& area_buffer) {
                             area_buffers.push_back(std::move(area_buffer));
                         }));
-                        for (const osmium::memory::Buffer& b : area_buffers) {
+                        for (const osrm_osmium::memory::Buffer& b : area_buffers) {
                             buffer.add_buffer(b);
                             buffer.commit();
                         }
-                    } else if (m_entities & (osmium::osm_entity_bits::node | osmium::osm_entity_bits::way)) {
-                        osmium::apply(buffer, m_location_handler);
+                    } else if (m_entities & (osrm_osmium::osm_entity_bits::node | osrm_osmium::osm_entity_bits::way)) {
+                        osrm_osmium::apply(buffer, m_location_handler);
                     }
                 }
 
                 return buffer;
             }
 
-            osmium::io::Header header() {
+            osrm_osmium::io::Header header() {
                 return m_reader.header();
             }
 
@@ -124,7 +124,7 @@ namespace osmium {
                 return m_reader.eof();
             }
 
-            const osmium::area::MultipolygonCollector<osmium::area::Assembler>& collector() const {
+            const osrm_osmium::area::MultipolygonCollector<osrm_osmium::area::Assembler>& collector() const {
                 return m_collector;
             }
 
@@ -132,6 +132,6 @@ namespace osmium {
 
     } // namespace experimental
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_EXPERIMENTAL_FLEX_READER_HPP

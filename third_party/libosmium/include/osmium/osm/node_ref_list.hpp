@@ -41,18 +41,18 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/item_type.hpp>
 #include <osmium/osm/node_ref.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * An ordered collection of NodeRef objects. Usually this is not
      * instantiated directly, but one of its subclasses are used.
      */
-    class NodeRefList : public osmium::memory::Item {
+    class NodeRefList : public osrm_osmium::memory::Item {
 
     public:
 
-        explicit NodeRefList(osmium::item_type itemtype) noexcept :
-            osmium::memory::Item(sizeof(NodeRefList), itemtype) {
+        explicit NodeRefList(osrm_osmium::item_type itemtype) noexcept :
+            osrm_osmium::memory::Item(sizeof(NodeRefList), itemtype) {
         }
 
         /**
@@ -182,6 +182,6 @@ namespace osmium {
 
     }; // class NodeRefList
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_NODE_REF_LIST_HPP

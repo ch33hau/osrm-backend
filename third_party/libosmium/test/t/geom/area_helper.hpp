@@ -3,10 +3,10 @@
 #include <osmium/memory/buffer.hpp>
 #include <osmium/osm/area.hpp>
 
-using namespace osmium::builder::attr;
+using namespace osrm_osrm_osmium::builder::attr;
 
-inline const osmium::Area& create_test_area_1outer_0inner(osmium::memory::Buffer& buffer) {
-    osmium::builder::add_area(buffer,
+inline const osrm_osmium::Area& create_test_area_1outer_0inner(osrm_osmium::memory::Buffer& buffer) {
+    osrm_osmium::builder::add_area(buffer,
         _user("foo"),
         _tag("building", "true"),
         _outer_ring({
@@ -17,11 +17,11 @@ inline const osmium::Area& create_test_area_1outer_0inner(osmium::memory::Buffer
         })
     );
 
-    return buffer.get<osmium::Area>(0);
+    return buffer.get<osrm_osmium::Area>(0);
 }
 
-inline const osmium::Area& create_test_area_1outer_1inner(osmium::memory::Buffer& buffer) {
-    osmium::builder::add_area(buffer,
+inline const osrm_osmium::Area& create_test_area_1outer_1inner(osrm_osmium::memory::Buffer& buffer) {
+    osrm_osmium::builder::add_area(buffer,
         _user("foo"),
         _tag("building", "true"),
         _outer_ring({
@@ -40,11 +40,11 @@ inline const osmium::Area& create_test_area_1outer_1inner(osmium::memory::Buffer
         })
     );
 
-    return buffer.get<osmium::Area>(0);
+    return buffer.get<osrm_osmium::Area>(0);
 }
 
-inline const osmium::Area& create_test_area_2outer_2inner(osmium::memory::Buffer& buffer) {
-    osmium::builder::add_area(buffer,
+inline const osrm_osmium::Area& create_test_area_2outer_2inner(osrm_osmium::memory::Buffer& buffer) {
+    osrm_osmium::builder::add_area(buffer,
         _user("foo"),
         _tag("building", "true"),
         _outer_ring({
@@ -76,6 +76,6 @@ inline const osmium::Area& create_test_area_2outer_2inner(osmium::memory::Buffer
         })
     );
 
-    return buffer.get<osmium::Area>(0);
+    return buffer.get<osrm_osmium::Area>(0);
 }
 

@@ -19,12 +19,12 @@ int main(int argc, char* argv[]) {
     std::string input_filename = argv[1];
     std::string output_filename = argv[2];
 
-    osmium::io::Reader reader(input_filename);
-    osmium::io::File output_file(output_filename, "pbf");
-    osmium::io::Header header;
-    osmium::io::Writer writer(output_file, header, osmium::io::overwrite::allow);
+    osrm_osmium::io::Reader reader(input_filename);
+    osrm_osmium::io::File output_file(output_filename, "pbf");
+    osrm_osmium::io::Header header;
+    osrm_osmium::io::Writer writer(output_file, header, osrm_osmium::io::overwrite::allow);
 
-    while (osmium::memory::Buffer buffer = reader.read()) {
+    while (osrm_osmium::memory::Buffer buffer = reader.read()) {
         writer(std::move(buffer));
     }
 

@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <type_traits>
 #include <utility>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -64,7 +64,7 @@ namespace osmium {
 
             public:
 
-                /// The "key" type, usually osmium::unsigned_object_id_type.
+                /// The "key" type, usually osrm_osmium::unsigned_object_id_type.
                 typedef TId key_type;
 
                 /// The "value" type, usually a Location or size_t.
@@ -122,6 +122,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MULTIMAP_HPP

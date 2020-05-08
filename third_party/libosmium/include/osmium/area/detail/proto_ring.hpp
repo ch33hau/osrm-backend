@@ -45,7 +45,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/node_ref.hpp>
 #include <osmium/area/detail/node_ref_segment.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -240,7 +240,7 @@ namespace osmium {
                 }
 
                 bool is_in(ProtoRing* outer) {
-                    osmium::Location testpoint = segments().front().first().location();
+                    osrm_osmium::Location testpoint = segments().front().first().location();
                     bool is_in = false;
 
                     for (size_t i = 0, j = outer->segments().size()-1; i < outer->segments().size(); j = i++) {
@@ -253,7 +253,7 @@ namespace osmium {
                     return is_in;
                 }
 
-                void get_ways(std::set<const osmium::Way*>& ways) {
+                void get_ways(std::set<const osrm_osmium::Way*>& ways) {
                     for (const auto& segment : m_segments) {
                         ways.insert(segment.way());
                     }
@@ -280,6 +280,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_DETAIL_PROTO_RING_HPP

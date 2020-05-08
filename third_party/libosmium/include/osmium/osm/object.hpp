@@ -50,22 +50,22 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/osm/types_from_string.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * OSMObject (Node, Way, Relation, or Area).
      */
-    class OSMObject : public osmium::OSMEntity {
+    class OSMObject : public osrm_osmium::OSMEntity {
 
         object_id_type      m_id;
         bool                m_deleted : 1;
         object_version_type m_version : 31;
-        osmium::Timestamp   m_timestamp;
+        osrm_osmium::Timestamp   m_timestamp;
         user_id_type        m_uid;
         changeset_id_type   m_changeset;
 
         size_t sizeof_object() const noexcept {
-            return sizeof(OSMObject) + (type() == item_type::node ? sizeof(osmium::Location) : 0) + sizeof(string_size_type);
+            return sizeof(OSMObject) + (type() == item_type::node ? sizeof(osrm_osmium::Location) : 0) + sizeof(string_size_type);
         }
 
         unsigned char* user_position() noexcept {
@@ -81,16 +81,16 @@ namespace osmium {
         }
 
         unsigned char* subitems_position() {
-            return data() + osmium::memory::padded_length(sizeof_object() + user_size());
+            return data() + osrm_osmium::memory::padded_length(sizeof_object() + user_size());
         }
 
         const unsigned char* subitems_position() const {
-            return data() + osmium::memory::padded_length(sizeof_object() + user_size());
+            return data() + osrm_osmium::memory::padded_length(sizeof_object() + user_size());
         }
 
     protected:
 
-        OSMObject(osmium::memory::item_size_type size, osmium::item_type type) :
+        OSMObject(osrm_osmium::memory::item_size_type size, osrm_osmium::item_type type) :
             OSMEntity(size, type),
             m_id(0),
             m_deleted(false),
@@ -132,7 +132,7 @@ namespace osmium {
          * @returns Reference to object to make calls chainable.
          */
         OSMObject& set_id(const char* id) {
-            return set_id(osmium::string_to_object_id(id));
+            return set_id(osrm_osmium::string_to_object_id(id));
         }
 
         /// Is this object marked as deleted?
@@ -271,7 +271,7 @@ namespace osmium {
         }
 
         /// Get timestamp when this object last changed.
-        osmium::Timestamp timestamp() const noexcept {
+        osrm_osmium::Timestamp timestamp() const noexcept {
             return m_timestamp;
         }
 
@@ -281,7 +281,7 @@ namespace osmium {
          * @param timestamp Timestamp
          * @returns Reference to object to make calls chainable.
          */
-        OSMObject& set_timestamp(const osmium::Timestamp& timestamp) noexcept {
+        OSMObject& set_timestamp(const osrm_osmium::Timestamp& timestamp) noexcept {
             m_timestamp = timestamp;
             return *this;
         }
@@ -293,7 +293,7 @@ namespace osmium {
 
         /// Get the list of tags for this object.
         const TagList& tags() const {
-            return osmium::detail::subitem_of_type<const TagList>(cbegin(), cend());
+            return osrm_osmium::detail::subitem_of_type<const TagList>(cbegin(), cend());
         }
 
         /**
@@ -320,7 +320,7 @@ namespace osmium {
             } else if (!strcmp(attr, "changeset")) {
                 set_changeset(value);
             } else if (!strcmp(attr, "timestamp")) {
-                set_timestamp(osmium::Timestamp(value));
+                set_timestamp(osrm_osmium::Timestamp(value));
             } else if (!strcmp(attr, "uid")) {
                 set_uid(value);
             } else if (!strcmp(attr, "visible")) {
@@ -328,8 +328,8 @@ namespace osmium {
             }
         }
 
-        typedef osmium::memory::CollectionIterator<Item> iterator;
-        typedef osmium::memory::CollectionIterator<const Item> const_iterator;
+        typedef osrm_osmium::memory::CollectionIterator<Item> iterator;
+        typedef osrm_osmium::memory::CollectionIterator<const Item> const_iterator;
 
         iterator begin() {
             return iterator(subitems_position());
@@ -356,10 +356,10 @@ namespace osmium {
         }
 
         template <typename T>
-        using t_iterator = osmium::memory::ItemIterator<T>;
+        using t_iterator = osrm_osmium::memory::ItemIterator<T>;
 
         template <typename T>
-        using t_const_iterator = osmium::memory::ItemIterator<const T>;
+        using t_const_iterator = osrm_osmium::memory::ItemIterator<const T>;
 
         template <typename T>
         t_iterator<T> begin() {
@@ -393,7 +393,7 @@ namespace osmium {
 
     }; // class OSMObject
 
-    static_assert(sizeof(OSMObject) % osmium::memory::align_bytes == 0, "Class osmium::OSMObject has wrong size to be aligned properly!");
+    static_assert(sizeof(OSMObject) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::OSMObject has wrong size to be aligned properly!");
 
     /**
      * OSMObjects are equal if their type, id, and version are equal.
@@ -433,6 +433,6 @@ namespace osmium {
         return ! (lhs < rhs);
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_OBJECT_HPP

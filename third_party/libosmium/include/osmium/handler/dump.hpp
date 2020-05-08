@@ -54,17 +54,17 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/way.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace handler {
 
-        class Dump : public osmium::handler::Handler {
+        class Dump : public osrm_osmium::handler::Handler {
 
             std::ostream* m_out;
             bool m_with_size;
             std::string m_prefix;
 
-            void print_title(const char* title, const osmium::memory::Item& item) {
+            void print_title(const char* title, const osrm_osmium::memory::Item& item) {
                 *m_out << m_prefix
                        << title
                        << ":";
@@ -78,7 +78,7 @@ namespace osmium {
                 *m_out << "\n";
             }
 
-            void print_meta(const osmium::OSMObject& object) {
+            void print_meta(const osrm_osmium::OSMObject& object) {
                 *m_out << m_prefix
                        << "  id="
                        << object.id()
@@ -109,11 +109,11 @@ namespace osmium {
                        << "\n";
 
                 Dump dump(*m_out, m_with_size, m_prefix + "  ");
-                osmium::apply(object.cbegin(), object.cend(), dump);
+                osrm_osmium::apply(object.cbegin(), object.cend(), dump);
             }
 
-            void print_location(const osmium::Node& node) {
-                const osmium::Location& location = node.location();
+            void print_location(const osrm_osmium::Node& node) {
+                const osrm_osmium::Location& location = node.location();
 
                 if (location) {
                     *m_out << m_prefix
@@ -142,7 +142,7 @@ namespace osmium {
                 m_prefix(prefix) {
             }
 
-            void tag_list(const osmium::TagList& tags) {
+            void tag_list(const osrm_osmium::TagList& tags) {
                 print_title("TAGS", tags);
                 for (const auto& tag : tags) {
                     *m_out << m_prefix
@@ -155,7 +155,7 @@ namespace osmium {
                 }
             }
 
-            void way_node_list(const osmium::WayNodeList& wnl) {
+            void way_node_list(const osrm_osmium::WayNodeList& wnl) {
                 print_title("NODES", wnl);
                 for (const auto& node_ref : wnl) {
                     *m_out << m_prefix
@@ -169,7 +169,7 @@ namespace osmium {
                 }
             }
 
-            void relation_member_list(const osmium::RelationMemberList& rml) {
+            void relation_member_list(const osrm_osmium::RelationMemberList& rml) {
                 print_title("MEMBERS", rml);
                 for (const auto& member : rml) {
                     *m_out << m_prefix
@@ -182,12 +182,12 @@ namespace osmium {
                            << "|\n";
                     if (member.full_member()) {
                         Dump dump(*m_out, m_with_size, m_prefix + "  | ");
-                        osmium::apply_item(member.get_object(), dump);
+                        osrm_osmium::apply_item(member.get_object(), dump);
                     }
                 }
             }
 
-            void outer_ring(const osmium::OuterRing& ring) {
+            void outer_ring(const osrm_osmium::OuterRing& ring) {
                 print_title("OUTER RING", ring);
                 for (const auto& node_ref : ring) {
                     *m_out << m_prefix
@@ -201,7 +201,7 @@ namespace osmium {
                 }
             }
 
-            void inner_ring(const osmium::InnerRing& ring) {
+            void inner_ring(const osrm_osmium::InnerRing& ring) {
                 print_title("INNER RING", ring);
                 for (const auto& node_ref : ring) {
                     *m_out << m_prefix
@@ -215,28 +215,28 @@ namespace osmium {
                 }
             }
 
-            void node(const osmium::Node& node) {
+            void node(const osrm_osmium::Node& node) {
                 print_title("NODE", node);
                 print_meta(node);
                 print_location(node);
             }
 
-            void way(const osmium::Way& way) {
+            void way(const osrm_osmium::Way& way) {
                 print_title("WAY", way);
                 print_meta(way);
             }
 
-            void relation(const osmium::Relation& relation) {
+            void relation(const osrm_osmium::Relation& relation) {
                 print_title("RELATION", relation);
                 print_meta(relation);
             }
 
-            void area(const osmium::Area& area) {
+            void area(const osrm_osmium::Area& area) {
                 print_title("AREA", area);
                 print_meta(area);
             }
 
-            void changeset(const osmium::Changeset& changeset) {
+            void changeset(const osrm_osmium::Changeset& changeset) {
                 print_title("CHANGESET", changeset);
                 *m_out << m_prefix
                        << "  id="
@@ -282,13 +282,13 @@ namespace osmium {
                 *m_out << "\n";
 
                 Dump dump(*m_out, m_with_size, m_prefix + "  ");
-                osmium::apply(changeset.cbegin(), changeset.cend(), dump);
+                osrm_osmium::apply(changeset.cbegin(), changeset.cend(), dump);
             }
 
         }; // class Dump
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_DUMP_HPP

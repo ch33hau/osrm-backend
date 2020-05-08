@@ -11,15 +11,15 @@
 #include <osmium/osm.hpp>
 #include <osmium/osm/types.hpp>
 
-class CheckWKTHandler : public osmium::handler::Handler {
+class CheckWKTHandler : public osrm_osmium::handler::Handler {
 
-    std::map<osmium::object_id_type, std::string> m_geometries;
-    osmium::geom::WKTFactory<> m_factory;
+    std::map<osrm_osmium::object_id_type, std::string> m_geometries;
+    osrm_osmium::geom::WKTFactory<> m_factory;
 
     void read_wkt_file(const std::string& filename) {
         std::ifstream in(filename, std::ifstream::in);
         if (in) {
-            osmium::object_id_type id;
+            osrm_osmium::object_id_type id;
             std::string line;
             while (std::getline(in, line)) {
                 size_t pos = line.find_first_of(' ');
@@ -46,7 +46,7 @@ class CheckWKTHandler : public osmium::handler::Handler {
 public:
 
     CheckWKTHandler(const std::string& dirname, int test_id) :
-        osmium::handler::Handler() {
+        osrm_osmium::handler::Handler() {
 
         std::string filename = dirname + "/" + std::to_string(test_id / 100) + "/" + std::to_string(test_id) + "/";
         read_wkt_file(filename + "nodes.wkt");
@@ -62,7 +62,7 @@ public:
         }
     }
 
-    void node(const osmium::Node& node) {
+    void node(const osrm_osmium::Node& node) {
         const std::string wkt = m_geometries[node.id()];
         assert(wkt != "" && "Missing geometry for node in nodes.wkt");
 
@@ -71,7 +71,7 @@ public:
         m_geometries.erase(node.id());
     }
 
-    void way(const osmium::Way& way) {
+    void way(const osrm_osmium::Way& way) {
         const std::string wkt = m_geometries[way.id()];
         assert(wkt != "" && "Missing geometry for way in ways.wkt");
 

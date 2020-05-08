@@ -3,7 +3,7 @@
 #include <osmium/io/detail/string_table.hpp>
 
 TEST_CASE("String store") {
-    osmium::io::detail::StringStore ss(100);
+    osrm_osmium::io::detail::StringStore ss(100);
 
     SECTION("empty") {
         REQUIRE(ss.begin() == ss.end());
@@ -64,7 +64,7 @@ TEST_CASE("String store") {
 }
 
 TEST_CASE("String table") {
-    osmium::io::detail::StringTable st;
+    osrm_osmium::io::detail::StringTable st;
 
     SECTION("empty") {
         REQUIRE(st.size() == 1);

@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/io/error.hpp>
 #include <osmium/osm/location.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when there was a problem with parsing the PBF format of
@@ -78,12 +78,12 @@ namespace osmium {
             // between representation as double and as int
             const int64_t lonlat_resolution = 1000 * 1000 * 1000;
 
-            const int64_t resolution_convert = lonlat_resolution / osmium::Location::coordinate_precision;
+            const int64_t resolution_convert = lonlat_resolution / osrm_osmium::Location::coordinate_precision;
 
         } // namespace detail
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_PBF_HPP

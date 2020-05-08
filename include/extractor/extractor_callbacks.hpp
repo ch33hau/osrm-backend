@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace osmium
+namespace osrm_osmium
 {
 class Node;
 class Way;
@@ -50,13 +50,13 @@ class ExtractorCallbacks
     ExtractorCallbacks &operator=(const ExtractorCallbacks &) = delete;
 
     // warning: caller needs to take care of synchronization!
-    void ProcessNode(const osmium::Node &current_node, const ExtractionNode &result_node);
+    void ProcessNode(const osrm_osmium::Node &current_node, const ExtractionNode &result_node);
 
     // warning: caller needs to take care of synchronization!
     void ProcessRestriction(const boost::optional<InputRestrictionContainer> &restriction);
 
     // warning: caller needs to take care of synchronization!
-    void ProcessWay(const osmium::Way &current_way, const ExtractionWay &result_way);
+    void ProcessWay(const osrm_osmium::Way &current_way, const ExtractionWay &result_way);
 };
 }
 }

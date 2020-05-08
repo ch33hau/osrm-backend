@@ -11,21 +11,21 @@
 #include <osmium/handler.hpp>
 #include <osmium/visitor.hpp>
 
-struct CountHandler : public osmium::handler::Handler {
+struct CountHandler : public osrm_osmium::handler::Handler {
 
     uint64_t nodes = 0;
     uint64_t ways = 0;
     uint64_t relations = 0;
 
-    void node(osmium::Node&) {
+    void node(osrm_osmium::Node&) {
         ++nodes;
     }
 
-    void way(osmium::Way&) {
+    void way(osrm_osmium::Way&) {
         ++ways;
     }
 
-    void relation(osmium::Relation&) {
+    void relation(osrm_osmium::Relation&) {
         ++relations;
     }
 
@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
 
     std::string input_filename = argv[1];
 
-    osmium::io::Reader reader(input_filename);
+    osrm_osmium::io::Reader reader(input_filename);
 
     CountHandler handler;
-    osmium::apply(reader, handler);
+    osrm_osmium::apply(reader, handler);
     reader.close();
 
     std::cout << "Nodes: "     << handler.nodes << "\n";

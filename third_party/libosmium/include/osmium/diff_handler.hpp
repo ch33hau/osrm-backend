@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/osm/diff_object.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Osmium diff handlers provide access to differences between OSM object versions
@@ -48,19 +48,19 @@ namespace osmium {
 
             DiffHandler() = default;
 
-            void node(const osmium::DiffNode&) const {
+            void node(const osrm_osmium::DiffNode&) const {
             }
 
-            void way(const osmium::DiffWay&) const {
+            void way(const osrm_osmium::DiffWay&) const {
             }
 
-            void relation(const osmium::DiffRelation&) const {
+            void relation(const osrm_osmium::DiffRelation&) const {
             }
 
         }; // class DiffHandler
 
     } // namespace diff_handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_DIFF_HANDLER_HPP

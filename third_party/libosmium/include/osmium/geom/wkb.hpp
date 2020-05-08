@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/cast.hpp>
 #include <osmium/util/endian.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -160,7 +160,7 @@ namespace osmium {
 
                 /* Point */
 
-                point_type make_point(const osmium::geom::Coordinates& xy) const {
+                point_type make_point(const osrm_osmium::geom::Coordinates& xy) const {
                     std::string data;
                     header(data, wkbPoint, false);
                     str_push(data, xy.x);
@@ -180,7 +180,7 @@ namespace osmium {
                     m_linestring_size_offset = header(m_data, wkbLineString, true);
                 }
 
-                void linestring_add_location(const osmium::geom::Coordinates& xy) {
+                void linestring_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     str_push(m_data, xy.x);
                     str_push(m_data, xy.y);
                 }
@@ -239,7 +239,7 @@ namespace osmium {
                     set_size(m_ring_size_offset, m_points);
                 }
 
-                void multipolygon_add_location(const osmium::geom::Coordinates& xy) {
+                void multipolygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     str_push(m_data, xy.x);
                     str_push(m_data, xy.y);
                     ++m_points;
@@ -264,10 +264,10 @@ namespace osmium {
         } // namespace detail
 
         template <typename TProjection = IdentityProjection>
-        using WKBFactory = GeometryFactory<osmium::geom::detail::WKBFactoryImpl, TProjection>;
+        using WKBFactory = GeometryFactory<osrm_osmium::geom::detail::WKBFactoryImpl, TProjection>;
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_WKB_HPP

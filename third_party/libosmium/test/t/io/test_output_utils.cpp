@@ -10,19 +10,19 @@ TEST_CASE("output formatted") {
     std::string out;
 
     SECTION("small results") {
-        osmium::io::detail::append_printf_formatted_string(out, "%d", 17);
+        osrm_osmium::io::detail::append_printf_formatted_string(out, "%d", 17);
         REQUIRE(out == "17");
     }
 
     SECTION("several parameters") {
-        osmium::io::detail::append_printf_formatted_string(out, "%d %s", 17, "foo");
+        osrm_osmium::io::detail::append_printf_formatted_string(out, "%d %s", 17, "foo");
         REQUIRE(out == "17 foo");
 
     }
 
     SECTION("string already containing something") {
         out += "foo";
-        osmium::io::detail::append_printf_formatted_string(out, " %d", 23);
+        osrm_osmium::io::detail::append_printf_formatted_string(out, " %d", 23);
         REQUIRE(out == "foo 23");
     }
 
@@ -34,7 +34,7 @@ TEST_CASE("output formatted") {
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
-        osmium::io::detail::append_printf_formatted_string(out, "%s", str);
+        osrm_osmium::io::detail::append_printf_formatted_string(out, "%s", str);
 
         REQUIRE(out == str);
     }
@@ -47,30 +47,30 @@ TEST_CASE("UTF8 encoding") {
 
     SECTION("append to string") {
         out += "1234";
-        osmium::io::detail::append_utf8_encoded_string(out, "abc");
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, "abc");
         REQUIRE(out == "1234abc");
     }
 
     SECTION("don't encode alphabetic characters") {
         const char* s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        osmium::io::detail::append_utf8_encoded_string(out, s);
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, s);
         REQUIRE(out == s);
     }
 
     SECTION("don't encode numeric characters") {
         const char* s = "0123456789";
-        osmium::io::detail::append_utf8_encoded_string(out, s);
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, s);
         REQUIRE(out == s);
     }
 
     SECTION("don't encode lots of often used characters characters") {
         const char* s = ".-;:_#+";
-        osmium::io::detail::append_utf8_encoded_string(out, s);
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, s);
         REQUIRE(out == s);
     }
 
     SECTION("encode characters that are special in OPL") {
-        osmium::io::detail::append_utf8_encoded_string(out, " \n,=@");
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, " \n,=@");
         REQUIRE(out == "%20%%0a%%2c%%3d%%40%");
     }
 
@@ -78,7 +78,7 @@ TEST_CASE("UTF8 encoding") {
 #if !defined(_MSC_VER)
 
     SECTION("encode multibyte character") {
-        osmium::io::detail::append_utf8_encoded_string(out, u8"\u30dc_\U0001d11e_\U0001f6eb");
+        osrm_osmium::io::detail::append_utf8_encoded_string(out, u8"\u30dc_\U0001d11e_\U0001f6eb");
         REQUIRE(out == "%30dc%_%1d11e%_%1f6eb%");
     }
 
@@ -92,13 +92,13 @@ TEST_CASE("html encoding") {
 
     SECTION("do not encode normal characters") {
         const char* s = "abc123,.-";
-        osmium::io::detail::append_xml_encoded_string(out, s);
+        osrm_osmium::io::detail::append_xml_encoded_string(out, s);
         REQUIRE(out == s);
     }
 
     SECTION("encode special XML characters") {
         const char* s = "& \" \' < > \n \r \t";
-        osmium::io::detail::append_xml_encoded_string(out, s);
+        osrm_osmium::io::detail::append_xml_encoded_string(out, s);
         REQUIRE(out == "&amp; &quot; &apos; &lt; &gt; &#xA; &#xD; &#x9;");
     }
 
@@ -110,13 +110,13 @@ TEST_CASE("debug encoding") {
 
     SECTION("do not encode normal characters") {
         const char* s = "abc123,.-";
-        osmium::io::detail::append_debug_encoded_string(out, s, "[", "]");
+        osrm_osmium::io::detail::append_debug_encoded_string(out, s, "[", "]");
         REQUIRE(out == s);
     }
 
     SECTION("encode some unicode characters") {
         const char* s = u8"\n_\u30dc_\U0001d11e_\U0001f6eb";
-        osmium::io::detail::append_debug_encoded_string(out, s, "[", "]");
+        osrm_osmium::io::detail::append_debug_encoded_string(out, s, "[", "]");
         REQUIRE(out == "[<U+000A>]_[<U+30DC>]_[<U+1D11E>]_[<U+1F6EB>]");
     }
 
@@ -132,7 +132,7 @@ TEST_CASE("encoding of non-printable characters in the first 127 characters") {
         s[0] = c;
 
         SECTION("utf8 encode") {
-            osmium::io::detail::append_utf8_encoded_string(out, s);
+            osrm_osmium::io::detail::append_utf8_encoded_string(out, s);
 
             if (!std::isprint(c, cloc)) {
                 REQUIRE(out[0] == '%');
@@ -140,7 +140,7 @@ TEST_CASE("encoding of non-printable characters in the first 127 characters") {
         }
 
         SECTION("debug encode") {
-            osmium::io::detail::append_debug_encoded_string(out, s, "", "");
+            osrm_osmium::io::detail::append_debug_encoded_string(out, s, "", "");
 
             if (!std::isprint(c, cloc)) {
                 REQUIRE(out[0] == '<');

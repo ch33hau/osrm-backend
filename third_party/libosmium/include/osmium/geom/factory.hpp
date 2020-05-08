@@ -48,7 +48,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/node_ref.hpp>
 #include <osmium/osm/way.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when an invalid geometry is encountered. An example
@@ -57,11 +57,11 @@ namespace osmium {
     class geometry_error : public std::runtime_error {
 
         std::string m_message;
-        osmium::object_id_type m_id;
+        osrm_osmium::object_id_type m_id;
 
     public:
 
-        explicit geometry_error(const std::string& message, const char* object_type = "", osmium::object_id_type id = 0) :
+        explicit geometry_error(const std::string& message, const char* object_type = "", osrm_osmium::object_id_type id = 0) :
             std::runtime_error(message),
             m_message(message),
             m_id(id) {
@@ -74,7 +74,7 @@ namespace osmium {
             }
         }
 
-        void set_id(const char* object_type, osmium::object_id_type id) {
+        void set_id(const char* object_type, osrm_osmium::object_id_type id) {
             if (m_id == 0 && id != 0) {
                 m_message += " (";
                 m_message += object_type;
@@ -85,7 +85,7 @@ namespace osmium {
             m_id = id;
         }
 
-        osmium::object_id_type id() const noexcept {
+        osrm_osmium::object_id_type id() const noexcept {
             return m_id;
         }
 
@@ -125,7 +125,7 @@ namespace osmium {
 
         public:
 
-            Coordinates operator()(osmium::Location location) const {
+            Coordinates operator()(osrm_osmium::Location location) const {
                 return Coordinates{location.lon(), location.lat()};
             }
 
@@ -148,9 +148,9 @@ namespace osmium {
             /**
              * Add all points of an outer or inner ring to a multipolygon.
              */
-            void add_points(const osmium::OuterRing& nodes) {
-                osmium::Location last_location;
-                for (const osmium::NodeRef& node_ref : nodes) {
+            void add_points(const osrm_osmium::OuterRing& nodes) {
+                osrm_osmium::Location last_location;
+                for (const osrm_osmium::NodeRef& node_ref : nodes) {
                     if (last_location != node_ref.location()) {
                         last_location = node_ref.location();
                         m_impl.multipolygon_add_location(m_projection(last_location));
@@ -199,23 +199,23 @@ namespace osmium {
 
             /* Point */
 
-            point_type create_point(const osmium::Location& location) const {
+            point_type create_point(const osrm_osmium::Location& location) const {
                 return m_impl.make_point(m_projection(location));
             }
 
-            point_type create_point(const osmium::Node& node) {
+            point_type create_point(const osrm_osmium::Node& node) {
                 try {
                     return create_point(node.location());
-                } catch (osmium::geometry_error& e) {
+                } catch (osrm_osmium::geometry_error& e) {
                     e.set_id("node", node.id());
                     throw;
                 }
             }
 
-            point_type create_point(const osmium::NodeRef& node_ref) {
+            point_type create_point(const osrm_osmium::NodeRef& node_ref) {
                 try {
                     return create_point(node_ref.location());
-                } catch (osmium::geometry_error& e) {
+                } catch (osrm_osmium::geometry_error& e) {
                     e.set_id("node", node_ref.ref());
                     throw;
                 }
@@ -239,7 +239,7 @@ namespace osmium {
             template <typename TIter>
             size_t fill_linestring_unique(TIter it, TIter end) {
                 size_t num_points = 0;
-                osmium::Location last_location;
+                osrm_osmium::Location last_location;
                 for (; it != end; ++it) {
                     if (last_location != it->location()) {
                         last_location = it->location();
@@ -254,12 +254,12 @@ namespace osmium {
                 return m_impl.linestring_finish(num_points);
             }
 
-            linestring_type create_linestring(const osmium::WayNodeList& wnl, use_nodes un = use_nodes::unique, direction dir = direction::forward) {
+            linestring_type create_linestring(const osrm_osmium::WayNodeList& wnl, use_nodes un = use_nodes::unique, direction dir = direction::forward) {
                 linestring_start();
                 size_t num_points = 0;
 
                 if (un == use_nodes::unique) {
-                    osmium::Location last_location;
+                    osrm_osmium::Location last_location;
                     switch (dir) {
                         case direction::forward:
                             num_points = fill_linestring_unique(wnl.cbegin(), wnl.cend());
@@ -280,16 +280,16 @@ namespace osmium {
                 }
 
                 if (num_points < 2) {
-                    throw osmium::geometry_error("need at least two points for linestring");
+                    throw osrm_osmium::geometry_error("need at least two points for linestring");
                 }
 
                 return linestring_finish(num_points);
             }
 
-            linestring_type create_linestring(const osmium::Way& way, use_nodes un=use_nodes::unique, direction dir=direction::forward) {
+            linestring_type create_linestring(const osrm_osmium::Way& way, use_nodes un=use_nodes::unique, direction dir=direction::forward) {
                 try {
                     return create_linestring(way.nodes(), un, dir);
-                } catch (osmium::geometry_error& e) {
+                } catch (osrm_osmium::geometry_error& e) {
                     e.set_id("way", way.id());
                     throw;
                 }
@@ -313,7 +313,7 @@ namespace osmium {
             template <typename TIter>
             size_t fill_polygon_unique(TIter it, TIter end) {
                 size_t num_points = 0;
-                osmium::Location last_location;
+                osrm_osmium::Location last_location;
                 for (; it != end; ++it) {
                     if (last_location != it->location()) {
                         last_location = it->location();
@@ -328,12 +328,12 @@ namespace osmium {
                 return m_impl.polygon_finish(num_points);
             }
 
-            polygon_type create_polygon(const osmium::WayNodeList& wnl, use_nodes un = use_nodes::unique, direction dir = direction::forward) {
+            polygon_type create_polygon(const osrm_osmium::WayNodeList& wnl, use_nodes un = use_nodes::unique, direction dir = direction::forward) {
                 polygon_start();
                 size_t num_points = 0;
 
                 if (un == use_nodes::unique) {
-                    osmium::Location last_location;
+                    osrm_osmium::Location last_location;
                     switch (dir) {
                         case direction::forward:
                             num_points = fill_polygon_unique(wnl.cbegin(), wnl.cend());
@@ -354,16 +354,16 @@ namespace osmium {
                 }
 
                 if (num_points < 4) {
-                    throw osmium::geometry_error("need at least four points for polygon");
+                    throw osrm_osmium::geometry_error("need at least four points for polygon");
                 }
 
                 return polygon_finish(num_points);
             }
 
-            polygon_type create_polygon(const osmium::Way& way, use_nodes un=use_nodes::unique, direction dir=direction::forward) {
+            polygon_type create_polygon(const osrm_osmium::Way& way, use_nodes un=use_nodes::unique, direction dir=direction::forward) {
                 try {
                     return create_polygon(way.nodes(), un, dir);
-                } catch (osmium::geometry_error& e) {
+                } catch (osrm_osmium::geometry_error& e) {
                     e.set_id("way", way.id());
                     throw;
                 }
@@ -371,15 +371,15 @@ namespace osmium {
 
             /* MultiPolygon */
 
-            multipolygon_type create_multipolygon(const osmium::Area& area) {
+            multipolygon_type create_multipolygon(const osrm_osmium::Area& area) {
                 try {
                     size_t num_polygons = 0;
                     size_t num_rings = 0;
                     m_impl.multipolygon_start();
 
                     for (auto it = area.cbegin(); it != area.cend(); ++it) {
-                        const osmium::OuterRing& ring = static_cast<const osmium::OuterRing&>(*it);
-                        if (it->type() == osmium::item_type::outer_ring) {
+                        const osrm_osmium::OuterRing& ring = static_cast<const osrm_osmium::OuterRing&>(*it);
+                        if (it->type() == osrm_osmium::item_type::outer_ring) {
                             if (num_polygons > 0) {
                                 m_impl.multipolygon_polygon_finish();
                             }
@@ -389,7 +389,7 @@ namespace osmium {
                             m_impl.multipolygon_outer_ring_finish();
                             ++num_rings;
                             ++num_polygons;
-                        } else if (it->type() == osmium::item_type::inner_ring) {
+                        } else if (it->type() == osrm_osmium::item_type::inner_ring) {
                             m_impl.multipolygon_inner_ring_start();
                             add_points(ring);
                             m_impl.multipolygon_inner_ring_finish();
@@ -399,12 +399,12 @@ namespace osmium {
 
                     // if there are no rings, this area is invalid
                     if (num_rings == 0) {
-                        throw osmium::geometry_error("area contains no rings");
+                        throw osrm_osmium::geometry_error("area contains no rings");
                     }
 
                     m_impl.multipolygon_polygon_finish();
                     return m_impl.multipolygon_finish();
-                } catch (osmium::geometry_error& e) {
+                } catch (osrm_osmium::geometry_error& e) {
                     e.set_id("area", area.id());
                     throw;
                 }
@@ -414,6 +414,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_FACTORY_HPP

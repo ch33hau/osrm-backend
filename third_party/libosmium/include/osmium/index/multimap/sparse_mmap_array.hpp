@@ -38,20 +38,20 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/detail/mmap_vector_anon.hpp>
 #include <osmium/index/detail/vector_multimap.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
         namespace multimap {
 
             template <typename TId, typename TValue>
-            using SparseMmapArray = VectorBasedSparseMultimap<TId, TValue, osmium::detail::mmap_vector_anon>;
+            using SparseMmapArray = VectorBasedSparseMultimap<TId, TValue, osrm_osmium::detail::mmap_vector_anon>;
 
         } // namespace multimap
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // __linux__
 

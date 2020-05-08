@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 /**
  * @brief Namespace for everything in the Osmium library.
  */
-namespace osmium {
-} // namespace osmium
+namespace osrm_osmium {
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_HPP

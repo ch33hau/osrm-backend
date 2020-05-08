@@ -61,7 +61,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/cast.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when there are problems compressing or
@@ -94,7 +94,7 @@ namespace osmium {
                 } else {
                     error += ::BZ2_bzerror(bzfile, &errnum);
                 }
-                throw osmium::bzip2_error(error, errnum);
+                throw osrm_osmium::bzip2_error(error, errnum);
             }
 
         } // namespace detail
@@ -140,7 +140,7 @@ namespace osmium {
                     m_bzfile = nullptr;
                     if (m_file) {
                         if (do_fsync()) {
-                            osmium::io::detail::reliable_fsync(::fileno(m_file));
+                            osrm_osmium::io::detail::reliable_fsync(::fileno(m_file));
                         }
                         if (fclose(m_file) != 0) {
                             throw std::system_error(errno, std::system_category(), "Close failed");
@@ -185,7 +185,7 @@ namespace osmium {
                 std::string buffer;
 
                 if (!m_stream_end) {
-                    buffer.resize(osmium::io::Decompressor::input_buffer_size);
+                    buffer.resize(osrm_osmium::io::Decompressor::input_buffer_size);
                     int error;
                     int nread = ::BZ2_bzRead(&error, m_bzfile, const_cast<char*>(buffer.data()), static_cast_with_assert<int>(buffer.size()));
                     if (error != BZ_OK && error != BZ_STREAM_END) {
@@ -301,10 +301,10 @@ namespace osmium {
 
             // we want the register_compression() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_bzip2_compression = osmium::io::CompressionFactory::instance().register_compression(osmium::io::file_compression::bzip2,
-                [](int fd, fsync sync) { return new osmium::io::Bzip2Compressor(fd, sync); },
-                [](int fd) { return new osmium::io::Bzip2Decompressor(fd); },
-                [](const char* buffer, size_t size) { return new osmium::io::Bzip2BufferDecompressor(buffer, size); }
+            const bool registered_bzip2_compression = osrm_osmium::io::CompressionFactory::instance().register_compression(osrm_osmium::io::file_compression::bzip2,
+                [](int fd, fsync sync) { return new osrm_osmium::io::Bzip2Compressor(fd, sync); },
+                [](int fd) { return new osrm_osmium::io::Bzip2Decompressor(fd); },
+                [](const char* buffer, size_t size) { return new osrm_osmium::io::Bzip2BufferDecompressor(buffer, size); }
             );
 
             // dummy function to silence the unused variable warning from above
@@ -316,6 +316,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_BZIP2_COMPRESSION_HPP

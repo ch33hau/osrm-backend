@@ -63,7 +63,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/cast.hpp>
 #include <osmium/util/delta.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when the o5m deocder failed. The exception contains
@@ -140,9 +140,9 @@ namespace osmium {
 
                 static constexpr int buffer_size = 2 * 1000 * 1000;
 
-                osmium::io::Header m_header;
+                osrm_osmium::io::Header m_header;
 
-                osmium::memory::Buffer m_buffer;
+                osrm_osmium::memory::Buffer m_buffer;
 
                 std::string m_input;
 
@@ -224,15 +224,15 @@ namespace osmium {
                     set_header_value(m_header);
                 }
 
-                osmium::util::DeltaDecode<osmium::object_id_type> m_delta_id;
+                osrm_osmium::util::DeltaDecode<osrm_osmium::object_id_type> m_delta_id;
 
-                osmium::util::DeltaDecode<int64_t> m_delta_timestamp;
-                osmium::util::DeltaDecode<osmium::changeset_id_type> m_delta_changeset;
-                osmium::util::DeltaDecode<int64_t> m_delta_lon;
-                osmium::util::DeltaDecode<int64_t> m_delta_lat;
+                osrm_osmium::util::DeltaDecode<int64_t> m_delta_timestamp;
+                osrm_osmium::util::DeltaDecode<osrm_osmium::changeset_id_type> m_delta_changeset;
+                osrm_osmium::util::DeltaDecode<int64_t> m_delta_lon;
+                osrm_osmium::util::DeltaDecode<int64_t> m_delta_lat;
 
-                osmium::util::DeltaDecode<osmium::object_id_type> m_delta_way_node_id;
-                osmium::util::DeltaDecode<osmium::object_id_type> m_delta_member_ids[3];
+                osrm_osmium::util::DeltaDecode<osrm_osmium::object_id_type> m_delta_way_node_id;
+                osrm_osmium::util::DeltaDecode<osrm_osmium::object_id_type> m_delta_member_ids[3];
 
                 void reset() {
                     m_reference_table.clear();
@@ -262,7 +262,7 @@ namespace osmium {
                     }
                 }
 
-                std::pair<osmium::user_id_type, const char*> decode_user(const char** dataptr, const char* const end) {
+                std::pair<osrm_osmium::user_id_type, const char*> decode_user(const char** dataptr, const char* const end) {
                     bool update_pointer = (**dataptr == 0x00);
                     const char* data = decode_string(dataptr, end);
                     const char* start = data;
@@ -292,11 +292,11 @@ namespace osmium {
                         *dataptr = data;
                     }
 
-                    return std::make_pair(static_cast_with_assert<osmium::user_id_type>(uid), user);
+                    return std::make_pair(static_cast_with_assert<osrm_osmium::user_id_type>(uid), user);
                 }
 
-                void decode_tags(osmium::builder::Builder* builder, const char** dataptr, const char* const end) {
-                    osmium::builder::TagListBuilder tl_builder(m_buffer, builder);
+                void decode_tags(osrm_osmium::builder::Builder* builder, const char** dataptr, const char* const end) {
+                    osrm_osmium::builder::TagListBuilder tl_builder(m_buffer, builder);
 
                     while(*dataptr != end) {
                         bool update_pointer = (**dataptr == 0x00);
@@ -325,7 +325,7 @@ namespace osmium {
                     }
                 }
 
-                const char* decode_info(osmium::OSMObject& object, const char** dataptr, const char* const end) {
+                const char* decode_info(osrm_osmium::OSMObject& object, const char** dataptr, const char* const end) {
                     const char* user = "";
 
                     if (**dataptr == 0x00) { // no info section
@@ -350,8 +350,8 @@ namespace osmium {
                 }
 
                 void decode_node(const char* data, const char* const end) {
-                    osmium::builder::NodeBuilder builder(m_buffer);
-                    osmium::Node& node = builder.object();
+                    osrm_osmium::builder::NodeBuilder builder(m_buffer);
+                    osrm_osmium::Node& node = builder.object();
 
                     node.set_id(m_delta_id.update(zvarint(&data, end)));
 
@@ -360,11 +360,11 @@ namespace osmium {
                     if (data == end) {
                         // no location, object is deleted
                         builder.object().set_visible(false);
-                        builder.object().set_location(osmium::Location{});
+                        builder.object().set_location(osrm_osmium::Location{});
                     } else {
                         auto lon = m_delta_lon.update(zvarint(&data, end));
                         auto lat = m_delta_lat.update(zvarint(&data, end));
-                        builder.object().set_location(osmium::Location{lon, lat});
+                        builder.object().set_location(osrm_osmium::Location{lon, lat});
 
                         if (data != end) {
                             decode_tags(&builder, &data, end);
@@ -375,8 +375,8 @@ namespace osmium {
                 }
 
                 void decode_way(const char* data, const char* const end) {
-                    osmium::builder::WayBuilder builder(m_buffer);
-                    osmium::Way& way = builder.object();
+                    osrm_osmium::builder::WayBuilder builder(m_buffer);
+                    osrm_osmium::Way& way = builder.object();
 
                     way.set_id(m_delta_id.update(zvarint(&data, end)));
 
@@ -393,7 +393,7 @@ namespace osmium {
                                 throw o5m_error("way nodes ref section too long");
                             }
 
-                            osmium::builder::WayNodeListBuilder wn_builder(m_buffer, &builder);
+                            osrm_osmium::builder::WayNodeListBuilder wn_builder(m_buffer, &builder);
 
                             while (data < end_refs) {
                                 wn_builder.add_node_ref(m_delta_way_node_id.update(zvarint(&data, end)));
@@ -408,14 +408,14 @@ namespace osmium {
                     m_buffer.commit();
                 }
 
-                osmium::item_type decode_member_type(char c) {
+                osrm_osmium::item_type decode_member_type(char c) {
                     if (c < '0' || c > '2') {
                         throw o5m_error("unknown member type");
                     }
-                    return osmium::nwr_index_to_item_type(c - '0');
+                    return osrm_osmium::nwr_index_to_item_type(c - '0');
                 }
 
-                std::pair<osmium::item_type, const char*> decode_role(const char** dataptr, const char* const end) {
+                std::pair<osrm_osmium::item_type, const char*> decode_role(const char** dataptr, const char* const end) {
                     bool update_pointer = (**dataptr == 0x00);
                     const char* data = decode_string(dataptr, end);
                     const char* start = data;
@@ -441,8 +441,8 @@ namespace osmium {
                 }
 
                 void decode_relation(const char* data, const char* const end) {
-                    osmium::builder::RelationBuilder builder(m_buffer);
-                    osmium::Relation& relation = builder.object();
+                    osrm_osmium::builder::RelationBuilder builder(m_buffer);
+                    osrm_osmium::Relation& relation = builder.object();
 
                     relation.set_id(m_delta_id.update(zvarint(&data, end)));
 
@@ -459,7 +459,7 @@ namespace osmium {
                                 throw o5m_error("relation format error");
                             }
 
-                            osmium::builder::RelationMemberListBuilder rml_builder(m_buffer, &builder);
+                            osrm_osmium::builder::RelationMemberListBuilder rml_builder(m_buffer, &builder);
 
                             while (data < end_refs) {
                                 auto delta_id = zvarint(&data, end);
@@ -467,7 +467,7 @@ namespace osmium {
                                     throw o5m_error("relation member format error");
                                 }
                                 auto type_role = decode_role(&data, end);
-                                auto i = osmium::item_type_to_nwr_index(type_role.first);
+                                auto i = osrm_osmium::item_type_to_nwr_index(type_role.first);
                                 auto ref = m_delta_member_ids[i].update(delta_id);
                                 rml_builder.add_member(type_role.first, ref, type_role.second);
                             }
@@ -487,18 +487,18 @@ namespace osmium {
                     auto ne_lon = zvarint(&data, end);
                     auto ne_lat = zvarint(&data, end);
 
-                    m_header.add_box(osmium::Box{osmium::Location{sw_lon, sw_lat},
-                                                 osmium::Location{ne_lon, ne_lat}});
+                    m_header.add_box(osrm_osmium::Box{osrm_osmium::Location{sw_lon, sw_lat},
+                                                 osrm_osmium::Location{ne_lon, ne_lat}});
                 }
 
                 void decode_timestamp(const char* data, const char* const end) {
-                    auto timestamp = osmium::Timestamp(zvarint(&data, end)).to_iso();
+                    auto timestamp = osrm_osmium::Timestamp(zvarint(&data, end)).to_iso();
                     m_header.set("o5m_timestamp", timestamp);
                     m_header.set("timestamp", timestamp);
                 }
 
                 void flush() {
-                    osmium::memory::Buffer buffer(buffer_size);
+                    osrm_osmium::memory::Buffer buffer(buffer_size);
                     using std::swap;
                     swap(m_buffer, buffer);
                     send_to_output_queue(std::move(buffer));
@@ -540,19 +540,19 @@ namespace osmium {
                             switch (ds_type) {
                                 case dataset_type::node:
                                     mark_header_as_done();
-                                    if (read_types() & osmium::osm_entity_bits::node) {
+                                    if (read_types() & osrm_osmium::osm_entity_bits::node) {
                                         decode_node(m_data, m_data + length);
                                     }
                                     break;
                                 case dataset_type::way:
                                     mark_header_as_done();
-                                    if (read_types() & osmium::osm_entity_bits::way) {
+                                    if (read_types() & osrm_osmium::osm_entity_bits::way) {
                                         decode_way(m_data, m_data + length);
                                     }
                                     break;
                                 case dataset_type::relation:
                                     mark_header_as_done();
-                                    if (read_types() & osmium::osm_entity_bits::relation) {
+                                    if (read_types() & osrm_osmium::osm_entity_bits::relation) {
                                         decode_relation(m_data, m_data + length);
                                     }
                                     break;
@@ -567,7 +567,7 @@ namespace osmium {
                                     break;
                             }
 
-                            if (read_types() == osmium::osm_entity_bits::nothing && header_is_done()) {
+                            if (read_types() == osrm_osmium::osm_entity_bits::nothing && header_is_done()) {
                                 break;
                             }
 
@@ -590,8 +590,8 @@ namespace osmium {
 
                 O5mParser(future_string_queue_type& input_queue,
                           future_buffer_queue_type& output_queue,
-                          std::promise<osmium::io::Header>& header_promise,
-                          osmium::osm_entity_bits::type read_types) :
+                          std::promise<osrm_osmium::io::Header>& header_promise,
+                          osrm_osmium::osm_entity_bits::type read_types) :
                     Parser(input_queue, output_queue, header_promise, read_types),
                     m_header(),
                     m_buffer(buffer_size),
@@ -603,7 +603,7 @@ namespace osmium {
                 ~O5mParser() noexcept final = default;
 
                 void run() final {
-                    osmium::thread::set_thread_name("_osmium_o5m_in");
+                    osrm_osmium::thread::set_thread_name("_osmium_o5m_in");
 
                     decode_header();
                     decode_data();
@@ -617,8 +617,8 @@ namespace osmium {
                 file_format::o5m,
                 [](future_string_queue_type& input_queue,
                     future_buffer_queue_type& output_queue,
-                    std::promise<osmium::io::Header>& header_promise,
-                    osmium::osm_entity_bits::type read_which_entities) {
+                    std::promise<osrm_osmium::io::Header>& header_promise,
+                    osrm_osmium::osm_entity_bits::type read_which_entities) {
                     return std::unique_ptr<Parser>(new O5mParser(input_queue, output_queue, header_promise, read_which_entities));
             });
 
@@ -631,6 +631,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_O5M_INPUT_FORMAT_HPP

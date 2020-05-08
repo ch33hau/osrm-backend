@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/fwd.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Osmium handlers provide callbacks for OSM objects
@@ -46,40 +46,40 @@ namespace osmium {
 
         public:
 
-            void osm_object(const osmium::OSMObject&) const {
+            void osm_object(const osrm_osmium::OSMObject&) const {
             }
 
-            void node(const osmium::Node&) const {
+            void node(const osrm_osmium::Node&) const {
             }
 
-            void way(const osmium::Way&) const {
+            void way(const osrm_osmium::Way&) const {
             }
 
-            void relation(const osmium::Relation&) const {
+            void relation(const osrm_osmium::Relation&) const {
             }
 
-            void area(const osmium::Area&) const {
+            void area(const osrm_osmium::Area&) const {
             }
 
-            void changeset(const osmium::Changeset&) const {
+            void changeset(const osrm_osmium::Changeset&) const {
             }
 
-            void tag_list(const osmium::TagList&) const {
+            void tag_list(const osrm_osmium::TagList&) const {
             }
 
-            void way_node_list(const osmium::WayNodeList&) const {
+            void way_node_list(const osrm_osmium::WayNodeList&) const {
             }
 
-            void relation_member_list(const osmium::RelationMemberList&) const {
+            void relation_member_list(const osrm_osmium::RelationMemberList&) const {
             }
 
-            void outer_ring(const osmium::OuterRing&) const {
+            void outer_ring(const osrm_osmium::OuterRing&) const {
             }
 
-            void inner_ring(const osmium::InnerRing&) const {
+            void inner_ring(const osrm_osmium::InnerRing&) const {
             }
 
-            void changeset_discussion(const osmium::ChangesetDiscussion&) const {
+            void changeset_discussion(const osrm_osmium::ChangesetDiscussion&) const {
             }
 
             void flush() const {
@@ -89,6 +89,6 @@ namespace osmium {
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_HPP

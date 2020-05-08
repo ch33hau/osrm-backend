@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/util/memory_mapping.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace detail {
 
@@ -56,13 +56,13 @@ namespace osmium {
         protected:
 
             size_t m_size;
-            osmium::util::TypedMemoryMapping<T> m_mapping;
+            osrm_osmium::util::TypedMemoryMapping<T> m_mapping;
 
         public:
 
             mmap_vector_base(int fd, size_t capacity, size_t size = 0) :
                 m_size(size),
-                m_mapping(capacity, osmium::util::MemoryMapping::mapping_mode::write_shared, fd) {
+                m_mapping(capacity, osrm_osmium::util::MemoryMapping::mapping_mode::write_shared, fd) {
             }
 
             explicit mmap_vector_base(size_t capacity = mmap_vector_size_increment) :
@@ -139,7 +139,7 @@ namespace osmium {
 
             void resize(size_t new_size) {
                 if (new_size > capacity()) {
-                    reserve(new_size + osmium::detail::mmap_vector_size_increment);
+                    reserve(new_size + osrm_osmium::detail::mmap_vector_size_increment);
                 }
                 if (new_size > size()) {
                     new (data() + size()) T[new_size - size()];
@@ -175,6 +175,6 @@ namespace osmium {
 
     } // namespace detail
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_DETAIL_MMAP_VECTOR_BASE_HPP

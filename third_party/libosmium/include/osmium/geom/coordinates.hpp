@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/util/double.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -51,13 +51,13 @@ namespace osmium {
             explicit Coordinates(double cx, double cy) noexcept : x(cx), y(cy) {
             }
 
-            Coordinates(const osmium::Location& location) : x(location.lon()), y(location.lat()) {
+            Coordinates(const osrm_osmium::Location& location) : x(location.lon()), y(location.lat()) {
             }
 
             void append_to_string(std::string& s, const char infix, int precision) const {
-                osmium::util::double2string(s, x, precision);
+                osrm_osmium::util::double2string(s, x, precision);
                 s += infix;
-                osmium::util::double2string(s, y, precision);
+                osrm_osmium::util::double2string(s, y, precision);
             }
 
             void append_to_string(std::string& s, const char prefix, const char infix, const char suffix, int precision) const {
@@ -91,6 +91,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_COORDINATES_HPP

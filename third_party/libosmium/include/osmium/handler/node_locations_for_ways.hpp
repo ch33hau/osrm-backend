@@ -46,11 +46,11 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/index/node_locations_map.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace handler {
 
-        typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> dummy_type;
+        typedef osrm_osmium::index::map::Dummy<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> dummy_type;
 
         /**
          * Handler to retrieve locations from nodes and add them to ways.
@@ -61,11 +61,11 @@ namespace osmium {
          * @tparam TStorageNegIDs Same but for negative IDs.
          */
         template <typename TStoragePosIDs, typename TStorageNegIDs = dummy_type>
-        class NodeLocationsForWays : public osmium::handler::Handler {
+        class NodeLocationsForWays : public osrm_osmium::handler::Handler {
 
-            static_assert(std::is_base_of<osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location>, TStoragePosIDs>::value, "Index class must be derived from osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location>");
+            static_assert(std::is_base_of<osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>, TStoragePosIDs>::value, "Index class must be derived from osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>");
 
-            static_assert(std::is_base_of<osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location>, TStorageNegIDs>::value, "Index class must be derived from osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location>");
+            static_assert(std::is_base_of<osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>, TStorageNegIDs>::value, "Index class must be derived from osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>");
 
         public:
 
@@ -114,24 +114,24 @@ namespace osmium {
             /**
              * Store the location of the node in the storage.
              */
-            void node(const osmium::Node& node) {
+            void node(const osrm_osmium::Node& node) {
                 m_must_sort = true;
-                const osmium::object_id_type id = node.id();
+                const osrm_osmium::object_id_type id = node.id();
                 if (id >= 0) {
-                    m_storage_pos.set(static_cast<osmium::unsigned_object_id_type>( id), node.location());
+                    m_storage_pos.set(static_cast<osrm_osmium::unsigned_object_id_type>( id), node.location());
                 } else {
-                    m_storage_neg.set(static_cast<osmium::unsigned_object_id_type>(-id), node.location());
+                    m_storage_neg.set(static_cast<osrm_osmium::unsigned_object_id_type>(-id), node.location());
                 }
             }
 
             /**
              * Get location of node with given id.
              */
-            osmium::Location get_node_location(const osmium::object_id_type id) const {
+            osrm_osmium::Location get_node_location(const osrm_osmium::object_id_type id) const {
                 if (id >= 0) {
-                    return m_storage_pos.get(static_cast<osmium::unsigned_object_id_type>( id));
+                    return m_storage_pos.get(static_cast<osrm_osmium::unsigned_object_id_type>( id));
                 } else {
-                    return m_storage_neg.get(static_cast<osmium::unsigned_object_id_type>(-id));
+                    return m_storage_neg.get(static_cast<osrm_osmium::unsigned_object_id_type>(-id));
                 }
             }
 
@@ -139,7 +139,7 @@ namespace osmium {
              * Retrieve locations of all nodes in the way from storage and add
              * them to the way object.
              */
-            void way(osmium::Way& way) {
+            void way(osrm_osmium::Way& way) {
                 if (m_must_sort) {
                     m_storage_pos.sort();
                     m_storage_neg.sort();
@@ -152,12 +152,12 @@ namespace osmium {
                         if (!node_ref.location()) {
                             error = true;
                         }
-                    } catch (osmium::not_found&) {
+                    } catch (osrm_osmium::not_found&) {
                         error = true;
                     }
                 }
                 if (error && !m_ignore_errors) {
-                    throw osmium::not_found("location for one or more nodes not found in node location index");
+                    throw osrm_osmium::not_found("location for one or more nodes not found in node location index");
                 }
             }
 
@@ -175,6 +175,6 @@ namespace osmium {
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_NODE_LOCATIONS_FOR_WAYS_HPP

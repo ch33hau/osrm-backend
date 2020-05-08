@@ -6,7 +6,7 @@
 
 TEST_CASE("Options") {
 
-    osmium::util::Options o;
+    osrm_osmium::util::Options o;
 
     SECTION("set a single value from string") {
         o.set("foo", "bar");
@@ -59,7 +59,7 @@ TEST_CASE("Options") {
 
 TEST_CASE("Options with initializer list") {
 
-    osmium::util::Options o{ { "foo", "true" }, { "bar", "17" } };
+    osrm_osmium::util::Options o{ { "foo", "true" }, { "bar", "17" } };
 
     REQUIRE(o.get("foo") == "true");
     REQUIRE(o.get("bar") == "17");

@@ -8,23 +8,23 @@
 TEST_CASE("OGR_Geometry") {
 
 SECTION("point") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    std::unique_ptr<OGRPoint> point {factory.create_point(osmium::Location(3.2, 4.2))};
+    std::unique_ptr<OGRPoint> point {factory.create_point(osrm_osmium::Location(3.2, 4.2))};
     REQUIRE(3.2 == point->getX());
     REQUIRE(4.2 == point->getY());
 }
 
 SECTION("empty_point") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    REQUIRE_THROWS_AS(factory.create_point(osmium::Location()), osmium::invalid_location);
+    REQUIRE_THROWS_AS(factory.create_point(osrm_osmium::Location()), osrm_osmium::invalid_location);
 }
 
 SECTION("linestring") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
     auto &wnl = create_test_wnl_okay(buffer);
 
     {
@@ -36,7 +36,7 @@ SECTION("linestring") {
     }
 
     {
-        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::unique, osmium::geom::direction::backward)};
+        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::unique, osrm_osmium::geom::direction::backward)};
         REQUIRE(3 == linestring->getNumPoints());
 
         REQUIRE(3.6 == linestring->getX(0));
@@ -44,14 +44,14 @@ SECTION("linestring") {
     }
 
     {
-        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::all)};
+        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::all)};
         REQUIRE(4 == linestring->getNumPoints());
 
         REQUIRE(3.2 == linestring->getX(0));
     }
 
     {
-        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osmium::geom::use_nodes::all, osmium::geom::direction::backward)};
+        std::unique_ptr<OGRLineString> linestring {factory.create_linestring(wnl, osrm_osmium::geom::use_nodes::all, osrm_osmium::geom::direction::backward)};
         REQUIRE(4 == linestring->getNumPoints());
 
         REQUIRE(3.6 == linestring->getX(0));
@@ -59,10 +59,10 @@ SECTION("linestring") {
 }
 
 SECTION("area_1outer_0inner") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_1outer_0inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_1outer_0inner(buffer);
 
     std::unique_ptr<OGRMultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(1 == mp->getNumGeometries());
@@ -77,10 +77,10 @@ SECTION("area_1outer_0inner") {
 }
 
 SECTION("area_1outer_1inner") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_1outer_1inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_1outer_1inner(buffer);
 
     std::unique_ptr<OGRMultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(1 == mp->getNumGeometries());
@@ -96,10 +96,10 @@ SECTION("area_1outer_1inner") {
 }
 
 SECTION("area_2outer_2inner") {
-    osmium::geom::OGRFactory<> factory;
+    osrm_osmium::geom::OGRFactory<> factory;
 
-    osmium::memory::Buffer buffer(10000);
-    const osmium::Area& area = create_test_area_2outer_2inner(buffer);
+    osrm_osmium::memory::Buffer buffer(10000);
+    const osrm_osmium::Area& area = create_test_area_2outer_2inner(buffer);
 
     std::unique_ptr<OGRMultiPolygon> mp {factory.create_multipolygon(area)};
     REQUIRE(2 == mp->getNumGeometries());

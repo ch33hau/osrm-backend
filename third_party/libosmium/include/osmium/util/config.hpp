@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 # define strcasecmp _stricmp
 #endif
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace config {
 
@@ -67,6 +67,6 @@ namespace osmium {
 
     } // namespace config
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_CONFIG_HPP

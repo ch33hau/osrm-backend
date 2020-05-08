@@ -41,20 +41,20 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * This reference to a node contains a node ID and a (possibly empty)
      * location.
      */
-    class NodeRef : public osmium::memory::detail::ItemHelper {
+    class NodeRef : public osrm_osmium::memory::detail::ItemHelper {
 
-        osmium::object_id_type m_ref;
-        osmium::Location m_location;
+        osrm_osmium::object_id_type m_ref;
+        osrm_osmium::Location m_location;
 
     public:
 
-        constexpr NodeRef(const osmium::object_id_type ref = 0, const osmium::Location& location = Location()) noexcept :
+        constexpr NodeRef(const osrm_osmium::object_id_type ref = 0, const osrm_osmium::Location& location = Location()) noexcept :
             m_ref(ref),
             m_location(location) {
         }
@@ -62,35 +62,35 @@ namespace osmium {
         /**
          * Get reference ID of this NodeRef.
          */
-        constexpr osmium::object_id_type ref() const noexcept {
+        constexpr osrm_osmium::object_id_type ref() const noexcept {
             return m_ref;
         }
 
         /**
          * Get absolute value of the reference ID of this NodeRef.
          */
-        osmium::unsigned_object_id_type positive_ref() const noexcept {
-            return static_cast<osmium::unsigned_object_id_type>(std::abs(m_ref));
+        osrm_osmium::unsigned_object_id_type positive_ref() const noexcept {
+            return static_cast<osrm_osmium::unsigned_object_id_type>(std::abs(m_ref));
         }
 
         /**
          * Get reference to location in this NodeRef. Can be used to update it.
          */
-        osmium::Location& location() noexcept {
+        osrm_osmium::Location& location() noexcept {
             return m_location;
         }
 
         /**
          * Get location of this NodeRef.
          */
-        constexpr osmium::Location location() const noexcept {
+        constexpr osrm_osmium::Location location() const noexcept {
             return m_location;
         }
 
         /**
          * Get longitude of the location in this NodeRef.
          *
-         * @throws osmium::invalid_location if the location is not set.
+         * @throws osrm_osmium::invalid_location if the location is not set.
          */
         double lon() const {
             return m_location.lon();
@@ -99,7 +99,7 @@ namespace osmium {
         /**
          * Get latitude of the location in this NodeRef.
          *
-         * @throws osmium::invalid_location if the location is not set.
+         * @throws osrm_osmium::invalid_location if the location is not set.
          */
         double lat() const {
             return m_location.lat();
@@ -124,7 +124,7 @@ namespace osmium {
          *
          * @returns Reference to this NodeRef for chaining calls.
          */
-        NodeRef& set_ref(const osmium::object_id_type ref) noexcept {
+        NodeRef& set_ref(const osrm_osmium::object_id_type ref) noexcept {
             m_ref = ref;
             return *this;
         }
@@ -134,7 +134,7 @@ namespace osmium {
          *
          * @returns Reference to this NodeRef for chaining calls.
          */
-        NodeRef& set_location(const osmium::Location& location) noexcept {
+        NodeRef& set_location(const osrm_osmium::Location& location) noexcept {
             m_location = location;
             return *this;
         }
@@ -192,7 +192,7 @@ namespace osmium {
      * Output a NodeRef to a stream.
      */
     template <typename TChar, typename TTraits>
-    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osmium::NodeRef& nr) {
+    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osrm_osmium::NodeRef& nr) {
         return out << "<" << nr.ref() << " " << nr.location() << ">";
     }
 
@@ -226,6 +226,6 @@ namespace osmium {
 
     }; // struct location_less
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_NODE_REF_HPP

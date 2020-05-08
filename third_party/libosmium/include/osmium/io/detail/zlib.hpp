@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/io/error.hpp>
 #include <osmium/util/cast.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -58,7 +58,7 @@ namespace osmium {
              * @returns Compressed data.
              */
             inline std::string zlib_compress(const std::string& input) {
-                unsigned long output_size = ::compressBound(osmium::static_cast_with_assert<unsigned long>(input.size()));
+                unsigned long output_size = ::compressBound(osrm_osmium::static_cast_with_assert<unsigned long>(input.size()));
 
                 std::string output(output_size, '\0');
 
@@ -66,7 +66,7 @@ namespace osmium {
                     reinterpret_cast<unsigned char*>(const_cast<char *>(output.data())),
                     &output_size,
                     reinterpret_cast<const unsigned char*>(input.data()),
-                    osmium::static_cast_with_assert<unsigned long>(input.size())
+                    osrm_osmium::static_cast_with_assert<unsigned long>(input.size())
                 );
 
                 if (result != Z_OK) {
@@ -110,6 +110,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_ZLIB_HPP

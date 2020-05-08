@@ -32,17 +32,17 @@
 // Choose the following depending on the size of the input OSM files:
 // ==============================================================================
 // for smaller OSM files (extracts)
-typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, size_t> offset_index_type;
-//typedef osmium::index::map::SparseMapMmap<osmium::unsigned_object_id_type, size_t> offset_index_type;
-//typedef osmium::index::map::SparseMapFile<osmium::unsigned_object_id_type, size_t> offset_index_type;
+typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, size_t> offset_index_type;
+//typedef osrm_osmium::index::map::SparseMapMmap<osrm_osmium::unsigned_object_id_type, size_t> offset_index_type;
+//typedef osrm_osmium::index::map::SparseMapFile<osrm_osmium::unsigned_object_id_type, size_t> offset_index_type;
 
-typedef osmium::index::multimap::SparseMemArray<osmium::unsigned_object_id_type, osmium::unsigned_object_id_type> map_type;
-//typedef osmium::index::multimap::SparseMemMultimap<osmium::unsigned_object_id_type, osmium::unsigned_object_id_type> map_type;
-//typedef osmium::index::multimap::Hybrid<osmium::unsigned_object_id_type, osmium::unsigned_object_id_type> map_type;
+typedef osrm_osmium::index::multimap::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::unsigned_object_id_type> map_type;
+//typedef osrm_osmium::index::multimap::SparseMemMultimap<osrm_osmium::unsigned_object_id_type, osrm_osmium::unsigned_object_id_type> map_type;
+//typedef osrm_osmium::index::multimap::Hybrid<osrm_osmium::unsigned_object_id_type, osrm_osmium::unsigned_object_id_type> map_type;
 
 // ==============================================================================
 // for very large OSM files (planet)
-//typedef osmium::index::map::DenseMmapArray<osmium::unsigned_object_id_type, size_t> offset_index_type;
+//typedef osrm_osmium::index::map::DenseMmapArray<osrm_osmium::unsigned_object_id_type, size_t> offset_index_type;
 // ==============================================================================
 
 void print_help() {
@@ -104,20 +104,20 @@ int main(int argc, char* argv[]) {
     offset_index_type way_index;
     offset_index_type relation_index;
 
-    osmium::handler::DiskStore disk_store_handler(data_fd, node_index, way_index, relation_index);
+    osrm_osmium::handler::DiskStore disk_store_handler(data_fd, node_index, way_index, relation_index);
 
     map_type map_node2way;
     map_type map_node2relation;
     map_type map_way2relation;
     map_type map_relation2relation;
 
-    osmium::handler::ObjectRelations object_relations_handler(map_node2way, map_node2relation, map_way2relation, map_relation2relation);
+    osrm_osmium::handler::ObjectRelations object_relations_handler(map_node2way, map_node2relation, map_way2relation, map_relation2relation);
 
-    osmium::io::Reader reader(argv[1]);
+    osrm_osmium::io::Reader reader(argv[1]);
 
-    while (osmium::memory::Buffer buffer = reader.read()) {
+    while (osrm_osmium::memory::Buffer buffer = reader.read()) {
         disk_store_handler(buffer); // XXX
-        osmium::apply(buffer, object_relations_handler);
+        osrm_osmium::apply(buffer, object_relations_handler);
     }
 
     reader.close();

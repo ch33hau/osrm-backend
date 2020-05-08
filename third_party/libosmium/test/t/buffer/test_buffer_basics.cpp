@@ -4,10 +4,10 @@
 
 TEST_CASE("Buffer basics") {
 
-    osmium::memory::Buffer invalid_buffer1;
-    osmium::memory::Buffer invalid_buffer2;
-    osmium::memory::Buffer empty_buffer1(1024);
-    osmium::memory::Buffer empty_buffer2(2048);
+    osrm_osmium::memory::Buffer invalid_buffer1;
+    osrm_osmium::memory::Buffer invalid_buffer2;
+    osrm_osmium::memory::Buffer empty_buffer1(1024);
+    osrm_osmium::memory::Buffer empty_buffer2(2048);
 
     REQUIRE(!invalid_buffer1);
     REQUIRE(!invalid_buffer2);

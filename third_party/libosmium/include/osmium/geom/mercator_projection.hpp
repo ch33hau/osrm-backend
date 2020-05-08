@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/geom/util.hpp>
 #include <osmium/osm/location.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -54,7 +54,7 @@ namespace osmium {
             }
 
             inline double lat_to_y(double lat) { // not constexpr because math functions aren't
-                return earth_radius_for_epsg3857 * std::log(std::tan(osmium::geom::PI/4 + deg_to_rad(lat)/2));
+                return earth_radius_for_epsg3857 * std::log(std::tan(osrm_osmium::geom::PI/4 + deg_to_rad(lat)/2));
             }
 
             constexpr inline double x_to_lon(double x) {
@@ -62,7 +62,7 @@ namespace osmium {
             }
 
             inline double y_to_lat(double y) { // not constexpr because math functions aren't
-                return rad_to_deg(2 * std::atan(std::exp(y / earth_radius_for_epsg3857)) - osmium::geom::PI/2);
+                return rad_to_deg(2 * std::atan(std::exp(y / earth_radius_for_epsg3857)) - osrm_osmium::geom::PI/2);
             }
 
         } // namespace detail
@@ -89,7 +89,7 @@ namespace osmium {
 
         public:
 
-            Coordinates operator()(osmium::Location location) const {
+            Coordinates operator()(osrm_osmium::Location location) const {
                 return Coordinates {detail::lon_to_x(location.lon()), detail::lat_to_y(location.lat())};
             }
 
@@ -105,6 +105,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_MERCATOR_PROJECTION_HPP

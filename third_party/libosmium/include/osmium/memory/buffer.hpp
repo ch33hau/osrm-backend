@@ -48,10 +48,10 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/entity.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
-     * Exception thrown by the osmium::memory::Buffer class when somebody tries
+     * Exception thrown by the osrm_osmium::memory::Buffer class when somebody tries
      * to write data into a buffer and it doesn't fit. Buffers with internal
      * memory management will not throw this exception, but increase their size.
      */
@@ -411,7 +411,7 @@ namespace osmium {
              *          only guaranteed to be valid until the next call to
              *          reserve_space().
              *
-             * @throws osmium::buffer_is_full if the buffer is full there is
+             * @throws osrm_osmium::buffer_is_full if the buffer is full there is
              *         no callback defined and the buffer isn't auto-growing.
              */
             unsigned char* reserve_space(const size_t size) {
@@ -430,7 +430,7 @@ namespace osmium {
                         }
                         grow(new_capacity);
                     } else {
-                        throw osmium::buffer_is_full();
+                        throw osrm_osmium::buffer_is_full();
                     }
                 }
                 unsigned char* data = &m_data[m_written];
@@ -485,7 +485,7 @@ namespace osmium {
              *
              * @param item The item to be added.
              */
-            void push_back(const osmium::memory::Item& item) {
+            void push_back(const osrm_osmium::memory::Item& item) {
                 assert(m_data);
                 add_item(item);
                 commit();
@@ -496,26 +496,26 @@ namespace osmium {
              * type T in a buffer.
              */
             template <typename T>
-            using t_iterator = osmium::memory::ItemIterator<T>;
+            using t_iterator = osrm_osmium::memory::ItemIterator<T>;
 
             /**
              * A const iterator that can be used to iterate over all items of
              * type T in a buffer.
              */
             template <typename T>
-            using t_const_iterator = osmium::memory::ItemIterator<const T>;
+            using t_const_iterator = osrm_osmium::memory::ItemIterator<const T>;
 
             /**
              * An iterator that can be used to iterate over all OSMEntity
              * objects in a buffer.
              */
-            using iterator = t_iterator<osmium::OSMEntity>;
+            using iterator = t_iterator<osrm_osmium::OSMEntity>;
 
             /**
              * A const iterator that can be used to iterate over all OSMEntity
              * objects in a buffer.
              */
-            using const_iterator = t_const_iterator<osmium::OSMEntity>;
+            using const_iterator = t_const_iterator<osrm_osmium::OSMEntity>;
 
             /**
              * Get iterator for iterating over all items of type T in the
@@ -742,6 +742,6 @@ namespace osmium {
 
     } // namespace memory
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_MEMORY_BUFFER_HPP

@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/compatibility.hpp>
 #include <osmium/util/string.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -76,9 +76,9 @@ namespace osmium {
              * on 64 bit systems if used in this case. 32 bit systems just
              * can't address that much memory!
              *
-             * @tparam TId Id type, usually osmium::unsigned_object_id_type,
+             * @tparam TId Id type, usually osrm_osmium::unsigned_object_id_type,
              *             must be an unsigned integral type.
-             * @tparam TValue Value type, usually osmium::Location or size_t.
+             * @tparam TValue Value type, usually osrm_osmium::Location or size_t.
              *                Copied by value, so should be "small" type.
              */
             template <typename TId, typename TValue>
@@ -97,7 +97,7 @@ namespace osmium {
 
             public:
 
-                /// The "key" type, usually osmium::unsigned_object_id_type.
+                /// The "key" type, usually osrm_osmium::unsigned_object_id_type.
                 typedef TId key_type;
 
                 /// The "value" type, usually a Location or size_t.
@@ -173,7 +173,7 @@ namespace osmium {
 
             typedef TId id_type;
             typedef TValue value_type;
-            typedef osmium::index::map::Map<id_type, value_type> map_type;
+            typedef osrm_osmium::index::map::Map<id_type, value_type> map_type;
             typedef std::function<map_type*(const std::vector<std::string>&)> create_map_func;
 
         private:
@@ -223,7 +223,7 @@ namespace osmium {
             }
 
             std::unique_ptr<map_type> create_map(const std::string& config_string) const {
-                std::vector<std::string> config = osmium::split_string(config_string, ',');
+                std::vector<std::string> config = osrm_osmium::split_string(config_string, ',');
 
                 if (config.empty()) {
                     throw std::runtime_error("Need non-empty map type name.");
@@ -252,7 +252,7 @@ namespace osmium {
 
         template <typename TId, typename TValue, template<typename, typename> class TMap>
         inline bool register_map(const std::string& name) {
-            return osmium::index::MapFactory<TId, TValue>::instance().register_map(name, [](const std::vector<std::string>& config) {
+            return osrm_osmium::index::MapFactory<TId, TValue>::instance().register_map(name, [](const std::vector<std::string>& config) {
                 return map::create_map<TId, TValue, TMap>()(config);
             });
         }
@@ -261,8 +261,8 @@ namespace osmium {
 #define OSMIUM_CONCATENATE_(x, y) OSMIUM_CONCATENATE_DETAIL_(x, y)
 
 #define REGISTER_MAP(id, value, klass, name) \
-namespace osmium { namespace index { namespace detail { \
-    const bool OSMIUM_CONCATENATE_(registered_, name) = osmium::index::register_map<id, value, klass>(#name); \
+namespace osrm_osmium { namespace index { namespace detail { \
+    const bool OSMIUM_CONCATENATE_(registered_, name) = osrm_osmium::index::register_map<id, value, klass>(#name); \
     inline bool OSMIUM_CONCATENATE_(get_registered_, name)() noexcept { \
         return OSMIUM_CONCATENATE_(registered_, name); \
     } \
@@ -270,6 +270,6 @@ namespace osmium { namespace index { namespace detail { \
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MAP_HPP

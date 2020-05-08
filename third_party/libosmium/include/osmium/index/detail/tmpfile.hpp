@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <cstdio>
 #include <system_error>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace detail {
 
@@ -57,6 +57,6 @@ namespace osmium {
 
     } // namespace detail
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_DETAIL_TMPFILE_HPP

@@ -43,7 +43,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/io/detail/queue_util.hpp>
 #include <osmium/thread/util.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -58,7 +58,7 @@ namespace osmium {
             class ReadThreadManager {
 
                 // only used in the sub-thread
-                osmium::io::Decompressor& m_decompressor;
+                osrm_osmium::io::Decompressor& m_decompressor;
                 future_string_queue_type& m_queue;
 
                 // used in both threads
@@ -68,7 +68,7 @@ namespace osmium {
                 std::thread m_thread;
 
                 void run_in_thread() {
-                    osmium::thread::set_thread_name("_osmium_read");
+                    osrm_osmium::thread::set_thread_name("_osmium_read");
 
                     try {
                         while (!m_done) {
@@ -89,7 +89,7 @@ namespace osmium {
 
             public:
 
-                ReadThreadManager(osmium::io::Decompressor& decompressor,
+                ReadThreadManager(osrm_osmium::io::Decompressor& decompressor,
                                   future_string_queue_type& queue) :
                     m_decompressor(decompressor),
                     m_queue(queue),
@@ -128,6 +128,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_READ_THREAD_HPP

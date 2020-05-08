@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_SPARSE_MEM_MAP
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -57,7 +57,7 @@ namespace osmium {
              * lot of memory, but might make sense for small maps.
              */
             template <typename TId, typename TValue>
-            class SparseMemMap : public osmium::index::map::Map<TId, TValue> {
+            class SparseMemMap : public osrm_osmium::index::map::Map<TId, TValue> {
 
                 // This is a rough estimate for the memory needed for each
                 // element in the map (id + value + pointers to left, right,
@@ -102,7 +102,7 @@ namespace osmium {
                     std::vector<t> v;
                     v.reserve(m_elements.size());
                     std::copy(m_elements.cbegin(), m_elements.cend(), std::back_inserter(v));
-                    osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(t) * v.size());
+                    osrm_osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(t) * v.size());
                 }
 
             }; // class SparseMemMap
@@ -111,6 +111,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MAP_SPARSE_MEM_MAP_HPP

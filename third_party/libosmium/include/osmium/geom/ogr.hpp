@@ -52,7 +52,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/geom/coordinates.hpp>
 #include <osmium/geom/factory.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -81,7 +81,7 @@ namespace osmium {
 
                 /* Point */
 
-                point_type make_point(const osmium::geom::Coordinates& xy) const {
+                point_type make_point(const osrm_osmium::geom::Coordinates& xy) const {
                     return point_type(new OGRPoint(xy.x, xy.y));
                 }
 
@@ -91,7 +91,7 @@ namespace osmium {
                     m_linestring = std::unique_ptr<OGRLineString>(new OGRLineString());
                 }
 
-                void linestring_add_location(const osmium::geom::Coordinates& xy) {
+                void linestring_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     assert(!!m_linestring);
                     m_linestring->addPoint(xy.x, xy.y);
                 }
@@ -106,7 +106,7 @@ namespace osmium {
                     m_ring = std::unique_ptr<OGRLinearRing>(new OGRLinearRing());
                 }
 
-                void polygon_add_location(const osmium::geom::Coordinates& xy) {
+                void polygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     assert(!!m_ring);
                     m_ring->addPoint(xy.x, xy.y);
                 }
@@ -153,7 +153,7 @@ namespace osmium {
                     m_polygon->addRingDirectly(m_ring.release());
                 }
 
-                void multipolygon_add_location(const osmium::geom::Coordinates& xy) {
+                void multipolygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     assert(!!m_polygon);
                     assert(!!m_ring);
                     m_ring->addPoint(xy.x, xy.y);
@@ -169,10 +169,10 @@ namespace osmium {
         } // namespace detail
 
         template <typename TProjection = IdentityProjection>
-        using OGRFactory = GeometryFactory<osmium::geom::detail::OGRFactoryImpl, TProjection>;
+        using OGRFactory = GeometryFactory<osrm_osmium::geom::detail::OGRFactoryImpl, TProjection>;
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_OGR_HPP

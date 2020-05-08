@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <cstddef>
 #include <iosfwd>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace relations {
 
@@ -131,6 +131,6 @@ namespace osmium {
 
     } // namespace relations
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_RELATIONS_DETAIL_RELATION_META_HPP

@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/node_ref.hpp>
 #include <osmium/osm/way.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -61,7 +61,7 @@ namespace osmium {
             /**
              * Calculate distance in meters between two sets of coordinates.
              */
-            inline double distance(const osmium::geom::Coordinates& c1, const osmium::geom::Coordinates& c2) {
+            inline double distance(const osrm_osmium::geom::Coordinates& c1, const osrm_osmium::geom::Coordinates& c2) {
                 double lonh = sin(deg_to_rad(c1.x - c2.x) * 0.5);
                 lonh *= lonh;
                 double lath = sin(deg_to_rad(c1.y - c2.y) * 0.5);
@@ -73,7 +73,7 @@ namespace osmium {
             /**
              * Calculate length of way.
              */
-            inline double distance(const osmium::WayNodeList& wnl) {
+            inline double distance(const osrm_osmium::WayNodeList& wnl) {
                 double sum_length = 0;
 
                 for (auto it = wnl.begin(); it != wnl.end(); ++it) {
@@ -89,6 +89,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_HAVERSINE_HPP

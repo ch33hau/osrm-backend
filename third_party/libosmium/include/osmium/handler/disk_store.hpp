@@ -46,7 +46,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/way.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace handler {
 
@@ -55,9 +55,9 @@ namespace osmium {
          * Note: This handler will only work if either all object IDs are
          *       positive or all object IDs are negative.
          */
-        class DiskStore : public osmium::handler::Handler {
+        class DiskStore : public osrm_osmium::handler::Handler {
 
-            typedef osmium::index::map::Map<unsigned_object_id_type, size_t> offset_index_type;
+            typedef osrm_osmium::index::map::Map<unsigned_object_id_type, size_t> offset_index_type;
 
             size_t m_offset = 0;
             int m_data_fd;
@@ -80,32 +80,32 @@ namespace osmium {
 
             ~DiskStore() noexcept = default;
 
-            void node(const osmium::Node& node) {
+            void node(const osrm_osmium::Node& node) {
                 m_node_index.set(node.positive_id(), m_offset);
                 m_offset += node.byte_size();
             }
 
-            void way(const osmium::Way& way) {
+            void way(const osrm_osmium::Way& way) {
                 m_way_index.set(way.positive_id(), m_offset);
                 m_offset += way.byte_size();
             }
 
-            void relation(const osmium::Relation& relation) {
+            void relation(const osrm_osmium::Relation& relation) {
                 m_relation_index.set(relation.positive_id(), m_offset);
                 m_offset += relation.byte_size();
             }
 
             // XXX
-            void operator()(const osmium::memory::Buffer& buffer) {
-                osmium::io::detail::reliable_write(m_data_fd, buffer.data(), buffer.committed());
+            void operator()(const osrm_osmium::memory::Buffer& buffer) {
+                osrm_osmium::io::detail::reliable_write(m_data_fd, buffer.data(), buffer.committed());
 
-                osmium::apply(buffer.begin(), buffer.end(), *this);
+                osrm_osmium::apply(buffer.begin(), buffer.end(), *this);
             }
 
         }; // class DiskStore
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_DISK_STORE_HPP

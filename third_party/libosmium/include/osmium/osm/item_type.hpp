@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <iosfwd>
 #include <stdexcept>
 
-namespace osmium {
+namespace osrm_osmium {
 
     enum class item_type : uint16_t {
 
@@ -203,6 +203,6 @@ namespace osmium {
 
     }; // struct unknown_type
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_ITEM_TYPE_HPP

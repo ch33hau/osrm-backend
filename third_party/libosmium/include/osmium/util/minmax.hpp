@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <limits>
 
-namespace osmium {
+namespace osrm_osmium {
 
     template <typename T>
     inline T min_op_start_value() {
@@ -115,6 +115,6 @@ namespace osmium {
 
     };
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_MINMAX_HPP

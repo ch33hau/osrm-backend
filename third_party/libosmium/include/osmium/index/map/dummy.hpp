@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/index.hpp>
 #include <osmium/index/map.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -50,7 +50,7 @@ namespace osmium {
              * need an object that behaves like one.
              */
             template <typename TId, typename TValue>
-            class Dummy : public osmium::index::map::Map<TId, TValue> {
+            class Dummy : public osrm_osmium::index::map::Map<TId, TValue> {
 
             public:
 
@@ -83,6 +83,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MAP_DUMMY_HPP

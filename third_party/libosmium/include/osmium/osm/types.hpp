@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <cstdint>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /*
      * The following typedefs are chosen so that they can represent all needed
@@ -61,6 +61,6 @@ namespace osmium {
     // maximum of 256 characters of max 4 bytes each (in UTF-8 encoding)
     constexpr const int max_osm_string_length = 256 * 4;
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_TYPES_HPP

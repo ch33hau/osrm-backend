@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/geom/coordinates.hpp>
 #include <osmium/geom/factory.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
@@ -66,7 +66,7 @@ namespace osmium {
                 /* Point */
 
                 // { "type": "Point", "coordinates": [100.0, 0.0] }
-                point_type make_point(const osmium::geom::Coordinates& xy) const {
+                point_type make_point(const osrm_osmium::geom::Coordinates& xy) const {
                     m_writer->String("geometry");
                     m_writer->StartObject();
                     m_writer->String("type");
@@ -91,7 +91,7 @@ namespace osmium {
                     m_writer->StartArray();
                 }
 
-                void linestring_add_location(const osmium::geom::Coordinates& xy) {
+                void linestring_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     m_writer->StartArray();
                     m_writer->Double(xy.x);
                     m_writer->Double(xy.y);
@@ -116,7 +116,7 @@ namespace osmium {
                     m_writer->StartArray();
                 }
 
-                void polygon_add_location(const osmium::geom::Coordinates& xy) {
+                void polygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     m_writer->StartArray();
                     m_writer->Double(xy.x);
                     m_writer->Double(xy.y);
@@ -164,7 +164,7 @@ namespace osmium {
                     m_writer->EndArray();
                 }
 
-                void multipolygon_add_location(const osmium::geom::Coordinates& xy) {
+                void multipolygon_add_location(const osrm_osmium::geom::Coordinates& xy) {
                     m_writer->StartArray();
                     m_writer->Double(xy.x);
                     m_writer->Double(xy.y);
@@ -185,6 +185,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_RAPID_GEOJSON_HPP

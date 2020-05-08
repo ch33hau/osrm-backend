@@ -39,17 +39,17 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/box.hpp>
 #include <osmium/util/options.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
         /**
         * Meta information from the header of an OSM file.
         */
-        class Header : public osmium::util::Options {
+        class Header : public osrm_osmium::util::Options {
 
             /// Bounding boxes
-            std::vector<osmium::Box> m_boxes;
+            std::vector<osrm_osmium::Box> m_boxes;
 
             /**
             * Are there possibly multiple versions of the same object in this stream of objects?
@@ -61,7 +61,7 @@ namespace osmium {
 
             Header() = default;
 
-            explicit Header(const std::initializer_list<osmium::util::Options::value_type>& values) :
+            explicit Header(const std::initializer_list<osrm_osmium::util::Options::value_type>& values) :
                 Options(values) {
             }
 
@@ -73,25 +73,25 @@ namespace osmium {
 
             ~Header() = default;
 
-            std::vector<osmium::Box>& boxes() noexcept {
+            std::vector<osrm_osmium::Box>& boxes() noexcept {
                 return m_boxes;
             }
 
-            const std::vector<osmium::Box>& boxes() const noexcept {
+            const std::vector<osrm_osmium::Box>& boxes() const noexcept {
                 return m_boxes;
             }
 
-            Header& boxes(const std::vector<osmium::Box>& boxes) noexcept {
+            Header& boxes(const std::vector<osrm_osmium::Box>& boxes) noexcept {
                 m_boxes = boxes;
                 return *this;
             }
 
-            osmium::Box box() const {
-                return m_boxes.empty() ? osmium::Box() : m_boxes.front();
+            osrm_osmium::Box box() const {
+                return m_boxes.empty() ? osrm_osmium::Box() : m_boxes.front();
             }
 
-            osmium::Box joined_boxes() const {
-                osmium::Box box;
+            osrm_osmium::Box joined_boxes() const {
+                osrm_osmium::Box box;
                 for (const auto& b : m_boxes) {
                     box.extend(b.bottom_left());
                     box.extend(b.top_right());
@@ -99,7 +99,7 @@ namespace osmium {
                 return box;
             }
 
-            Header& add_box(const osmium::Box& box) {
+            Header& add_box(const osrm_osmium::Box& box) {
                 m_boxes.push_back(box);
                 return *this;
             }
@@ -117,6 +117,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_HEADER_HPP

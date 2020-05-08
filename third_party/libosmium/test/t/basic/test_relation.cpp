@@ -6,12 +6,12 @@
 #include <osmium/osm/crc.hpp>
 #include <osmium/osm/relation.hpp>
 
-using namespace osmium::builder::attr;
+using namespace osrm_osrm_osmium::builder::attr;
 
 TEST_CASE("Build relation") {
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
 
-    osmium::builder::add_relation(buffer,
+    osrm_osmium::builder::add_relation(buffer,
         _id(17),
         _version(3),
         _visible(),
@@ -21,12 +21,12 @@ TEST_CASE("Build relation") {
         _user("foo"),
         _tag("type", "multipolygon"),
         _tag("name", "Sherwood Forest"),
-        _member(osmium::item_type::way, 1, "inner"),
-        _member(osmium::item_type::way, 2, ""),
-        _member(osmium::item_type::way, 3, "outer")
+        _member(osrm_osmium::item_type::way, 1, "inner"),
+        _member(osrm_osmium::item_type::way, 2, ""),
+        _member(osrm_osmium::item_type::way, 3, "outer")
     );
 
-    const osmium::Relation& relation = buffer.get<osmium::Relation>(0);
+    const osrm_osmium::Relation& relation = buffer.get<osrm_osmium::Relation>(0);
 
     REQUIRE(17 == relation.id());
     REQUIRE(3 == relation.version());
@@ -40,7 +40,7 @@ TEST_CASE("Build relation") {
 
     int n=1;
     for (auto& member : relation.members()) {
-        REQUIRE(osmium::item_type::way == member.type());
+        REQUIRE(osrm_osmium::item_type::way == member.type());
         REQUIRE(n == member.ref());
         switch (n) {
             case 1:
@@ -58,18 +58,18 @@ TEST_CASE("Build relation") {
         ++n;
     }
 
-    osmium::CRC<boost::crc_32_type> crc32;
+    osrm_osmium::CRC<boost::crc_32_type> crc32;
     crc32.update(relation);
     REQUIRE(crc32().checksum() == 0x2c2352e);
 }
 
 TEST_CASE("Member role too long") {
-    osmium::memory::Buffer buffer(10000);
+    osrm_osmium::memory::Buffer buffer(10000);
 
-    osmium::builder::RelationMemberListBuilder builder(buffer);
+    osrm_osmium::builder::RelationMemberListBuilder builder(buffer);
 
     const char role[2000] = "";
-    builder.add_member(osmium::item_type::node, 1, role, 1024);
-    REQUIRE_THROWS(builder.add_member(osmium::item_type::node, 1, role, 1025));
+    builder.add_member(osrm_osmium::item_type::node, 1, role, 1024);
+    REQUIRE_THROWS(builder.add_member(osrm_osmium::item_type::node, 1, role, 1025));
 }
 

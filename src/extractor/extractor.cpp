@@ -96,9 +96,9 @@ int Extractor::run()
         ExtractionContainers extraction_containers;
         auto extractor_callbacks = util::make_unique<ExtractorCallbacks>(extraction_containers);
 
-        const osmium::io::File input_file(config.input_path.string());
-        osmium::io::Reader reader(input_file);
-        const osmium::io::Header header = reader.header();
+        const osrm_osmium::io::File input_file(config.input_path.string());
+        osrm_osmium::io::Reader reader(input_file);
+        const osrm_osmium::io::Header header = reader.header();
 
         std::atomic<unsigned> number_of_nodes{0};
         std::atomic<unsigned> number_of_ways{0};
@@ -142,10 +142,10 @@ int Extractor::run()
         // setup restriction parser
         const RestrictionParser restriction_parser(main_context.state, main_context.properties);
 
-        while (const osmium::memory::Buffer buffer = reader.read())
+        while (const osrm_osmium::memory::Buffer buffer = reader.read())
         {
             // create a vector of iterators into the buffer
-            std::vector<osmium::memory::Buffer::const_iterator> osm_elements;
+            std::vector<osrm_osmium::memory::Buffer::const_iterator> osm_elements;
             for (auto iter = std::begin(buffer), end = std::end(buffer); iter != end; ++iter)
             {
                 osm_elements.push_back(iter);
@@ -170,30 +170,30 @@ int Extractor::run()
 
                         switch (entity->type())
                         {
-                        case osmium::item_type::node:
+                        case osrm_osmium::item_type::node:
                             result_node.clear();
                             ++number_of_nodes;
                             luabind::call_function<void>(
                                 local_context.state,
                                 "node_function",
-                                boost::cref(static_cast<const osmium::Node &>(*entity)),
+                                boost::cref(static_cast<const osrm_osmium::Node &>(*entity)),
                                 boost::ref(result_node));
                             resulting_nodes.push_back(std::make_pair(x, std::move(result_node)));
                             break;
-                        case osmium::item_type::way:
+                        case osrm_osmium::item_type::way:
                             result_way.clear();
                             ++number_of_ways;
                             luabind::call_function<void>(
                                 local_context.state,
                                 "way_function",
-                                boost::cref(static_cast<const osmium::Way &>(*entity)),
+                                boost::cref(static_cast<const osrm_osmium::Way &>(*entity)),
                                 boost::ref(result_way));
                             resulting_ways.push_back(std::make_pair(x, std::move(result_way)));
                             break;
-                        case osmium::item_type::relation:
+                        case osrm_osmium::item_type::relation:
                             ++number_of_relations;
                             resulting_restrictions.push_back(restriction_parser.TryParse(
-                                static_cast<const osmium::Relation &>(*entity)));
+                                static_cast<const osrm_osmium::Relation &>(*entity)));
                             break;
                         default:
                             ++number_of_others;
@@ -206,13 +206,13 @@ int Extractor::run()
             for (const auto &result : resulting_nodes)
             {
                 extractor_callbacks->ProcessNode(
-                    static_cast<const osmium::Node &>(*(osm_elements[result.first])),
+                    static_cast<const osrm_osmium::Node &>(*(osm_elements[result.first])),
                     result.second);
             }
             for (const auto &result : resulting_ways)
             {
                 extractor_callbacks->ProcessWay(
-                    static_cast<const osmium::Way &>(*(osm_elements[result.first])), result.second);
+                    static_cast<const osrm_osmium::Way &>(*(osm_elements[result.first])), result.second);
             }
             for (const auto &result : resulting_restrictions)
             {

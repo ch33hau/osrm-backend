@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <utf8.h>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -204,6 +204,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_STRING_UTIL_HPP

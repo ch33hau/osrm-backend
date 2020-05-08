@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_SPARSE_MEM_ARRAY
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -55,6 +55,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MAP_SPARSE_MEM_ARRAY_HPP

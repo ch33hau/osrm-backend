@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/entity_bits.hpp>
 #include <osmium/osm/item_type.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace detail {
 
@@ -61,20 +61,20 @@ namespace osmium {
      * \brief OSMEntity is the abstract base class for the OSMObject and
      *        Changeset classes.
      */
-    class OSMEntity : public osmium::memory::Item {
+    class OSMEntity : public osrm_osmium::memory::Item {
 
     public:
 
-        explicit OSMEntity(osmium::memory::item_size_type size, osmium::item_type type) :
+        explicit OSMEntity(osrm_osmium::memory::item_size_type size, osrm_osmium::item_type type) :
             Item(size, type) {
         }
 
-        bool type_is_in(osmium::osm_entity_bits::type entity_bits) const {
+        bool type_is_in(osrm_osmium::osm_entity_bits::type entity_bits) const {
             return (osm_entity_bits::from_item_type(type()) & entity_bits) != 0;
         }
 
     }; // class OSMEntity
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_ENTITY_HPP

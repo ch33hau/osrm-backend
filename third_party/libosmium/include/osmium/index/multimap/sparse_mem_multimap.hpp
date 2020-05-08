@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/multimap.hpp>
 #include <osmium/io/detail/read_write.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -53,7 +53,7 @@ namespace osmium {
              * lot of memory, but might make sense for small maps.
              */
             template <typename TId, typename TValue>
-            class SparseMemMultimap : public osmium::index::multimap::Multimap<TId, TValue> {
+            class SparseMemMultimap : public osrm_osmium::index::multimap::Multimap<TId, TValue> {
 
                 // This is a rough estimate for the memory needed for each
                 // element in the map (id + value + pointers to left, right,
@@ -137,7 +137,7 @@ namespace osmium {
                         v.emplace_back(element.first, element.second);
                     }
                     std::sort(v.begin(), v.end());
-                    osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(element_type) * v.size());
+                    osrm_osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(v.data()), sizeof(element_type) * v.size());
                 }
 
             }; // class SparseMemMultimap
@@ -146,6 +146,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MULTIMAP_SPARSE_MEM_MULTIMAP_HPP

@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    osmium::io::File infile(argv[1]);
-    osmium::io::Reader reader(infile);
+    osrm_osmium::io::File infile(argv[1]);
+    osrm_osmium::io::Reader reader(infile);
 
-    while (osmium::memory::Buffer buffer = reader.read()) {
+    while (osrm_osmium::memory::Buffer buffer = reader.read()) {
         // do nothing
     }
 

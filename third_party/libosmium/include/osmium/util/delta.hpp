@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/util/cast.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace util {
 
@@ -169,6 +169,6 @@ namespace osmium {
 
     } // namespace util
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_DELTA_HPP

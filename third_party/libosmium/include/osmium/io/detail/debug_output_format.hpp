@@ -62,7 +62,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/minmax.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -158,7 +158,7 @@ namespace osmium {
                     write_color(color_reset);
                 }
 
-                void write_timestamp(const osmium::Timestamp& timestamp) {
+                void write_timestamp(const osrm_osmium::Timestamp& timestamp) {
                     if (timestamp.valid()) {
                         *m_out += timestamp.to_iso();
                         output_formatted(" (%d)", timestamp.seconds_since_epoch());
@@ -168,7 +168,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void write_meta(const osmium::OSMObject& object) {
+                void write_meta(const osrm_osmium::OSMObject& object) {
                     output_formatted("%" PRId64 "\n", object.id());
                     if (m_options.add_metadata) {
                         write_fieldname("version");
@@ -189,13 +189,13 @@ namespace osmium {
                     }
                 }
 
-                void write_tags(const osmium::TagList& tags, const char* padding="") {
+                void write_tags(const osrm_osmium::TagList& tags, const char* padding="") {
                     if (!tags.empty()) {
                         write_fieldname("tags");
                         *m_out += padding;
                         output_formatted("     %d\n", tags.size());
 
-                        osmium::max_op<size_t> max;
+                        osrm_osmium::max_op<size_t> max;
                         for (const auto& tag : tags) {
                             max.update(std::strlen(tag.key()));
                         }
@@ -213,7 +213,7 @@ namespace osmium {
                     }
                 }
 
-                void write_location(const osmium::Location& location) {
+                void write_location(const osrm_osmium::Location& location) {
                     write_fieldname("lon/lat");
                     output_formatted("  %.7f,%.7f", location.lon_without_check(), location.lat_without_check());
                     if (!location.valid()) {
@@ -222,7 +222,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void write_box(const osmium::Box& box) {
+                void write_box(const osrm_osmium::Box& box) {
                     write_fieldname("box l/b/r/t");
                     if (!box) {
                         write_error("BOX NOT SET!\n");
@@ -239,7 +239,7 @@ namespace osmium {
 
             public:
 
-                DebugOutputBlock(osmium::memory::Buffer&& buffer, const debug_output_options& options) :
+                DebugOutputBlock(osrm_osmium::memory::Buffer&& buffer, const debug_output_options& options) :
                     OutputBlock(std::move(buffer)),
                     m_options(options),
                     m_utf8_prefix(options.use_color ? color_red  : ""),
@@ -255,7 +255,7 @@ namespace osmium {
                 ~DebugOutputBlock() noexcept = default;
 
                 std::string operator()() {
-                    osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
+                    osrm_osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
 
                     std::string out;
                     using std::swap;
@@ -264,7 +264,7 @@ namespace osmium {
                     return out;
                 }
 
-                void node(const osmium::Node& node) {
+                void node(const osrm_osmium::Node& node) {
                     write_object_type("node", node.visible());
                     write_meta(node);
 
@@ -277,7 +277,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void way(const osmium::Way& way) {
+                void way(const osrm_osmium::Way& way) {
                     write_object_type("way", way.visible());
                     write_meta(way);
                     write_tags(way.tags());
@@ -309,7 +309,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     static const char* short_typename[] = { "node", "way ", "rel " };
                     write_object_type("relation", relation.visible());
                     write_meta(relation);
@@ -331,7 +331,7 @@ namespace osmium {
                     *m_out += '\n';
                 }
 
-                void changeset(const osmium::Changeset& changeset) {
+                void changeset(const osrm_osmium::Changeset& changeset) {
                     write_object_type("changeset");
                     output_formatted("%d\n", changeset.id());
 
@@ -391,7 +391,7 @@ namespace osmium {
 
             }; // class DebugOutputBlock
 
-            class DebugOutputFormat : public osmium::io::detail::OutputFormat {
+            class DebugOutputFormat : public osrm_osmium::io::detail::OutputFormat {
 
                 debug_output_options m_options;
 
@@ -409,7 +409,7 @@ namespace osmium {
 
             public:
 
-                DebugOutputFormat(const osmium::io::File& file, future_string_queue_type& output_queue) :
+                DebugOutputFormat(const osrm_osmium::io::File& file, future_string_queue_type& output_queue) :
                     OutputFormat(output_queue),
                     m_options() {
                     m_options.add_metadata = file.is_not_false("add_metadata");
@@ -421,7 +421,7 @@ namespace osmium {
 
                 ~DebugOutputFormat() noexcept final = default;
 
-                void write_header(const osmium::io::Header& header) final {
+                void write_header(const osrm_osmium::io::Header& header) final {
                     std::string out;
 
                     if (m_options.use_color) {
@@ -458,17 +458,17 @@ namespace osmium {
                     send_to_output_queue(std::move(out));
                 }
 
-                void write_buffer(osmium::memory::Buffer&& buffer) final {
-                    m_output_queue.push(osmium::thread::Pool::instance().submit(DebugOutputBlock{std::move(buffer), m_options}));
+                void write_buffer(osrm_osmium::memory::Buffer&& buffer) final {
+                    m_output_queue.push(osrm_osmium::thread::Pool::instance().submit(DebugOutputBlock{std::move(buffer), m_options}));
                 }
 
             }; // class DebugOutputFormat
 
             // we want the register_output_format() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_debug_output = osmium::io::detail::OutputFormatFactory::instance().register_output_format(osmium::io::file_format::debug,
-                [](const osmium::io::File& file, future_string_queue_type& output_queue) {
-                    return new osmium::io::detail::DebugOutputFormat(file, output_queue);
+            const bool registered_debug_output = osrm_osmium::io::detail::OutputFormatFactory::instance().register_output_format(osrm_osmium::io::file_format::debug,
+                [](const osrm_osmium::io::File& file, future_string_queue_type& output_queue) {
+                    return new osrm_osmium::io::detail::DebugOutputFormat(file, output_queue);
             });
 
             // dummy function to silence the unused variable warning from above
@@ -480,6 +480,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_DEBUG_OUTPUT_FORMAT_HPP

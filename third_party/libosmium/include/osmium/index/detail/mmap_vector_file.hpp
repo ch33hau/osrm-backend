@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/detail/tmpfile.hpp>
 #include <osmium/util/file.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace detail {
 
@@ -52,15 +52,15 @@ namespace osmium {
 
             mmap_vector_file() :
                 mmap_vector_base<T>(
-                    osmium::detail::create_tmp_file(),
-                    osmium::detail::mmap_vector_size_increment) {
+                    osrm_osmium::detail::create_tmp_file(),
+                    osrm_osmium::detail::mmap_vector_size_increment) {
             }
 
             explicit mmap_vector_file(int fd) :
                 mmap_vector_base<T>(
                     fd,
-                    osmium::util::file_size(fd) / sizeof(T),
-                    osmium::util::file_size(fd) / sizeof(T)) {
+                    osrm_osmium::util::file_size(fd) / sizeof(T),
+                    osrm_osmium::util::file_size(fd) / sizeof(T)) {
             }
 
             ~mmap_vector_file() noexcept = default;
@@ -69,6 +69,6 @@ namespace osmium {
 
     } // namespace detail
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_DETAIL_MMAP_VECTOR_FILE_HPP

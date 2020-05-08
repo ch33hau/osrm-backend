@@ -42,19 +42,19 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_DENSE_FILE_ARRAY
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
         namespace map {
 
             template <typename TId, typename TValue>
-            using DenseFileArray = VectorBasedDenseMap<osmium::detail::mmap_vector_file<TValue>, TId, TValue>;
+            using DenseFileArray = VectorBasedDenseMap<osrm_osmium::detail::mmap_vector_file<TValue>, TId, TValue>;
 
             template <typename TId, typename TValue>
             struct create_map<TId, TValue, DenseFileArray> {
                 DenseFileArray<TId, TValue>* operator()(const std::vector<std::string>& config) {
-                    return osmium::index::detail::create_map_with_fd<DenseFileArray<TId, TValue>>(config);
+                    return osrm_osmium::index::detail::create_map_with_fd<DenseFileArray<TId, TValue>>(config);
                 }
             };
 
@@ -62,6 +62,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MAP_DENSE_FILE_ARRAY_HPP

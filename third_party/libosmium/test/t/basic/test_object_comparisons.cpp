@@ -7,17 +7,17 @@
 
 TEST_CASE("Object_Comparisons") {
 
-    using namespace osmium::builder::attr;
+    using namespace osrm_osrm_osmium::builder::attr;
 
     SECTION("order") {
-        osmium::memory::Buffer buffer(10 * 1000);
+        osrm_osmium::memory::Buffer buffer(10 * 1000);
 
-        osmium::builder::add_node(buffer, _id(10), _version(1));
-        osmium::builder::add_node(buffer, _id(15), _version(2));
+        osrm_osmium::builder::add_node(buffer, _id(10), _version(1));
+        osrm_osmium::builder::add_node(buffer, _id(15), _version(2));
 
         auto it = buffer.begin();
-        osmium::Node& node1 = static_cast<osmium::Node&>(*it);
-        osmium::Node& node2 = static_cast<osmium::Node&>(*(++it));
+        osrm_osmium::Node& node1 = static_cast<osrm_osmium::Node&>(*it);
+        osrm_osmium::Node& node2 = static_cast<osrm_osmium::Node&>(*(++it));
 
         REQUIRE(node1 < node2);
         REQUIRE_FALSE(node1 > node2);
@@ -36,20 +36,20 @@ TEST_CASE("Object_Comparisons") {
     }
 
     SECTION("order_types") {
-        osmium::memory::Buffer buffer(10 * 1000);
+        osrm_osmium::memory::Buffer buffer(10 * 1000);
 
-        osmium::builder::add_node(buffer, _id(3), _version(3));
-        osmium::builder::add_node(buffer, _id(3), _version(4));
-        osmium::builder::add_node(buffer, _id(3), _version(4));
-        osmium::builder::add_way(buffer, _id(2), _version(2));
-        osmium::builder::add_relation(buffer, _id(1), _version(1));
+        osrm_osmium::builder::add_node(buffer, _id(3), _version(3));
+        osrm_osmium::builder::add_node(buffer, _id(3), _version(4));
+        osrm_osmium::builder::add_node(buffer, _id(3), _version(4));
+        osrm_osmium::builder::add_way(buffer, _id(2), _version(2));
+        osrm_osmium::builder::add_relation(buffer, _id(1), _version(1));
 
         auto it = buffer.begin();
-        const osmium::Node& node1 = static_cast<const osmium::Node&>(*it);
-        const osmium::Node& node2 = static_cast<const osmium::Node&>(*(++it));
-        const osmium::Node& node3 = static_cast<const osmium::Node&>(*(++it));
-        const osmium::Way& way = static_cast<const osmium::Way&>(*(++it));
-        const osmium::Relation& relation = static_cast<const osmium::Relation&>(*(++it));
+        const osrm_osmium::Node& node1 = static_cast<const osrm_osmium::Node&>(*it);
+        const osrm_osmium::Node& node2 = static_cast<const osrm_osmium::Node&>(*(++it));
+        const osrm_osmium::Node& node3 = static_cast<const osrm_osmium::Node&>(*(++it));
+        const osrm_osmium::Way& way = static_cast<const osrm_osmium::Way&>(*(++it));
+        const osrm_osmium::Relation& relation = static_cast<const osrm_osmium::Relation&>(*(++it));
 
         REQUIRE(node1 < node2);
         REQUIRE(node2 < way);
@@ -57,20 +57,20 @@ TEST_CASE("Object_Comparisons") {
         REQUIRE(way < relation);
         REQUIRE(node1 < relation);
 
-        REQUIRE(osmium::object_order_type_id_version()(node1, node2));
-        REQUIRE(osmium::object_order_type_id_reverse_version()(node2, node1));
-        REQUIRE(osmium::object_order_type_id_version()(node1, way));
-        REQUIRE(osmium::object_order_type_id_reverse_version()(node1, way));
+        REQUIRE(osrm_osmium::object_order_type_id_version()(node1, node2));
+        REQUIRE(osrm_osmium::object_order_type_id_reverse_version()(node2, node1));
+        REQUIRE(osrm_osmium::object_order_type_id_version()(node1, way));
+        REQUIRE(osrm_osmium::object_order_type_id_reverse_version()(node1, way));
 
-        REQUIRE_FALSE(osmium::object_equal_type_id_version()(node1, node2));
-        REQUIRE(osmium::object_equal_type_id_version()(node2, node3));
+        REQUIRE_FALSE(osrm_osmium::object_equal_type_id_version()(node1, node2));
+        REQUIRE(osrm_osmium::object_equal_type_id_version()(node2, node3));
 
-        REQUIRE(osmium::object_equal_type_id()(node1, node2));
-        REQUIRE(osmium::object_equal_type_id()(node2, node3));
+        REQUIRE(osrm_osmium::object_equal_type_id()(node1, node2));
+        REQUIRE(osrm_osmium::object_equal_type_id()(node2, node3));
 
-        REQUIRE_FALSE(osmium::object_equal_type_id_version()(node1, way));
-        REQUIRE_FALSE(osmium::object_equal_type_id_version()(node1, relation));
-        REQUIRE_FALSE(osmium::object_equal_type_id()(node1, relation));
+        REQUIRE_FALSE(osrm_osmium::object_equal_type_id_version()(node1, way));
+        REQUIRE_FALSE(osrm_osmium::object_equal_type_id_version()(node1, relation));
+        REQUIRE_FALSE(osrm_osmium::object_equal_type_id()(node1, relation));
     }
 
 }

@@ -40,17 +40,17 @@ DEALINGS IN THE SOFTWARE.
 #define OSMIUM_CHAIN_HANDLER_CALL(_func_, _type_) \
     template <int N, int SIZE, typename THandlers> \
     struct call_ ## _func_ { \
-        void operator()(THandlers& handlers, osmium::_type_& object) { \
+        void operator()(THandlers& handlers, osrm_osmium::_type_& object) { \
             std::get<N>(handlers)._func_(object); \
             call_ ## _func_<N+1, SIZE, THandlers>()(handlers, object); \
         } \
     }; \
     template <int SIZE, typename THandlers> \
     struct call_ ## _func_<SIZE, SIZE, THandlers> { \
-        void operator()(THandlers&, osmium::_type_&) {} \
+        void operator()(THandlers&, osrm_osmium::_type_&) {} \
     };
 
-namespace osmium {
+namespace osrm_osmium {
 
     class Node;
     class Way;
@@ -65,7 +65,7 @@ namespace osmium {
          * handler.
          */
         template <typename... THandler>
-        class ChainHandler : public osmium::handler::Handler {
+        class ChainHandler : public osrm_osmium::handler::Handler {
 
             typedef std::tuple<THandler&...> handlers_type;
             handlers_type m_handlers;
@@ -95,23 +95,23 @@ namespace osmium {
                 m_handlers(handlers...) {
             }
 
-            void node(osmium::Node& node) {
+            void node(osrm_osmium::Node& node) {
                 call_node<0, sizeof...(THandler), handlers_type>()(m_handlers, node);
             }
 
-            void way(osmium::Way& way) {
+            void way(osrm_osmium::Way& way) {
                 call_way<0, sizeof...(THandler), handlers_type>()(m_handlers, way);
             }
 
-            void relation(osmium::Relation& relation) {
+            void relation(osrm_osmium::Relation& relation) {
                 call_relation<0, sizeof...(THandler), handlers_type>()(m_handlers, relation);
             }
 
-            void changeset( osmium::Changeset& changeset) {
+            void changeset( osrm_osmium::Changeset& changeset) {
                 call_changeset<0, sizeof...(THandler), handlers_type>()(m_handlers, changeset);
             }
 
-            void area(osmium::Area& area) {
+            void area(osrm_osmium::Area& area) {
                 call_area<0, sizeof...(THandler), handlers_type>()(m_handlers, area);
             }
 
@@ -123,6 +123,6 @@ namespace osmium {
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_CHAIN_HPP

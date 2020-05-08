@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <vector>
 #include <iostream>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Split string on the separator character.
@@ -97,6 +97,6 @@ namespace osmium {
         return tokens;
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_STRING_HPP

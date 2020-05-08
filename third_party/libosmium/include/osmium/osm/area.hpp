@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/osm/node_ref_list.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace builder {
         template <class T> class ObjectBuilder;
@@ -57,7 +57,7 @@ namespace osmium {
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::outer_ring;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::outer_ring;
 
         OuterRing():
             NodeRefList(itemtype) {
@@ -65,7 +65,7 @@ namespace osmium {
 
     }; // class OuterRing
 
-    static_assert(sizeof(OuterRing) % osmium::memory::align_bytes == 0, "Class osmium::OuterRing has wrong size to be aligned properly!");
+    static_assert(sizeof(OuterRing) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::OuterRing has wrong size to be aligned properly!");
 
     /**
      * An inner ring of an Area.
@@ -74,7 +74,7 @@ namespace osmium {
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::inner_ring;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::inner_ring;
 
         InnerRing():
             NodeRefList(itemtype) {
@@ -82,7 +82,7 @@ namespace osmium {
 
     }; // class InnerRing
 
-    static_assert(sizeof(InnerRing) % osmium::memory::align_bytes == 0, "Class osmium::InnerRing has wrong size to be aligned properly!");
+    static_assert(sizeof(InnerRing) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::InnerRing has wrong size to be aligned properly!");
 
     /**
      * Convert way or (multipolygon) relation id into unique area id.
@@ -91,9 +91,9 @@ namespace osmium {
      * @param type Type of object (way or relation)
      * @returns Area id
      */
-    inline osmium::object_id_type object_id_to_area_id(osmium::object_id_type id, osmium::item_type type) noexcept {
-        osmium::object_id_type area_id = std::abs(id) * 2;
-        if (type == osmium::item_type::relation) {
+    inline osrm_osmium::object_id_type object_id_to_area_id(osrm_osmium::object_id_type id, osrm_osmium::item_type type) noexcept {
+        osrm_osmium::object_id_type area_id = std::abs(id) * 2;
+        if (type == osrm_osmium::item_type::relation) {
             ++area_id;
         }
         return id < 0 ? -area_id : area_id;
@@ -105,7 +105,7 @@ namespace osmium {
      * @param id Area id
      * @returns Way or Relation id.
      */
-    inline osmium::object_id_type area_id_to_object_id(osmium::object_id_type id) noexcept {
+    inline osrm_osmium::object_id_type area_id_to_object_id(osrm_osmium::object_id_type id) noexcept {
         return id / 2;
     }
 
@@ -114,15 +114,15 @@ namespace osmium {
      */
     class Area : public OSMObject {
 
-        friend class osmium::builder::ObjectBuilder<osmium::Area>;
+        friend class osrm_osmium::builder::ObjectBuilder<osrm_osmium::Area>;
 
         Area() :
-            OSMObject(sizeof(Area), osmium::item_type::area) {
+            OSMObject(sizeof(Area), osrm_osmium::item_type::area) {
         }
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::area;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::area;
 
         /**
          * Was this area created from a way? (In contrast to areas
@@ -135,8 +135,8 @@ namespace osmium {
         /**
          * Return the Id of the way or relation this area was created from.
          */
-        osmium::object_id_type orig_id() const noexcept {
-            return osmium::area_id_to_object_id(id());
+        osrm_osmium::object_id_type orig_id() const noexcept {
+            return osrm_osmium::area_id_to_object_id(id());
         }
 
         /**
@@ -149,25 +149,25 @@ namespace osmium {
 
             for (auto it = cbegin(); it != cend(); ++it) {
                 switch (it->type()) {
-                    case osmium::item_type::outer_ring:
+                    case osrm_osmium::item_type::outer_ring:
                         ++counter.first;
                         break;
-                    case osmium::item_type::inner_ring:
+                    case osrm_osmium::item_type::inner_ring:
                         ++counter.second;
                         break;
-                    case osmium::item_type::tag_list:
+                    case osrm_osmium::item_type::tag_list:
                         // ignore tags
                         break;
-                    case osmium::item_type::undefined:
-                    case osmium::item_type::node:
-                    case osmium::item_type::way:
-                    case osmium::item_type::relation:
-                    case osmium::item_type::area:
-                    case osmium::item_type::changeset:
-                    case osmium::item_type::way_node_list:
-                    case osmium::item_type::relation_member_list:
-                    case osmium::item_type::relation_member_list_with_full_members:
-                    case osmium::item_type::changeset_discussion:
+                    case osrm_osmium::item_type::undefined:
+                    case osrm_osmium::item_type::node:
+                    case osrm_osmium::item_type::way:
+                    case osrm_osmium::item_type::relation:
+                    case osrm_osmium::item_type::area:
+                    case osrm_osmium::item_type::changeset:
+                    case osrm_osmium::item_type::way_node_list:
+                    case osrm_osmium::item_type::relation_member_list:
+                    case osrm_osmium::item_type::relation_member_list_with_full_members:
+                    case osrm_osmium::item_type::changeset_discussion:
                         assert(false && "Children of Area can only be outer/inner_ring and tag_list.");
                         break;
                 }
@@ -191,8 +191,8 @@ namespace osmium {
          * @param it Iterator specifying outer ring.
          * @returns Iterator to first inner ring in specified outer ring.
          */
-        osmium::memory::ItemIterator<const osmium::InnerRing> inner_ring_cbegin(const osmium::memory::ItemIterator<const osmium::OuterRing>& it) const {
-            return it.cast<const osmium::InnerRing>();
+        osrm_osmium::memory::ItemIterator<const osrm_osmium::InnerRing> inner_ring_cbegin(const osrm_osmium::memory::ItemIterator<const osrm_osmium::OuterRing>& it) const {
+            return it.cast<const osrm_osmium::InnerRing>();
         }
 
         /**
@@ -202,14 +202,14 @@ namespace osmium {
          * @param it Iterator specifying outer ring.
          * @returns Iterator one past last inner ring in specified outer ring.
          */
-        osmium::memory::ItemIterator<const osmium::InnerRing> inner_ring_cend(const osmium::memory::ItemIterator<const osmium::OuterRing>& it) const {
-            return std::next(it).cast<const osmium::InnerRing>();
+        osrm_osmium::memory::ItemIterator<const osrm_osmium::InnerRing> inner_ring_cend(const osrm_osmium::memory::ItemIterator<const osrm_osmium::OuterRing>& it) const {
+            return std::next(it).cast<const osrm_osmium::InnerRing>();
         }
 
     }; // class Area
 
-    static_assert(sizeof(Area) % osmium::memory::align_bytes == 0, "Class osmium::Area has wrong size to be aligned properly!");
+    static_assert(sizeof(Area) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::Area has wrong size to be aligned properly!");
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_AREA_HPP

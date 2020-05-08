@@ -43,7 +43,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/osm/way.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception thrown when a method in the CheckOrder class detects
@@ -75,15 +75,15 @@ namespace osmium {
          * way(), and relations() handlers, respectively. An out_of_order_error
          * exception will be thrown when the input is not in order.
          */
-        class CheckOrder : public osmium::handler::Handler {
+        class CheckOrder : public osrm_osmium::handler::Handler {
 
-            osmium::object_id_type m_max_node_id     = std::numeric_limits<osmium::object_id_type>::min();
-            osmium::object_id_type m_max_way_id      = std::numeric_limits<osmium::object_id_type>::min();
-            osmium::object_id_type m_max_relation_id = std::numeric_limits<osmium::object_id_type>::min();
+            osrm_osmium::object_id_type m_max_node_id     = std::numeric_limits<osrm_osmium::object_id_type>::min();
+            osrm_osmium::object_id_type m_max_way_id      = std::numeric_limits<osrm_osmium::object_id_type>::min();
+            osrm_osmium::object_id_type m_max_relation_id = std::numeric_limits<osrm_osmium::object_id_type>::min();
 
         public:
 
-            void node(const osmium::Node& node) {
+            void node(const osrm_osmium::Node& node) {
                 if (m_max_way_id > 0) {
                     throw out_of_order_error("Found a node after a way.");
                 }
@@ -97,7 +97,7 @@ namespace osmium {
                 m_max_node_id = node.id();
             }
 
-            void way(const osmium::Way& way) {
+            void way(const osrm_osmium::Way& way) {
                 if (m_max_relation_id > 0) {
                     throw out_of_order_error("Found a way after a relation.");
                 }
@@ -108,22 +108,22 @@ namespace osmium {
                 m_max_way_id = way.id();
             }
 
-            void relation(const osmium::Relation& relation) {
+            void relation(const osrm_osmium::Relation& relation) {
                 if (m_max_relation_id >= relation.id()) {
                     throw out_of_order_error("Relation IDs out of order.");
                 }
                 m_max_relation_id = relation.id();
             }
 
-            osmium::object_id_type max_node_id() const noexcept {
+            osrm_osmium::object_id_type max_node_id() const noexcept {
                 return m_max_node_id;
             }
 
-            osmium::object_id_type max_way_id() const noexcept {
+            osrm_osmium::object_id_type max_way_id() const noexcept {
                 return m_max_way_id;
             }
 
-            osmium::object_id_type max_relation_id() const noexcept {
+            osrm_osmium::object_id_type max_relation_id() const noexcept {
                 return m_max_relation_id;
             }
 
@@ -131,6 +131,6 @@ namespace osmium {
 
     } // namespace handler
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_HANDLER_CHECK_ORDER_HPP

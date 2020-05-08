@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -65,6 +65,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_DETAIL_CREATE_MAP_WITH_FD_HPP

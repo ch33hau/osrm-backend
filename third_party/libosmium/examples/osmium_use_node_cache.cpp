@@ -21,17 +21,17 @@
 #include <osmium/handler/node_locations_for_ways.hpp>
 #include <osmium/visitor.hpp>
 
-typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_neg_type;
-//typedef osmium::index::map::DenseMmapArray<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
-typedef osmium::index::map::DenseFileArray<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
+typedef osrm_osmium::index::map::Dummy<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_neg_type;
+//typedef osrm_osmium::index::map::DenseMmapArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_pos_type;
+typedef osrm_osmium::index::map::DenseFileArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_pos_type;
 
-typedef osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
 
-class MyHandler : public osmium::handler::Handler {
+class MyHandler : public osrm_osmium::handler::Handler {
 
 public:
 
-    void way(osmium::Way& way) {
+    void way(osrm_osmium::Way& way) {
         for (auto& nr : way.nodes()) {
             std::cout << nr << "\n";
         }
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::string input_filename(argv[1]);
-    osmium::io::Reader reader(input_filename, osmium::osm_entity_bits::way);
+    osrm_osmium::io::Reader reader(input_filename, osrm_osmium::osm_entity_bits::way);
 
     int fd = open(argv[2], O_RDWR);
     if (fd == -1) {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     location_handler.ignore_errors();
 
     MyHandler handler;
-    osmium::apply(reader, location_handler, handler);
+    osrm_osmium::apply(reader, location_handler, handler);
     reader.close();
 
     return 0;

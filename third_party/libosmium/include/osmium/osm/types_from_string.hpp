@@ -45,7 +45,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/util/cast.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Convert string with object id to object_id_type.
@@ -75,21 +75,21 @@ namespace osmium {
      * @pre input must not be nullptr.
      *
      * @param input Input string.
-     * @param types Allowed types. Must not be osmium::osm_entity_bits::nothing.
+     * @param types Allowed types. Must not be osrm_osmium::osm_entity_bits::nothing.
      *
      * @returns std::pair of type and id.
      *
      * @throws std::range_error if the value is out of range.
      */
-    inline std::pair<osmium::item_type, osmium::object_id_type> string_to_object_id(const char* input, osmium::osm_entity_bits::type types) {
+    inline std::pair<osrm_osmium::item_type, osrm_osmium::object_id_type> string_to_object_id(const char* input, osrm_osmium::osm_entity_bits::type types) {
         assert(input);
-        assert(types != osmium::osm_entity_bits::nothing);
+        assert(types != osrm_osmium::osm_entity_bits::nothing);
         if (*input != '\0') {
             if (std::isdigit(*input)) {
-                return std::make_pair(osmium::item_type::undefined, string_to_object_id(input));
+                return std::make_pair(osrm_osmium::item_type::undefined, string_to_object_id(input));
             }
-            osmium::item_type t = osmium::char_to_item_type(*input);
-            if (osmium::osm_entity_bits::from_item_type(t) & types) {
+            osrm_osmium::item_type t = osrm_osmium::char_to_item_type(*input);
+            if (osrm_osmium::osm_entity_bits::from_item_type(t) & types) {
                 return std::make_pair(t, string_to_object_id(input+1));
             }
         }
@@ -184,6 +184,6 @@ namespace osmium {
         return static_cast_with_assert<num_comments_type>(detail::string_to_ulong(input, "value for num comments"));
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_TYPES_FROM_STRING_HPP

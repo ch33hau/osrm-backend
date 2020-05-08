@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/map.hpp>
 #include <osmium/io/detail/read_write.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
@@ -84,7 +84,7 @@ namespace osmium {
                 const TValue get(const TId id) const final {
                     try {
                         const TValue& value = m_vector.at(id);
-                        if (value == osmium::index::empty_value<TValue>()) {
+                        if (value == osrm_osmium::index::empty_value<TValue>()) {
                             not_found_error(id);
                         }
                         return value;
@@ -111,7 +111,7 @@ namespace osmium {
                 }
 
                 void dump_as_array(const int fd) final {
-                    osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(m_vector.data()), byte_size());
+                    osrm_osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(m_vector.data()), byte_size());
                 }
 
                 iterator begin() {
@@ -174,7 +174,7 @@ namespace osmium {
                 const TValue get(const TId id) const final {
                     const element_type element {
                         id,
-                        osmium::index::empty_value<TValue>()
+                        osrm_osmium::index::empty_value<TValue>()
                     };
                     const auto result = std::lower_bound(m_vector.begin(), m_vector.end(), element, [](const element_type& a, const element_type& b) {
                         return a.first < b.first;
@@ -208,7 +208,7 @@ namespace osmium {
                 }
 
                 void dump_as_list(const int fd) final {
-                    osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(m_vector.data()), byte_size());
+                    osrm_osmium::io::detail::reliable_write(fd, reinterpret_cast<const char*>(m_vector.data()), byte_size());
                 }
 
                 iterator begin() {
@@ -241,6 +241,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_DETAIL_VECTOR_MAP_HPP

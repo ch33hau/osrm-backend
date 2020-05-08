@@ -18,7 +18,7 @@ TEST_CASE("Bzip2") {
         size_t size = 0;
         std::string all;
         {
-            osmium::io::Bzip2Decompressor decomp(fd);
+            osrm_osmium::io::Bzip2Decompressor decomp(fd);
             for (std::string data = decomp.read(); !data.empty(); data = decomp.read()) {
                 size += data.size();
                 all += data;

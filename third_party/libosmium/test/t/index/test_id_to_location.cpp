@@ -17,28 +17,28 @@
 
 template <typename TIndex>
 void test_func_all(TIndex& index) {
-    osmium::unsigned_object_id_type id1 = 12;
-    osmium::unsigned_object_id_type id2 = 3;
-    osmium::Location loc1(1.2, 4.5);
-    osmium::Location loc2(3.5, -7.2);
+    osrm_osmium::unsigned_object_id_type id1 = 12;
+    osrm_osmium::unsigned_object_id_type id2 = 3;
+    osrm_osmium::Location loc1(1.2, 4.5);
+    osrm_osmium::Location loc2(3.5, -7.2);
 
-    REQUIRE_THROWS_AS(index.get(id1), osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(id1), osrm_osmium::not_found);
 
     index.set(id1, loc1);
     index.set(id2, loc2);
 
     index.sort();
 
-    REQUIRE_THROWS_AS(index.get(5), osmium::not_found);
-    REQUIRE_THROWS_AS(index.get(100), osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(5), osrm_osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(100), osrm_osmium::not_found);
 }
 
 template <typename TIndex>
 void test_func_real(TIndex& index) {
-    osmium::unsigned_object_id_type id1 = 12;
-    osmium::unsigned_object_id_type id2 = 3;
-    osmium::Location loc1(1.2, 4.5);
-    osmium::Location loc2(3.5, -7.2);
+    osrm_osmium::unsigned_object_id_type id1 = 12;
+    osrm_osmium::unsigned_object_id_type id2 = 3;
+    osrm_osmium::Location loc1(1.2, 4.5);
+    osrm_osmium::Location loc2(3.5, -7.2);
 
     index.set(id1, loc1);
     index.set(id2, loc2);
@@ -48,18 +48,18 @@ void test_func_real(TIndex& index) {
     REQUIRE(loc1 == index.get(id1));
     REQUIRE(loc2 == index.get(id2));
 
-    REQUIRE_THROWS_AS(index.get(5), osmium::not_found);
-    REQUIRE_THROWS_AS(index.get(100), osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(5), osrm_osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(100), osrm_osmium::not_found);
 
     index.clear();
 
-    REQUIRE_THROWS_AS(index.get(id1), osmium::not_found);
+    REQUIRE_THROWS_AS(index.get(id1), osrm_osmium::not_found);
 }
 
 TEST_CASE("IdToLocation") {
 
     SECTION("Dummy") {
-        typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::Dummy<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
 
@@ -73,7 +73,7 @@ TEST_CASE("IdToLocation") {
     }
 
     SECTION("DenseMemArray") {
-        typedef osmium::index::map::DenseMemArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::DenseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
         index1.reserve(1000);
@@ -86,7 +86,7 @@ TEST_CASE("IdToLocation") {
 
 #ifdef __linux__
     SECTION("DenseMmapArray") {
-        typedef osmium::index::map::DenseMmapArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::DenseMmapArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
         test_func_all<index_type>(index1);
@@ -99,7 +99,7 @@ TEST_CASE("IdToLocation") {
 #endif
 
     SECTION("DenseFileArray") {
-        typedef osmium::index::map::DenseFileArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::DenseFileArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
         test_func_all<index_type>(index1);
@@ -111,7 +111,7 @@ TEST_CASE("IdToLocation") {
 #ifdef OSMIUM_WITH_SPARSEHASH
 
     SECTION("SparseMemTable") {
-        typedef osmium::index::map::SparseMemTable<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::SparseMemTable<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
         test_func_all<index_type>(index1);
@@ -123,7 +123,7 @@ TEST_CASE("IdToLocation") {
 #endif
 
     SECTION("SparseMemMap") {
-        typedef osmium::index::map::SparseMemMap<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::SparseMemMap<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
         test_func_all<index_type>(index1);
@@ -133,7 +133,7 @@ TEST_CASE("IdToLocation") {
     }
 
     SECTION("SparseMemArray") {
-        typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
+        typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
 
         index_type index1;
 
@@ -149,8 +149,8 @@ TEST_CASE("IdToLocation") {
     }
 
     SECTION("Dynamic map choice") {
-        typedef osmium::index::map::Map<osmium::unsigned_object_id_type, osmium::Location> map_type;
-        const auto& map_factory = osmium::index::MapFactory<osmium::unsigned_object_id_type, osmium::Location>::instance();
+        typedef osrm_osmium::index::map::Map<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> map_type;
+        const auto& map_factory = osrm_osmium::index::MapFactory<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location>::instance();
 
         std::vector<std::string> map_type_names = map_factory.map_types();
         REQUIRE(map_type_names.size() >= 5);

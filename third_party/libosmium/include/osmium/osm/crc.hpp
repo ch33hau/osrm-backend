@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/way.hpp>
 #include <osmium/util/endian.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace util {
 
@@ -106,7 +106,7 @@ namespace osmium {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
             m_crc.process_bytes(&value, sizeof(uint16_t));
 #else
-            uint16_t v = osmium::util::byte_swap_16(value);
+            uint16_t v = osrm_osmium::util::byte_swap_16(value);
             m_crc.process_bytes(&v, sizeof(uint16_t));
 #endif
         }
@@ -115,7 +115,7 @@ namespace osmium {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
             m_crc.process_bytes(&value, sizeof(uint32_t));
 #else
-            uint32_t v = osmium::util::byte_swap_32(value);
+            uint32_t v = osrm_osmium::util::byte_swap_32(value);
             m_crc.process_bytes(&v, sizeof(uint32_t));
 #endif
         }
@@ -124,7 +124,7 @@ namespace osmium {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
             m_crc.process_bytes(&value, sizeof(uint64_t));
 #else
-            uint64_t v = osmium::util::byte_swap_64(value);
+            uint64_t v = osrm_osmium::util::byte_swap_64(value);
             m_crc.process_bytes(&v, sizeof(uint64_t));
 #endif
         }
@@ -139,12 +139,12 @@ namespace osmium {
             update_int32(uint32_t(timestamp));
         }
 
-        void update(const osmium::Location& location) {
+        void update(const osrm_osmium::Location& location) {
             update_int32(location.x());
             update_int32(location.y());
         }
 
-        void update(const osmium::Box& box) {
+        void update(const osrm_osmium::Box& box) {
             update(box.bottom_left());
             update(box.top_right());
         }
@@ -166,19 +166,19 @@ namespace osmium {
             }
         }
 
-        void update(const osmium::RelationMember& member) {
+        void update(const osrm_osmium::RelationMember& member) {
             update_int64(member.ref());
             update_int16(uint16_t(member.type()));
             update_string(member.role());
         }
 
-        void update(const osmium::RelationMemberList& members) {
+        void update(const osrm_osmium::RelationMemberList& members) {
             for (const RelationMember& member : members) {
                 update(member);
             }
         }
 
-        void update(const osmium::OSMObject& object) {
+        void update(const osrm_osmium::OSMObject& object) {
             update_int64(object.id());
             update_bool(object.visible());
             update_int32(object.version());
@@ -188,32 +188,32 @@ namespace osmium {
             update(object.tags());
         }
 
-        void update(const osmium::Node& node) {
-            update(static_cast<const osmium::OSMObject&>(node));
+        void update(const osrm_osmium::Node& node) {
+            update(static_cast<const osrm_osmium::OSMObject&>(node));
             update(node.location());
         }
 
-        void update(const osmium::Way& way) {
-            update(static_cast<const osmium::OSMObject&>(way));
+        void update(const osrm_osmium::Way& way) {
+            update(static_cast<const osrm_osmium::OSMObject&>(way));
             update(way.nodes());
         }
 
-        void update(const osmium::Relation& relation) {
-            update(static_cast<const osmium::OSMObject&>(relation));
+        void update(const osrm_osmium::Relation& relation) {
+            update(static_cast<const osrm_osmium::OSMObject&>(relation));
             update(relation.members());
         }
 
-        void update(const osmium::Area& area) {
-            update(static_cast<const osmium::OSMObject&>(area));
+        void update(const osrm_osmium::Area& area) {
+            update(static_cast<const osrm_osmium::OSMObject&>(area));
             for (auto it = area.cbegin(); it != area.cend(); ++it) {
-                if (it->type() == osmium::item_type::outer_ring ||
-                    it->type() == osmium::item_type::inner_ring) {
-                    update(static_cast<const osmium::NodeRefList&>(*it));
+                if (it->type() == osrm_osmium::item_type::outer_ring ||
+                    it->type() == osrm_osmium::item_type::inner_ring) {
+                    update(static_cast<const osrm_osmium::NodeRefList&>(*it));
                 }
             }
         }
 
-        void update(const osmium::ChangesetDiscussion& discussion) {
+        void update(const osrm_osmium::ChangesetDiscussion& discussion) {
             for (const auto& comment : discussion) {
                 update(comment.date());
                 update_int32(comment.uid());
@@ -222,7 +222,7 @@ namespace osmium {
             }
         }
 
-        void update(const osmium::Changeset& changeset) {
+        void update(const osrm_osmium::Changeset& changeset) {
             update_int64(changeset.id());
             update(changeset.created_at());
             update(changeset.closed_at());
@@ -237,6 +237,6 @@ namespace osmium {
 
     }; // class CRC
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_CRC

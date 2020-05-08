@@ -80,9 +80,9 @@ int main(int argc, char* argv[]) {
         input =  argv[optind];
     }
 
-    osmium::io::File infile(input, input_format);
+    osrm_osmium::io::File infile(input, input_format);
 
-    osmium::io::File outfile(output, output_format);
+    osrm_osmium::io::File outfile(output, output_format);
 
     if (infile.has_multiple_object_versions() && !outfile.has_multiple_object_versions()) {
         std::cerr << "Warning! You are converting from an OSM file with (potentially) several versions of the same object to one that is not marked as such.\n";
@@ -91,12 +91,12 @@ int main(int argc, char* argv[]) {
     int exit_code = 0;
 
     try {
-        osmium::io::Reader reader(infile);
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Reader reader(infile);
+        osrm_osmium::io::Header header = reader.header();
         header.set("generator", "osmium_convert");
 
-        osmium::io::Writer writer(outfile, header, osmium::io::overwrite::allow);
-        while (osmium::memory::Buffer buffer = reader.read()) {
+        osrm_osmium::io::Writer writer(outfile, header, osrm_osmium::io::overwrite::allow);
+        while (osrm_osmium::memory::Buffer buffer = reader.read()) {
             writer(std::move(buffer));
         }
         writer.close();

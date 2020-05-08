@@ -47,7 +47,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/thread/util.hpp>
 #include <osmium/util/config.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Threading-related low-level code
@@ -109,13 +109,13 @@ namespace osmium {
 
             }; // class thread_joiner
 
-            osmium::thread::Queue<function_wrapper> m_work_queue;
+            osrm_osmium::thread::Queue<function_wrapper> m_work_queue;
             std::vector<std::thread> m_threads;
             thread_joiner m_joiner;
             int m_num_threads;
 
             void worker_thread() {
-                osmium::thread::set_thread_name("_osmium_worker");
+                osrm_osmium::thread::set_thread_name("_osmium_worker");
                 while (true) {
                     function_wrapper task;
                     m_work_queue.wait_and_pop_with_timeout(task);
@@ -145,7 +145,7 @@ namespace osmium {
                 m_work_queue(max_queue_size, "work"),
                 m_threads(),
                 m_joiner(m_threads),
-                m_num_threads(detail::get_pool_size(num_threads, osmium::config::get_pool_threads(), std::thread::hardware_concurrency())) {
+                m_num_threads(detail::get_pool_size(num_threads, osrm_osmium::config::get_pool_threads(), std::thread::hardware_concurrency())) {
 
                 try {
                     for (int i = 0; i < m_num_threads; ++i) {
@@ -203,6 +203,6 @@ namespace osmium {
 
     } // namespace thread
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_THREAD_POOL_HPP

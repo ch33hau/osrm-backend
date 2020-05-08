@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/compatibility.hpp>
 #include <osmium/util/double.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception signaling an invalid location, ie a location
@@ -185,7 +185,7 @@ namespace osmium {
          */
         double lon() const {
             if (!valid()) {
-                throw osmium::invalid_location("invalid location");
+                throw osrm_osmium::invalid_location("invalid location");
             }
             return fix_to_double(m_x);
         }
@@ -204,7 +204,7 @@ namespace osmium {
          */
         double lat() const {
             if (!valid()) {
-                throw osmium::invalid_location("invalid location");
+                throw osrm_osmium::invalid_location("invalid location");
             }
             return fix_to_double(m_y);
         }
@@ -228,9 +228,9 @@ namespace osmium {
 
         template <typename T>
         T as_string(T iterator, const char separator) const {
-            iterator = osmium::util::double2string(iterator, lon(), 7);
+            iterator = osrm_osmium::util::double2string(iterator, lon(), 7);
             *iterator++ = separator;
-            return osmium::util::double2string(iterator, lat(), 7);
+            return osrm_osmium::util::double2string(iterator, lat(), 7);
         }
 
     }; // class Location
@@ -271,7 +271,7 @@ namespace osmium {
      * Output a location to a stream.
      */
     template <typename TChar, typename TTraits>
-    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osmium::Location& location) {
+    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osrm_osmium::Location& location) {
         if (location) {
             out << '(' << location.lon() << ',' << location.lat() << ')';
         } else {
@@ -280,6 +280,6 @@ namespace osmium {
         return out;
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_LOCATION_HPP

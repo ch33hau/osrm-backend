@@ -44,7 +44,7 @@ ExtractorCallbacks::ExtractorCallbacks(ExtractionContainers &extraction_containe
  *
  * warning: caller needs to take care of synchronization!
  */
-void ExtractorCallbacks::ProcessNode(const osmium::Node &input_node,
+void ExtractorCallbacks::ProcessNode(const osrm_osmium::Node &input_node,
                                      const ExtractionNode &result_node)
 {
     external_memory.all_nodes_list.push_back(
@@ -77,7 +77,7 @@ void ExtractorCallbacks::ProcessRestriction(
  *
  * warning: caller needs to take care of synchronization!
  */
-void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const ExtractionWay &parsed_way)
+void ExtractorCallbacks::ProcessWay(const osrm_osmium::Way &input_way, const ExtractionWay &parsed_way)
 {
     if (((0 >= parsed_way.forward_speed) ||
          (TRAVEL_MODE_INACCESSIBLE == parsed_way.forward_travel_mode)) &&
@@ -304,7 +304,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
     std::transform(input_way.nodes().begin(),
                    input_way.nodes().end(),
                    std::back_inserter(external_memory.used_node_id_list),
-                   [](const osmium::NodeRef &ref) {
+                   [](const osrm_osmium::NodeRef &ref) {
                        return OSMNodeID{static_cast<std::uint64_t>(ref.ref())};
                    });
 
@@ -318,7 +318,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
         util::for_each_pair(
             input_way.nodes().crbegin(),
             input_way.nodes().crend(),
-            [&](const osmium::NodeRef &first_node, const osmium::NodeRef &last_node) {
+            [&](const osrm_osmium::NodeRef &first_node, const osrm_osmium::NodeRef &last_node) {
                 external_memory.all_edges_list.push_back(
                     InternalExtractorEdge(OSMNodeID{static_cast<std::uint64_t>(first_node.ref())},
                                           OSMNodeID{static_cast<std::uint64_t>(last_node.ref())},
@@ -350,7 +350,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
         util::for_each_pair(
             input_way.nodes().cbegin(),
             input_way.nodes().cend(),
-            [&](const osmium::NodeRef &first_node, const osmium::NodeRef &last_node) {
+            [&](const osrm_osmium::NodeRef &first_node, const osrm_osmium::NodeRef &last_node) {
                 external_memory.all_edges_list.push_back(
                     InternalExtractorEdge(OSMNodeID{static_cast<std::uint64_t>(first_node.ref())},
                                           OSMNodeID{static_cast<std::uint64_t>(last_node.ref())},
@@ -372,7 +372,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
             util::for_each_pair(
                 input_way.nodes().cbegin(),
                 input_way.nodes().cend(),
-                [&](const osmium::NodeRef &first_node, const osmium::NodeRef &last_node) {
+                [&](const osrm_osmium::NodeRef &first_node, const osrm_osmium::NodeRef &last_node) {
                     external_memory.all_edges_list.push_back(InternalExtractorEdge(
                         OSMNodeID{static_cast<std::uint64_t>(first_node.ref())},
                         OSMNodeID{static_cast<std::uint64_t>(last_node.ref())},

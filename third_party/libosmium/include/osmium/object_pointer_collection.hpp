@@ -43,10 +43,10 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/item.hpp>
 #include <osmium/osm/object.hpp>
 
-// IWYU pragma: no_forward_declare osmium::OSMObject
-// IWYU pragma: no_forward_declare osmium::memory::Item
+// IWYU pragma: no_forward_declare osrm_osmium::OSMObject
+// IWYU pragma: no_forward_declare osrm_osmium::memory::Item
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * A collection of pointers to OSM objects. The pointers can be easily
@@ -59,25 +59,25 @@ namespace osmium {
      * This class implements the visitor pattern which makes it easy to
      * populate the collection from a buffer of OSM objects:
      *
-     *   osmium::ObjectPointerCollection objects;
-     *   osmium::memory::Buffer buffer = reader.read();
-     *   osmium::apply(buffer, objects);
+     *   osrm_osmium::ObjectPointerCollection objects;
+     *   osrm_osmium::memory::Buffer buffer = reader.read();
+     *   osrm_osmium::apply(buffer, objects);
      *
      */
-    class ObjectPointerCollection : public osmium::handler::Handler {
+    class ObjectPointerCollection : public osrm_osmium::handler::Handler {
 
-        std::vector<osmium::OSMObject*> m_objects;
+        std::vector<osrm_osmium::OSMObject*> m_objects;
 
     public:
 
-        typedef boost::indirect_iterator<std::vector<osmium::OSMObject*>::iterator, osmium::OSMObject> iterator;
-        typedef boost::indirect_iterator<std::vector<osmium::OSMObject*>::const_iterator, const osmium::OSMObject> const_iterator;
+        typedef boost::indirect_iterator<std::vector<osrm_osmium::OSMObject*>::iterator, osrm_osmium::OSMObject> iterator;
+        typedef boost::indirect_iterator<std::vector<osrm_osmium::OSMObject*>::const_iterator, const osrm_osmium::OSMObject> const_iterator;
 
         ObjectPointerCollection() noexcept :
             m_objects() {
         }
 
-        void osm_object(osmium::OSMObject& object) {
+        void osm_object(osrm_osmium::OSMObject& object) {
             m_objects.push_back(&object);
         }
 
@@ -107,6 +107,6 @@ namespace osmium {
 
     }; // class ObjectPointerCollection
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OBJECT_POINTER_COLLECTION_HPP

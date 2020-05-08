@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <cstdint>
 #include <type_traits>
 
-namespace osmium {
+namespace osrm_osmium {
 
     // forward declaration, see osmium/osm/item_type.hpp for declaration
     enum class item_type : uint16_t;
@@ -95,7 +95,7 @@ namespace osmium {
 
         } // namespace detail
 
-        class Item : public osmium::memory::detail::ItemHelper {
+        class Item : public osrm_osmium::memory::detail::ItemHelper {
 
             item_size_type m_size;
             item_type m_type;
@@ -108,7 +108,7 @@ namespace osmium {
             template <typename TMember>
             friend class ItemIterator;
 
-            friend class osmium::builder::Builder;
+            friend class osrm_osmium::builder::Builder;
 
             Item& add_size(const item_size_type size) noexcept {
                 m_size += size;
@@ -167,11 +167,11 @@ namespace osmium {
 
         }; // class Item
 
-        static_assert(sizeof(Item) == 8, "Class osmium::Item has wrong size!");
-        static_assert(sizeof(Item) % align_bytes == 0, "Class osmium::Item has wrong size to be aligned properly!");
+        static_assert(sizeof(Item) == 8, "Class osrm_osmium::Item has wrong size!");
+        static_assert(sizeof(Item) % align_bytes == 0, "Class osrm_osmium::Item has wrong size to be aligned properly!");
 
     } // namespace memory
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_MEMORY_ITEM_HPP

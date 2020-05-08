@@ -49,7 +49,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/buffer.hpp>
 #include <osmium/osm/entity_bits.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -58,9 +58,9 @@ namespace osmium {
             class Parser {
 
                 future_buffer_queue_type& m_output_queue;
-                std::promise<osmium::io::Header>& m_header_promise;
+                std::promise<osrm_osmium::io::Header>& m_header_promise;
                 queue_wrapper<std::string> m_input_queue;
-                osmium::osm_entity_bits::type m_read_types;
+                osrm_osmium::osm_entity_bits::type m_read_types;
                 bool m_header_is_done;
 
             protected:
@@ -73,7 +73,7 @@ namespace osmium {
                     return m_input_queue.has_reached_end_of_data();
                 }
 
-                osmium::osm_entity_bits::type read_types() const {
+                osrm_osmium::osm_entity_bits::type read_types() const {
                     return m_read_types;
                 }
 
@@ -81,7 +81,7 @@ namespace osmium {
                     return m_header_is_done;
                 }
 
-                void set_header_value(const osmium::io::Header& header) {
+                void set_header_value(const osrm_osmium::io::Header& header) {
                     if (!m_header_is_done) {
                         m_header_is_done = true;
                         m_header_promise.set_value(header);
@@ -98,11 +98,11 @@ namespace osmium {
                 /**
                  * Wrap the buffer into a future and add it to the output queue.
                  */
-                void send_to_output_queue(osmium::memory::Buffer&& buffer) {
+                void send_to_output_queue(osrm_osmium::memory::Buffer&& buffer) {
                     add_to_queue(m_output_queue, std::move(buffer));
                 }
 
-                void send_to_output_queue(std::future<osmium::memory::Buffer>&& future) {
+                void send_to_output_queue(std::future<osrm_osmium::memory::Buffer>&& future) {
                     m_output_queue.push(std::move(future));
                 }
 
@@ -110,8 +110,8 @@ namespace osmium {
 
                 Parser(future_string_queue_type& input_queue,
                        future_buffer_queue_type& output_queue,
-                       std::promise<osmium::io::Header>& header_promise,
-                       osmium::osm_entity_bits::type read_types) :
+                       std::promise<osrm_osmium::io::Header>& header_promise,
+                       osrm_osmium::osm_entity_bits::type read_types) :
                     m_output_queue(output_queue),
                     m_header_promise(header_promise),
                     m_input_queue(input_queue),
@@ -147,7 +147,7 @@ namespace osmium {
              * This factory class is used to create objects that decode OSM
              * data written in a specified format.
              *
-             * Do not use this class directly. Use the osmium::io::Reader
+             * Do not use this class directly. Use the osrm_osmium::io::Reader
              * class instead.
              */
             class ParserFactory {
@@ -158,14 +158,14 @@ namespace osmium {
                             std::unique_ptr<Parser>(
                                 future_string_queue_type&,
                                 future_buffer_queue_type&,
-                                std::promise<osmium::io::Header>& header_promise,
-                                osmium::osm_entity_bits::type read_which_entities
+                                std::promise<osrm_osmium::io::Header>& header_promise,
+                                osrm_osmium::osm_entity_bits::type read_which_entities
                             )
                         > create_parser_type;
 
             private:
 
-                typedef std::map<osmium::io::file_format, create_parser_type> map_type;
+                typedef std::map<osrm_osmium::io::file_format, create_parser_type> map_type;
 
                 map_type m_callbacks;
 
@@ -180,14 +180,14 @@ namespace osmium {
                     return factory;
                 }
 
-                bool register_parser(osmium::io::file_format format, create_parser_type create_function) {
+                bool register_parser(osrm_osmium::io::file_format format, create_parser_type create_function) {
                     if (! m_callbacks.insert(map_type::value_type(format, create_function)).second) {
                         return false;
                     }
                     return true;
                 }
 
-                create_parser_type get_creator_function(const osmium::io::File& file) {
+                create_parser_type get_creator_function(const osrm_osmium::io::File& file) {
                     auto it = m_callbacks.find(file.format());
                     if (it == m_callbacks.end()) {
                         throw unsupported_file_format_error(
@@ -206,6 +206,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_INPUT_FORMAT_HPP

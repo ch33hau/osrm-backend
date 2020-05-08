@@ -42,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/diff_object.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace memory {
         class Item;
@@ -51,7 +51,7 @@ namespace osmium {
     namespace io {
 
         template <typename TDest>
-        class OutputIterator : public std::iterator<std::output_iterator_tag, osmium::memory::Item> {
+        class OutputIterator : public std::iterator<std::output_iterator_tag, osrm_osmium::memory::Item> {
 
             TDest* m_destination;
 
@@ -89,12 +89,12 @@ namespace osmium {
                 m_destination->flush();
             }
 
-            OutputIterator& operator=(const osmium::memory::Item& item) {
+            OutputIterator& operator=(const osrm_osmium::memory::Item& item) {
                 (*m_destination)(item);
                 return *this;
             }
 
-            OutputIterator& operator=(const osmium::DiffObject& diff) {
+            OutputIterator& operator=(const osrm_osmium::DiffObject& diff) {
                 return this->operator=(diff.curr());
             }
 
@@ -131,6 +131,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_OUTPUT_ITERATOR_HPP

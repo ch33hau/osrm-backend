@@ -12,16 +12,16 @@
 #include <osmium/io/xml_input.hpp>
 #include <osmium/visitor.hpp>
 
-typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, osmium::Location> index_type;
-typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
+typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 
-class TestOverviewHandler : public osmium::handler::Handler {
+class TestOverviewHandler : public osrm_osmium::handler::Handler {
 
     gdalcpp::Layer m_layer_nodes;
     gdalcpp::Layer m_layer_labels;
     gdalcpp::Layer m_layer_ways;
 
-    osmium::geom::OGRFactory<> m_factory;
+    osrm_osmium::geom::OGRFactory<> m_factory;
 
 public:
 
@@ -39,7 +39,7 @@ public:
         m_layer_ways.add_field("test", OFTInteger, 3);
     }
 
-    void node(const osmium::Node& node) {
+    void node(const osrm_osmium::Node& node) {
         const char* label = node.tags().get_value_by_key("label");
         if (label) {
             gdalcpp::Feature feature(m_layer_labels, m_factory.create_point(node));
@@ -53,7 +53,7 @@ public:
         }
     }
 
-    void way(const osmium::Way& way) {
+    void way(const osrm_osmium::Way& way) {
         try {
             gdalcpp::Feature feature(m_layer_ways, m_factory.create_linestring(way));
             feature.set_field("id", static_cast<double>(way.id()));
@@ -64,7 +64,7 @@ public:
             }
 
             feature.add_to_layer();
-        } catch (osmium::geometry_error&) {
+        } catch (osrm_osmium::geometry_error&) {
             std::cerr << "Ignoring illegal geometry for way " << way.id() << ".\n";
         }
     }
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
     gdalcpp::Dataset dataset(output_format, output_filename, gdalcpp::SRS{}, { "SPATIALITE=TRUE" });
 
-    osmium::io::Reader reader(input_filename);
+    osrm_osmium::io::Reader reader(input_filename);
 
     index_type index;
     location_handler_type location_handler(index);
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
 
     TestOverviewHandler handler(dataset);
 
-    osmium::apply(reader, location_handler, handler);
+    osrm_osmium::apply(reader, location_handler, handler);
     reader.close();
 }
 

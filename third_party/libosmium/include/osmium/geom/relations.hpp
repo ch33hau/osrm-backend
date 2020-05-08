@@ -36,14 +36,14 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/box.hpp>
 #include <osmium/osm/location.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace geom {
 
         /**
          * Check whether one geometry contains another.
          */
-        inline bool contains(const osmium::Box& a, const osmium::Box& b) {
+        inline bool contains(const osrm_osmium::Box& a, const osrm_osmium::Box& b) {
             return ((a.bottom_left().x() >= b.bottom_left().x()) &&
                     (a.top_right().x()   <= b.top_right().x())   &&
                     (a.bottom_left().y() >= b.bottom_left().y()) &&
@@ -52,6 +52,6 @@ namespace osmium {
 
     } // namespace geom
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_GEOM_RELATIONS_HPP

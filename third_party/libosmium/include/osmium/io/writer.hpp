@@ -53,13 +53,13 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/buffer.hpp>
 #include <osmium/thread/util.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
         /**
          * This is the user-facing interface for writing OSM files. Instantiate
-         * an object of this class with a file name or osmium::io::File object
+         * an object of this class with a file name or osrm_osmium::io::File object
          * and optionally the data for the header and then call operator() on
          * it to write Buffers or Items.
          *
@@ -76,27 +76,27 @@ namespace osmium {
          * will not get informed about any problems.
          *
          * The writer is usually used to write complete blocks of data stored
-         * in osmium::memory::Buffers. But you can also write single
-         * osmium::memory::Items. In this case the Writer uses an internal
+         * in osrm_osmium::memory::Buffers. But you can also write single
+         * osrm_osmium::memory::Items. In this case the Writer uses an internal
          * Buffer.
          */
         class Writer {
 
             static constexpr size_t default_buffer_size = 10 * 1024 * 1024;
 
-            osmium::io::File m_file;
+            osrm_osmium::io::File m_file;
 
             detail::future_string_queue_type m_output_queue;
 
-            std::unique_ptr<osmium::io::detail::OutputFormat> m_output;
+            std::unique_ptr<osrm_osmium::io::detail::OutputFormat> m_output;
 
-            osmium::memory::Buffer m_buffer;
+            osrm_osmium::memory::Buffer m_buffer;
 
             size_t m_buffer_size;
 
             std::future<bool> m_write_future;
 
-            osmium::thread::thread_handler m_thread;
+            osrm_osmium::thread::thread_handler m_thread;
 
             enum class status {
                 okay   = 0, // normal writing
@@ -106,7 +106,7 @@ namespace osmium {
 
             // This function will run in a separate thread.
             static void write_thread(detail::future_string_queue_type& output_queue,
-                                     std::unique_ptr<osmium::io::Compressor>&& compressor,
+                                     std::unique_ptr<osrm_osmium::io::Compressor>&& compressor,
                                      std::promise<bool>&& write_promise) {
                 detail::WriteThread write_thread{output_queue,
                                                  std::move(compressor),
@@ -114,17 +114,17 @@ namespace osmium {
                 write_thread();
             }
 
-            void do_write(osmium::memory::Buffer&& buffer) {
+            void do_write(osrm_osmium::memory::Buffer&& buffer) {
                 if (buffer && buffer.committed() > 0) {
                     m_output->write_buffer(std::move(buffer));
                 }
             }
 
             void do_flush() {
-                osmium::thread::check_for_exception(m_write_future);
+                osrm_osmium::thread::check_for_exception(m_write_future);
                 if (m_buffer && m_buffer.committed() > 0) {
-                    osmium::memory::Buffer buffer{m_buffer_size,
-                                                  osmium::memory::Buffer::auto_grow::no};
+                    osrm_osmium::memory::Buffer buffer{m_buffer_size,
+                                                  osrm_osmium::memory::Buffer::auto_grow::no};
                     using std::swap;
                     swap(m_buffer, buffer);
 
@@ -149,12 +149,12 @@ namespace osmium {
             }
 
             struct options_type {
-                osmium::io::Header header;
+                osrm_osmium::io::Header header;
                 overwrite allow_overwrite = overwrite::no;
                 fsync sync = fsync::no;
             };
 
-            static void set_option(options_type& options, const osmium::io::Header& header) {
+            static void set_option(options_type& options, const osrm_osmium::io::Header& header) {
                 options.header = header;
             }
 
@@ -176,26 +176,26 @@ namespace osmium {
              * @param args All further arguments are optional and can appear
              *             in any order:
              *
-             * * osmium::io::Header: Optional header data. If this is
-             *       not given, a default constructed osmium::io::Header
+             * * osrm_osmium::io::Header: Optional header data. If this is
+             *       not given, a default constructed osrm_osmium::io::Header
              *       object will be used.
              *
-             * * osmium::io::overwrite: Allow overwriting of existing file?
-             *       Can be osmium::io::overwrite::allow or
-             *       osmium::io::overwrite::no (default).
+             * * osrm_osmium::io::overwrite: Allow overwriting of existing file?
+             *       Can be osrm_osmium::io::overwrite::allow or
+             *       osrm_osmium::io::overwrite::no (default).
              *
-             * * osmium::io::fsync: Should fsync be called on the file
-             *       before closing it? Can be osmium::io::fsync::yes or
-             *       osmium::io::fsync::no (default).
+             * * osrm_osmium::io::fsync: Should fsync be called on the file
+             *       before closing it? Can be osrm_osmium::io::fsync::yes or
+             *       osrm_osmium::io::fsync::no (default).
              *
-             * @throws osmium::io_error If there was an error.
+             * @throws osrm_osmium::io_error If there was an error.
              * @throws std::system_error If the file could not be opened.
              */
             template <typename... TArgs>
-            explicit Writer(const osmium::io::File& file, TArgs&&... args) :
+            explicit Writer(const osrm_osmium::io::File& file, TArgs&&... args) :
                 m_file(file.check()),
                 m_output_queue(20, "raw_output"), // XXX
-                m_output(osmium::io::detail::OutputFormatFactory::instance().create_output(m_file, m_output_queue)),
+                m_output(osrm_osmium::io::detail::OutputFormatFactory::instance().create_output(m_file, m_output_queue)),
                 m_buffer(),
                 m_buffer_size(default_buffer_size),
                 m_write_future(),
@@ -208,14 +208,14 @@ namespace osmium {
                     (set_option(options, args), 0)...
                 };
 
-                std::unique_ptr<osmium::io::Compressor> compressor =
+                std::unique_ptr<osrm_osmium::io::Compressor> compressor =
                     CompressionFactory::instance().create_compressor(file.compression(),
-                                                                     osmium::io::detail::open_for_writing(m_file.filename(), options.allow_overwrite),
+                                                                     osrm_osmium::io::detail::open_for_writing(m_file.filename(), options.allow_overwrite),
                                                                      options.sync);
 
                 std::promise<bool> write_promise;
                 m_write_future = write_promise.get_future();
-                m_thread = osmium::thread::thread_handler{write_thread, std::ref(m_output_queue), std::move(compressor), std::move(write_promise)};
+                m_thread = osrm_osmium::thread::thread_handler{write_thread, std::ref(m_output_queue), std::move(compressor), std::move(write_promise)};
 
                 ensure_cleanup([&](){
                     m_output->write_header(options.header);
@@ -224,12 +224,12 @@ namespace osmium {
 
             template <typename... TArgs>
             explicit Writer(const std::string& filename, TArgs&&... args) :
-                Writer(osmium::io::File(filename), std::forward<TArgs>(args)...) {
+                Writer(osrm_osmium::io::File(filename), std::forward<TArgs>(args)...) {
             }
 
             template <typename... TArgs>
             explicit Writer(const char* filename, TArgs&&... args) :
-                Writer(osmium::io::File(filename), std::forward<TArgs>(args)...) {
+                Writer(osrm_osmium::io::File(filename), std::forward<TArgs>(args)...) {
             }
 
             Writer(const Writer&) = delete;
@@ -266,7 +266,7 @@ namespace osmium {
              * usually not needed as the buffer gets flushed on close()
              * automatically.
              *
-             * @throws Some form of osmium::io_error when there is a problem.
+             * @throws Some form of osrm_osmium::io_error when there is a problem.
              */
             void flush() {
                 ensure_cleanup([&](){
@@ -280,9 +280,9 @@ namespace osmium {
              * state afterwards.
              *
              * @param buffer Buffer that is being written out.
-             * @throws Some form of osmium::io_error when there is a problem.
+             * @throws Some form of osrm_osmium::io_error when there is a problem.
              */
-            void operator()(osmium::memory::Buffer&& buffer) {
+            void operator()(osrm_osmium::memory::Buffer&& buffer) {
                 ensure_cleanup([&](){
                     do_flush();
                     do_write(std::move(buffer));
@@ -294,17 +294,17 @@ namespace osmium {
              * output file.
              *
              * @param item Item to write (usually an OSM object).
-             * @throws Some form of osmium::io_error when there is a problem.
+             * @throws Some form of osrm_osmium::io_error when there is a problem.
              */
-            void operator()(const osmium::memory::Item& item) {
+            void operator()(const osrm_osmium::memory::Item& item) {
                 ensure_cleanup([&](){
                     if (!m_buffer) {
-                        m_buffer = osmium::memory::Buffer{m_buffer_size,
-                                                          osmium::memory::Buffer::auto_grow::no};
+                        m_buffer = osrm_osmium::memory::Buffer{m_buffer_size,
+                                                          osrm_osmium::memory::Buffer::auto_grow::no};
                     }
                     try {
                         m_buffer.push_back(item);
-                    } catch (osmium::buffer_is_full&) {
+                    } catch (osrm_osmium::buffer_is_full&) {
                         do_flush();
                         m_buffer.push_back(item);
                     }
@@ -318,7 +318,7 @@ namespace osmium {
              * the destructor will ignore, it is better to call close()
              * explicitly.
              *
-             * @throws Some form of osmium::io_error when there is a problem.
+             * @throws Some form of osrm_osmium::io_error when there is a problem.
              */
             void close() {
                 if (m_status == status::okay) {
@@ -339,6 +339,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_WRITER_HPP

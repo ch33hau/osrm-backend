@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/compatibility.hpp>
 #include <osmium/util/minmax.hpp> // IWYU pragma: keep
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * A timestamp. Internal representation is an unsigned 32bit integer
@@ -260,15 +260,15 @@ namespace osmium {
     }
 
     template <>
-    inline osmium::Timestamp min_op_start_value<osmium::Timestamp>() {
+    inline osrm_osmium::Timestamp min_op_start_value<osrm_osmium::Timestamp>() {
         return end_of_time();
     }
 
     template <>
-    inline osmium::Timestamp max_op_start_value<osmium::Timestamp>() {
+    inline osrm_osmium::Timestamp max_op_start_value<osrm_osmium::Timestamp>() {
         return start_of_time();
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_TIMESTAMP_HPP

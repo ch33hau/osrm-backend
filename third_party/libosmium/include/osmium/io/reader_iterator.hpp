@@ -38,12 +38,12 @@ DEALINGS IN THE SOFTWARE.
 
 namespace std {
 
-    inline osmium::io::InputIterator<osmium::io::Reader> begin(osmium::io::Reader& reader) {
-        return osmium::io::InputIterator<osmium::io::Reader>(reader);
+    inline osrm_osmium::io::InputIterator<osrm_osmium::io::Reader> begin(osrm_osmium::io::Reader& reader) {
+        return osrm_osmium::io::InputIterator<osrm_osmium::io::Reader>(reader);
     }
 
-    inline osmium::io::InputIterator<osmium::io::Reader> end(osmium::io::Reader&) {
-        return osmium::io::InputIterator<osmium::io::Reader>();
+    inline osrm_osmium::io::InputIterator<osrm_osmium::io::Reader> end(osrm_osmium::io::Reader&) {
+        return osrm_osmium::io::InputIterator<osrm_osmium::io::Reader>();
     }
 
 } // namespace std

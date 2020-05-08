@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/node_ref.hpp>
 #include <osmium/osm/node_ref_list.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace builder {
         template <typename T> class ObjectBuilder;
@@ -53,7 +53,7 @@ namespace osmium {
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::way_node_list;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::way_node_list;
 
         WayNodeList():
             NodeRefList(itemtype) {
@@ -61,24 +61,24 @@ namespace osmium {
 
     }; // class WayNodeList
 
-    static_assert(sizeof(WayNodeList) % osmium::memory::align_bytes == 0, "Class osmium::WayNodeList has wrong size to be aligned properly!");
+    static_assert(sizeof(WayNodeList) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::WayNodeList has wrong size to be aligned properly!");
 
     class Way : public OSMObject {
 
-        friend class osmium::builder::ObjectBuilder<osmium::Way>;
+        friend class osrm_osmium::builder::ObjectBuilder<osrm_osmium::Way>;
 
         Way() noexcept :
-            OSMObject(sizeof(Way), osmium::item_type::way) {
+            OSMObject(sizeof(Way), osrm_osmium::item_type::way) {
         }
 
     public:
 
         WayNodeList& nodes() {
-            return osmium::detail::subitem_of_type<WayNodeList>(begin(), end());
+            return osrm_osmium::detail::subitem_of_type<WayNodeList>(begin(), end());
         }
 
         const WayNodeList& nodes() const {
-            return osmium::detail::subitem_of_type<const WayNodeList>(cbegin(), cend());
+            return osrm_osmium::detail::subitem_of_type<const WayNodeList>(cbegin(), cend());
         }
 
         /**
@@ -110,8 +110,8 @@ namespace osmium {
 
     }; // class Way
 
-    static_assert(sizeof(Way) % osmium::memory::align_bytes == 0, "Class osmium::Way has wrong size to be aligned properly!");
+    static_assert(sizeof(Way) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::Way has wrong size to be aligned properly!");
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_WAY_HPP

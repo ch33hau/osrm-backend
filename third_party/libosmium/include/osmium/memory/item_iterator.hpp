@@ -42,75 +42,75 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/item.hpp>
 #include <osmium/osm/item_type.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace memory {
 
         namespace detail {
 
             template <typename T>
-            inline bool type_is_compatible(osmium::item_type) noexcept {
+            inline bool type_is_compatible(osrm_osmium::item_type) noexcept {
                 return true;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::Node>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::node;
+            inline bool type_is_compatible<osrm_osmium::Node>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::node;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::Way>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::way;
+            inline bool type_is_compatible<osrm_osmium::Way>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::way;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::Relation>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::relation;
+            inline bool type_is_compatible<osrm_osmium::Relation>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::relation;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::Area>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::area;
+            inline bool type_is_compatible<osrm_osmium::Area>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::area;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::Changeset>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::changeset;
+            inline bool type_is_compatible<osrm_osmium::Changeset>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::changeset;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::OSMObject>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::node || t == osmium::item_type::way || t == osmium::item_type::relation || t == osmium::item_type::area;
+            inline bool type_is_compatible<osrm_osmium::OSMObject>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::node || t == osrm_osmium::item_type::way || t == osrm_osmium::item_type::relation || t == osrm_osmium::item_type::area;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::OSMEntity>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::node || t == osmium::item_type::way || t == osmium::item_type::relation || t == osmium::item_type::area || t == osmium::item_type::changeset;
+            inline bool type_is_compatible<osrm_osmium::OSMEntity>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::node || t == osrm_osmium::item_type::way || t == osrm_osmium::item_type::relation || t == osrm_osmium::item_type::area || t == osrm_osmium::item_type::changeset;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::TagList>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::tag_list;
+            inline bool type_is_compatible<osrm_osmium::TagList>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::tag_list;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::WayNodeList>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::way_node_list;
+            inline bool type_is_compatible<osrm_osmium::WayNodeList>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::way_node_list;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::RelationMemberList>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::relation_member_list || t == osmium::item_type::relation_member_list_with_full_members;
+            inline bool type_is_compatible<osrm_osmium::RelationMemberList>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::relation_member_list || t == osrm_osmium::item_type::relation_member_list_with_full_members;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::OuterRing>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::outer_ring;
+            inline bool type_is_compatible<osrm_osmium::OuterRing>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::outer_ring;
             }
 
             template <>
-            inline bool type_is_compatible<osmium::InnerRing>(osmium::item_type t) noexcept {
-                return t == osmium::item_type::inner_ring;
+            inline bool type_is_compatible<osrm_osmium::InnerRing>(osrm_osmium::item_type t) noexcept {
+                return t == osrm_osmium::item_type::inner_ring;
             }
 
         } // namespace detail
@@ -118,7 +118,7 @@ namespace osmium {
         template <typename TMember>
         class ItemIterator : public std::iterator<std::forward_iterator_tag, TMember> {
 
-            static_assert(std::is_base_of<osmium::memory::Item, TMember>::value, "TMember must derive from osmium::memory::Item");
+            static_assert(std::is_base_of<osrm_osmium::memory::Item, TMember>::value, "TMember must derive from osrm_osmium::memory::Item");
 
             // This data_type is either 'unsigned char*' or 'const unsigned char*' depending
             // on whether TMember is const. This allows this class to be used as an iterator and
@@ -130,7 +130,7 @@ namespace osmium {
 
             void advance_to_next_item_of_right_type() {
                 while (m_data != m_end &&
-                       !detail::type_is_compatible<typename std::remove_const<TMember>::type>(reinterpret_cast<const osmium::memory::Item*>(m_data)->type())) {
+                       !detail::type_is_compatible<typename std::remove_const<TMember>::type>(reinterpret_cast<const osrm_osmium::memory::Item*>(m_data)->type())) {
                     m_data = reinterpret_cast<TMember*>(m_data)->next();
                 }
             }
@@ -223,6 +223,6 @@ namespace osmium {
 
     } // namespace memory
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_ITEM_ITERATOR_HPP

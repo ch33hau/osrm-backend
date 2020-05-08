@@ -55,7 +55,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/relations/detail/relation_meta.hpp>
 #include <osmium/relations/detail/member_meta.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Code related to the assembly of OSM relations
@@ -107,7 +107,7 @@ namespace osmium {
             /**
              * This is the handler class for the first pass of the Collector.
              */
-            class HandlerPass1 : public osmium::handler::Handler {
+            class HandlerPass1 : public osrm_osmium::handler::Handler {
 
                 TCollector& m_collector;
 
@@ -117,7 +117,7 @@ namespace osmium {
                     m_collector(collector) {
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     if (m_collector.keep_relation(relation)) {
                         m_collector.add_relation(relation);
                     }
@@ -130,7 +130,7 @@ namespace osmium {
             /**
              * This is the handler class for the second pass of the Collector.
              */
-            class HandlerPass2 : public osmium::handler::Handler {
+            class HandlerPass2 : public osrm_osmium::handler::Handler {
 
                 TCollector& m_collector;
 
@@ -140,7 +140,7 @@ namespace osmium {
                     m_collector(collector) {
                 }
 
-                void node(const osmium::Node& node) {
+                void node(const osrm_osmium::Node& node) {
                     if (TNodes) {
                         if (! m_collector.find_and_add_object(node)) {
                             m_collector.node_not_in_any_relation(node);
@@ -148,7 +148,7 @@ namespace osmium {
                     }
                 }
 
-                void way(const osmium::Way& way) {
+                void way(const osrm_osmium::Way& way) {
                     if (TWays) {
                         if (! m_collector.find_and_add_object(way)) {
                             m_collector.way_not_in_any_relation(way);
@@ -156,7 +156,7 @@ namespace osmium {
                     }
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     if (TRelations) {
                         if (! m_collector.find_and_add_object(relation)) {
                             m_collector.relation_not_in_any_relation(relation);
@@ -175,10 +175,10 @@ namespace osmium {
             HandlerPass2 m_handler_pass2;
 
             // All relations we are interested in will be kept in this buffer
-            osmium::memory::Buffer m_relations_buffer;
+            osrm_osmium::memory::Buffer m_relations_buffer;
 
             // All members we are interested in will be kept in this buffer
-            osmium::memory::Buffer m_members_buffer;
+            osrm_osmium::memory::Buffer m_members_buffer;
 
             /// Vector with all relations we are interested in
             std::vector<RelationMeta> m_relations;
@@ -193,12 +193,12 @@ namespace osmium {
 
             int m_count_complete = 0;
 
-            typedef std::function<void(osmium::memory::Buffer&&)> callback_func_type;
+            typedef std::function<void(osrm_osmium::memory::Buffer&&)> callback_func_type;
             callback_func_type m_callback;
 
             static constexpr size_t initial_buffer_size = 1024 * 1024;
 
-            iterator_range<mm_iterator> find_member_meta(osmium::item_type type, osmium::object_id_type id) {
+            iterator_range<mm_iterator> find_member_meta(osrm_osmium::item_type type, osrm_osmium::object_id_type id) {
                 auto& mmv = member_meta(type);
                 return iterator_range<mm_iterator>{std::equal_range(mmv.begin(), mmv.end(), MemberMeta(id))};
             }
@@ -210,8 +210,8 @@ namespace osmium {
              */
             Collector() :
                 m_handler_pass2(*static_cast<TCollector*>(this)),
-                m_relations_buffer(initial_buffer_size, osmium::memory::Buffer::auto_grow::yes),
-                m_members_buffer(initial_buffer_size, osmium::memory::Buffer::auto_grow::yes),
+                m_relations_buffer(initial_buffer_size, osrm_osmium::memory::Buffer::auto_grow::yes),
+                m_members_buffer(initial_buffer_size, osrm_osmium::memory::Buffer::auto_grow::yes),
                 m_relations(),
                 m_member_meta() {
             }
@@ -239,7 +239,7 @@ namespace osmium {
              * Storing relations takes a lot of memory, so it makes sense to
              * filter this as much as possible.
              */
-            bool keep_relation(const osmium::Relation& /*relation*/) const {
+            bool keep_relation(const osrm_osmium::Relation& /*relation*/) const {
                 return true;
             }
 
@@ -253,7 +253,7 @@ namespace osmium {
              * this is for instance used to only keep members of type way and
              * ignore all others.
              */
-            bool keep_member(const osmium::relations::RelationMeta& /*relation_meta*/, const osmium::RelationMember& /*member*/) const {
+            bool keep_member(const osrm_osmium::relations::RelationMeta& /*relation_meta*/, const osrm_osmium::RelationMember& /*member*/) const {
                 return true;
             }
 
@@ -264,7 +264,7 @@ namespace osmium {
              * Overwrite this method in a child class if you are interested
              * in this.
              */
-            void node_not_in_any_relation(const osmium::Node& /*node*/) {
+            void node_not_in_any_relation(const osrm_osmium::Node& /*node*/) {
             }
 
             /**
@@ -274,7 +274,7 @@ namespace osmium {
              * Overwrite this method in a child class if you are interested
              * in this.
              */
-            void way_not_in_any_relation(const osmium::Way& /*way*/) {
+            void way_not_in_any_relation(const osrm_osmium::Way& /*way*/) {
             }
 
             /**
@@ -284,7 +284,7 @@ namespace osmium {
              * Overwrite this method in a child class if you are interested
              * in this.
              */
-            void relation_not_in_any_relation(const osmium::Relation& /*relation*/) {
+            void relation_not_in_any_relation(const osrm_osmium::Relation& /*relation*/) {
             }
 
             /**
@@ -312,19 +312,19 @@ namespace osmium {
                 );
             }
 
-            const osmium::Relation& get_relation(size_t offset) const {
-                return m_relations_buffer.get<osmium::Relation>(offset);
+            const osrm_osmium::Relation& get_relation(size_t offset) const {
+                return m_relations_buffer.get<osrm_osmium::Relation>(offset);
             }
 
             /**
              * Get the relation from a relation_meta.
              */
-            const osmium::Relation& get_relation(const RelationMeta& relation_meta) const {
+            const osrm_osmium::Relation& get_relation(const RelationMeta& relation_meta) const {
                 return get_relation(relation_meta.relation_offset());
             }
 
-            osmium::OSMObject& get_member(size_t offset) const {
-                return m_members_buffer.get<osmium::OSMObject>(offset);
+            osrm_osmium::OSMObject& get_member(size_t offset) const {
+                return m_members_buffer.get<osrm_osmium::OSMObject>(offset);
             }
 
         private:
@@ -337,14 +337,14 @@ namespace osmium {
              * The relation is copied and stored in a buffer inside the
              * collector.
              */
-            void add_relation(const osmium::Relation& relation) {
+            void add_relation(const osrm_osmium::Relation& relation) {
                 const size_t offset = m_relations_buffer.committed();
                 m_relations_buffer.add_item(relation);
 
                 RelationMeta relation_meta(offset);
 
                 int n = 0;
-                for (auto& member : m_relations_buffer.get<osmium::Relation>(offset).members()) {
+                for (auto& member : m_relations_buffer.get<osrm_osmium::Relation>(offset).members()) {
                     if (static_cast<TCollector*>(this)->keep_member(relation_meta, member)) {
                         member_meta(member.type()).emplace_back(member.ref(), m_relations.size(), n);
                         relation_meta.increment_need_members();
@@ -385,7 +385,7 @@ namespace osmium {
              * @returns true if the member was added to at least one
              *          relation and false otherwise
              */
-            bool find_and_add_object(const osmium::OSMObject& object) {
+            bool find_and_add_object(const osrm_osmium::OSMObject& object) {
                 auto range = find_member_meta(object.type(), object.id());
 
                 if (detail::count_not_removed(range) == 0) {
@@ -425,8 +425,8 @@ namespace osmium {
                 return true;
             }
 
-            void clear_member_metas(const osmium::relations::RelationMeta& relation_meta) {
-                const osmium::Relation& relation = get_relation(relation_meta);
+            void clear_member_metas(const osrm_osmium::relations::RelationMeta& relation_meta) {
+                const osrm_osmium::Relation& relation = get_relation(relation_meta);
                 for (const auto& member : relation.members()) {
                     if (member.ref() != 0) {
                         auto range = find_member_meta(member.type(), member.ref());
@@ -487,11 +487,11 @@ namespace osmium {
                 return m_handler_pass2;
             }
 
-            osmium::memory::Buffer& members_buffer() {
+            osrm_osmium::memory::Buffer& members_buffer() {
                 return m_members_buffer;
             }
 
-            size_t get_offset(osmium::item_type type, osmium::object_id_type id) {
+            size_t get_offset(osrm_osmium::item_type type, osrm_osmium::object_id_type id) {
                 const auto range = find_member_meta(type, id);
                 assert(!range.empty());
                 return range.begin()->buffer_offset();
@@ -500,7 +500,7 @@ namespace osmium {
             template <typename TIter>
             void read_relations(TIter begin, TIter end) {
                 HandlerPass1 handler(*static_cast<TCollector*>(this));
-                osmium::apply(begin, end, handler);
+                osrm_osmium::apply(begin, end, handler);
                 sort_member_meta();
             }
 
@@ -511,7 +511,7 @@ namespace osmium {
             }
 
             void moving_in_buffer(size_t old_offset, size_t new_offset) {
-                const osmium::OSMObject& object = m_members_buffer.get<osmium::OSMObject>(old_offset);
+                const osrm_osmium::OSMObject& object = m_members_buffer.get<osrm_osmium::OSMObject>(old_offset);
                 auto range = find_member_meta(object.type(), object.id());
                 for (auto& member_meta : range) {
                     assert(member_meta.buffer_offset() == old_offset);
@@ -549,8 +549,8 @@ namespace osmium {
              * Note that these pointers point into memory allocated and
              * owned by the Collector object.
              */
-            std::vector<const osmium::Relation*> get_incomplete_relations() const {
-                std::vector<const osmium::Relation*> relations;
+            std::vector<const osrm_osmium::Relation*> get_incomplete_relations() const {
+                std::vector<const osrm_osmium::Relation*> relations;
                 for (const auto& relation_meta : m_relations) {
                     if (!relation_meta.has_all_members()) {
                         relations.push_back(&get_relation(relation_meta));
@@ -563,6 +563,6 @@ namespace osmium {
 
     } // namespace relations
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_RELATIONS_COLLECTOR_HPP

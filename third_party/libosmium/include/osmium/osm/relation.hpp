@@ -44,16 +44,16 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/object.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace builder {
         template <typename> class ObjectBuilder;
         class RelationMemberListBuilder;
     } // namespace builder
 
-    class RelationMember : public osmium::memory::detail::ItemHelper {
+    class RelationMember : public osrm_osmium::memory::detail::ItemHelper {
 
-        friend class osmium::builder::RelationMemberListBuilder;
+        friend class osrm_osmium::builder::RelationMemberListBuilder;
 
         object_id_type   m_ref;
         item_type        m_type;
@@ -67,26 +67,26 @@ namespace osmium {
         RelationMember& operator=(RelationMember&&) = delete;
 
         unsigned char* endpos() {
-            return data() + osmium::memory::padded_length(sizeof(RelationMember) + m_role_size);
+            return data() + osrm_osmium::memory::padded_length(sizeof(RelationMember) + m_role_size);
         }
 
         const unsigned char* endpos() const {
-            return data() + osmium::memory::padded_length(sizeof(RelationMember) + m_role_size);
+            return data() + osrm_osmium::memory::padded_length(sizeof(RelationMember) + m_role_size);
         }
 
         template <typename TMember>
-        friend class osmium::memory::CollectionIterator;
+        friend class osrm_osmium::memory::CollectionIterator;
 
         unsigned char* next() {
             if (full_member()) {
-                return endpos() + reinterpret_cast<osmium::memory::Item*>(endpos())->byte_size();
+                return endpos() + reinterpret_cast<osrm_osmium::memory::Item*>(endpos())->byte_size();
             }
             return endpos();
         }
 
         unsigned const char* next() const {
             if (full_member()) {
-                return endpos() + reinterpret_cast<const osmium::memory::Item*>(endpos())->byte_size();
+                return endpos() + reinterpret_cast<const osrm_osmium::memory::Item*>(endpos())->byte_size();
             }
             return endpos();
         }
@@ -118,7 +118,7 @@ namespace osmium {
             return static_cast<unsigned_object_id_type>(std::abs(m_ref));
         }
 
-        RelationMember& set_ref(const osmium::object_id_type ref) noexcept {
+        RelationMember& set_ref(const osrm_osmium::object_id_type ref) noexcept {
             m_ref = ref;
             return *this;
         }
@@ -145,14 +145,14 @@ namespace osmium {
 
     }; // class RelationMember
 
-    class RelationMemberList : public osmium::memory::Collection<RelationMember, osmium::item_type::relation_member_list> {
+    class RelationMemberList : public osrm_osmium::memory::Collection<RelationMember, osrm_osmium::item_type::relation_member_list> {
 
     public:
 
         typedef size_t size_type;
 
         RelationMemberList() :
-            osmium::memory::Collection<RelationMember, osmium::item_type::relation_member_list>() {
+            osrm_osmium::memory::Collection<RelationMember, osrm_osmium::item_type::relation_member_list>() {
         }
 
         size_type size() const noexcept {
@@ -161,32 +161,32 @@ namespace osmium {
 
     }; // class RelationMemberList
 
-    static_assert(sizeof(RelationMemberList) % osmium::memory::align_bytes == 0, "Class osmium::RelationMemberList has wrong size to be aligned properly!");
+    static_assert(sizeof(RelationMemberList) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::RelationMemberList has wrong size to be aligned properly!");
 
     class Relation : public OSMObject {
 
-        friend class osmium::builder::ObjectBuilder<osmium::Relation>;
+        friend class osrm_osmium::builder::ObjectBuilder<osrm_osmium::Relation>;
 
         Relation() noexcept :
-            OSMObject(sizeof(Relation), osmium::item_type::relation) {
+            OSMObject(sizeof(Relation), osrm_osmium::item_type::relation) {
         }
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::relation;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::relation;
 
         RelationMemberList& members() {
-            return osmium::detail::subitem_of_type<RelationMemberList>(begin(), end());
+            return osrm_osmium::detail::subitem_of_type<RelationMemberList>(begin(), end());
         }
 
         const RelationMemberList& members() const {
-            return osmium::detail::subitem_of_type<const RelationMemberList>(cbegin(), cend());
+            return osrm_osmium::detail::subitem_of_type<const RelationMemberList>(cbegin(), cend());
         }
 
     }; // class Relation
 
-    static_assert(sizeof(Relation) % osmium::memory::align_bytes == 0, "Class osmium::Relation has wrong size to be aligned properly!");
+    static_assert(sizeof(Relation) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::Relation has wrong size to be aligned properly!");
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_RELATION_HPP

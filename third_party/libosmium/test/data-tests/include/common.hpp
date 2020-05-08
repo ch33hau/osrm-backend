@@ -10,9 +10,9 @@
 #include <osmium/io/xml_input.hpp>
 #include <osmium/visitor.hpp>
 
-typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_neg_type;
-typedef osmium::index::map::SparseMemArray<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
-typedef osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
+typedef osrm_osmium::index::map::Dummy<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_neg_type;
+typedef osrm_osmium::index::map::SparseMemArray<osrm_osmium::unsigned_object_id_type, osrm_osmium::Location> index_pos_type;
+typedef osrm_osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
 
 #include "check_basics_handler.hpp"
 #include "check_wkt_handler.hpp"

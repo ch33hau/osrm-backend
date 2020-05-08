@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 
 */
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -55,6 +55,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_WRITER_OPTIONS_HPP

@@ -36,19 +36,19 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/index/detail/mmap_vector_file.hpp>
 #include <osmium/index/detail/vector_multimap.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
         namespace multimap {
 
             template <typename TId, typename TValue>
-            using SparseFileArray = VectorBasedSparseMultimap<TId, TValue, osmium::detail::mmap_vector_file>;
+            using SparseFileArray = VectorBasedSparseMultimap<TId, TValue, osrm_osmium::detail::mmap_vector_file>;
 
         } // namespace multimap
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_MULTIMAP_SPARSE_FILE_ARRAY_HPP

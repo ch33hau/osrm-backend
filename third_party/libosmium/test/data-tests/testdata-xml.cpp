@@ -34,8 +34,8 @@ std::string filename(const char* test_id, const char* suffix = "osm") {
 }
 
 struct header_buffer_type {
-    osmium::io::Header header;
-    osmium::memory::Buffer buffer;
+    osrm_osmium::io::Header header;
+    osrm_osmium::memory::Buffer buffer;
 };
 
 // =============================================
@@ -47,7 +47,7 @@ struct header_buffer_type {
 // file contents fit into small buffers.
 
 std::string read_file(const char* test_id) {
-    int fd = osmium::io::detail::open_for_reading(filename(test_id));
+    int fd = osrm_osmium::io::detail::open_for_reading(filename(test_id));
     assert(fd >= 0);
 
     std::string input(10000, '\0');
@@ -61,10 +61,10 @@ std::string read_file(const char* test_id) {
 }
 
 std::string read_gz_file(const char* test_id, const char* suffix) {
-    int fd = osmium::io::detail::open_for_reading(filename(test_id, suffix));
+    int fd = osrm_osmium::io::detail::open_for_reading(filename(test_id, suffix));
     assert(fd >= 0);
 
-    osmium::io::GzipDecompressor gzip_decompressor(fd);
+    osrm_osmium::io::GzipDecompressor gzip_decompressor(fd);
     std::string input = gzip_decompressor.read();
     gzip_decompressor.close();
 
@@ -73,25 +73,25 @@ std::string read_gz_file(const char* test_id, const char* suffix) {
 
 
 header_buffer_type parse_xml(std::string input) {
-    osmium::io::detail::future_string_queue_type input_queue;
-    osmium::io::detail::future_buffer_queue_type output_queue;
-    std::promise<osmium::io::Header> header_promise;
-    std::future<osmium::io::Header> header_future = header_promise.get_future();
+    osrm_osmium::io::detail::future_string_queue_type input_queue;
+    osrm_osmium::io::detail::future_buffer_queue_type output_queue;
+    std::promise<osrm_osmium::io::Header> header_promise;
+    std::future<osrm_osmium::io::Header> header_future = header_promise.get_future();
 
-    osmium::io::detail::add_to_queue(input_queue, std::move(input));
-    osmium::io::detail::add_to_queue(input_queue, std::string{});
+    osrm_osmium::io::detail::add_to_queue(input_queue, std::move(input));
+    osrm_osmium::io::detail::add_to_queue(input_queue, std::string{});
 
-    osmium::io::detail::XMLParser parser(input_queue, output_queue, header_promise, osmium::osm_entity_bits::all);
+    osrm_osmium::io::detail::XMLParser parser(input_queue, output_queue, header_promise, osrm_osmium::osm_entity_bits::all);
     parser.parse();
 
     header_buffer_type result;
     result.header = header_future.get();
-    std::future<osmium::memory::Buffer> future_buffer;
+    std::future<osrm_osmium::memory::Buffer> future_buffer;
     output_queue.wait_and_pop(future_buffer);
     result.buffer = future_buffer.get();
 
     if (result.buffer) {
-        std::future<osmium::memory::Buffer> future_buffer2;
+        std::future<osrm_osmium::memory::Buffer> future_buffer2;
         output_queue.wait_and_pop(future_buffer2);
         assert(!future_buffer2.get());
     }
@@ -117,21 +117,21 @@ TEST_CASE("Reading OSM XML 100") {
     }
 
     SECTION("Using Reader") {
-        osmium::io::Reader reader(filename("100-correct_but_no_data"));
+        osrm_osmium::io::Reader reader(filename("100-correct_but_no_data"));
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::memory::Buffer buffer = reader.read();
         REQUIRE(0 == buffer.committed());
         REQUIRE(! buffer);
         reader.close();
     }
 
     SECTION("Using Reader asking for header only") {
-        osmium::io::Reader reader(filename("100-correct_but_no_data"), osmium::osm_entity_bits::nothing);
+        osrm_osmium::io::Reader reader(filename("100-correct_but_no_data"), osrm_osmium::osm_entity_bits::nothing);
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
         reader.close();
     }
@@ -143,21 +143,21 @@ TEST_CASE("Reading OSM XML 100") {
 TEST_CASE("Reading OSM XML 101") {
 
     SECTION("Direct") {
-        REQUIRE_THROWS_AS(read_xml("101-missing_version"), osmium::format_version_error);
+        REQUIRE_THROWS_AS(read_xml("101-missing_version"), osrm_osmium::format_version_error);
         try {
             read_xml("101-missing_version");
-        } catch (osmium::format_version_error& e) {
+        } catch (osrm_osmium::format_version_error& e) {
             REQUIRE(e.version.empty());
         }
     }
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("101-missing_version"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("101-missing_version"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::format_version_error);
+        }, osrm_osmium::format_version_error);
     }
 
 }
@@ -167,22 +167,22 @@ TEST_CASE("Reading OSM XML 101") {
 TEST_CASE("Reading OSM XML 102") {
 
     SECTION("Direct") {
-        REQUIRE_THROWS_AS(read_xml("102-wrong_version"), osmium::format_version_error);
+        REQUIRE_THROWS_AS(read_xml("102-wrong_version"), osrm_osmium::format_version_error);
         try {
             read_xml("102-wrong_version");
-        } catch (osmium::format_version_error& e) {
+        } catch (osrm_osmium::format_version_error& e) {
             REQUIRE(e.version == "0.1");
         }
     }
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("102-wrong_version"));
+            osrm_osmium::io::Reader reader(filename("102-wrong_version"));
 
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::format_version_error);
+        }, osrm_osmium::format_version_error);
     }
 
 }
@@ -192,21 +192,21 @@ TEST_CASE("Reading OSM XML 102") {
 TEST_CASE("Reading OSM XML 103") {
 
     SECTION("Direct") {
-        REQUIRE_THROWS_AS(read_xml("103-old_version"), osmium::format_version_error);
+        REQUIRE_THROWS_AS(read_xml("103-old_version"), osrm_osmium::format_version_error);
         try {
             read_xml("103-old_version");
-        } catch (osmium::format_version_error& e) {
+        } catch (osrm_osmium::format_version_error& e) {
             REQUIRE(e.version == "0.5");
         }
     }
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("103-old_version"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("103-old_version"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::format_version_error);
+        }, osrm_osmium::format_version_error);
     }
 
 }
@@ -216,10 +216,10 @@ TEST_CASE("Reading OSM XML 103") {
 TEST_CASE("Reading OSM XML 104") {
 
     SECTION("Direct") {
-        REQUIRE_THROWS_AS(read_xml("104-empty_file"), osmium::xml_error);
+        REQUIRE_THROWS_AS(read_xml("104-empty_file"), osrm_osmium::xml_error);
         try {
             read_xml("104-empty_file");
-        } catch (osmium::xml_error& e) {
+        } catch (osrm_osmium::xml_error& e) {
             REQUIRE(e.line == 1);
             REQUIRE(e.column == 0);
         }
@@ -227,11 +227,11 @@ TEST_CASE("Reading OSM XML 104") {
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("104-empty_file"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("104-empty_file"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::xml_error);
+        }, osrm_osmium::xml_error);
     }
 }
 
@@ -240,16 +240,16 @@ TEST_CASE("Reading OSM XML 104") {
 TEST_CASE("Reading OSM XML 105") {
 
     SECTION("Direct") {
-        REQUIRE_THROWS_AS(read_xml("105-incomplete_xml_file"), osmium::xml_error);
+        REQUIRE_THROWS_AS(read_xml("105-incomplete_xml_file"), osrm_osmium::xml_error);
     }
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("105-incomplete_xml_file"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("105-incomplete_xml_file"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::xml_error);
+        }, osrm_osmium::xml_error);
     }
 
 }
@@ -270,12 +270,12 @@ TEST_CASE("Reading OSM XML 120") {
     }
 
     SECTION("Using Reader") {
-        osmium::io::Reader reader(filename("120-correct_gzip_file_without_data", "osm.gz"));
+        osrm_osmium::io::Reader reader(filename("120-correct_gzip_file_without_data", "osm.gz"));
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::memory::Buffer buffer = reader.read();
         REQUIRE(0 == buffer.committed());
         REQUIRE(! buffer);
         reader.close();
@@ -290,15 +290,15 @@ TEST_CASE("Reading OSM XML 121") {
     SECTION("Direct") {
         REQUIRE_THROWS_AS( {
             read_gz_file("121-truncated_gzip_file", "osm.gz");
-        }, osmium::gzip_error);
+        }, osrm_osmium::gzip_error);
     }
 
     SECTION("Using Reader") {
-        // can throw osmium::gzip_error or osmium::xml_error
+        // can throw osrm_osmium::gzip_error or osrm_osmium::xml_error
         REQUIRE_THROWS({
-            osmium::io::Reader reader(filename("121-truncated_gzip_file", "osm.gz"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("121-truncated_gzip_file", "osm.gz"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
         });
     }
@@ -312,16 +312,16 @@ TEST_CASE("Reading OSM XML 122") {
     SECTION("Direct") {
         REQUIRE_THROWS_AS( {
             read_xml("122-no_osm_element");
-        }, osmium::xml_error);
+        }, osrm_osmium::xml_error);
     }
 
     SECTION("Using Reader") {
         REQUIRE_THROWS_AS({
-            osmium::io::Reader reader(filename("122-no_osm_element"));
-            osmium::io::Header header = reader.header();
-            osmium::memory::Buffer buffer = reader.read();
+            osrm_osmium::io::Reader reader(filename("122-no_osm_element"));
+            osrm_osmium::io::Header header = reader.header();
+            osrm_osmium::memory::Buffer buffer = reader.read();
             reader.close();
-        }, osmium::xml_error);
+        }, osrm_osmium::xml_error);
     }
 
 }
@@ -331,15 +331,15 @@ TEST_CASE("Reading OSM XML 122") {
 TEST_CASE("Reading OSM XML 140") {
 
     SECTION("Using Reader") {
-        osmium::io::Reader reader(filename("140-unicode"));
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::io::Reader reader(filename("140-unicode"));
+        osrm_osmium::memory::Buffer buffer = reader.read();
         reader.close();
 
         int count = 0;
-        for (auto it = buffer.begin<osmium::Node>(); it != buffer.end<osmium::Node>(); ++it) {
+        for (auto it = buffer.begin<osrm_osmium::Node>(); it != buffer.end<osrm_osmium::Node>(); ++it) {
             ++count;
             REQUIRE(it->id() == count);
-            const osmium::TagList& t = it->tags();
+            const osrm_osmium::TagList& t = it->tags();
 
             const char* uc = t["unicode_char"];
 
@@ -382,14 +382,14 @@ TEST_CASE("Reading OSM XML 140") {
 TEST_CASE("Reading OSM XML 141") {
 
     SECTION("Using Reader") {
-        osmium::io::Reader reader(filename("141-entities"));
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::io::Reader reader(filename("141-entities"));
+        osrm_osmium::memory::Buffer buffer = reader.read();
         reader.close();
         REQUIRE(buffer.committed() > 0);
-        REQUIRE(buffer.get<osmium::memory::Item>(0).type() == osmium::item_type::node);
+        REQUIRE(buffer.get<osrm_osmium::memory::Item>(0).type() == osrm_osmium::item_type::node);
 
-        const osmium::Node& node = buffer.get<osmium::Node>(0);
-        const osmium::TagList& tags = node.tags();
+        const osrm_osmium::Node& node = buffer.get<osrm_osmium::Node>(0);
+        const osrm_osmium::TagList& tags = node.tags();
 
         REQUIRE(S_(tags["less-than"])    == "<");
         REQUIRE(S_(tags["greater-than"]) == ">");
@@ -406,16 +406,16 @@ TEST_CASE("Reading OSM XML 141") {
 TEST_CASE("Reading OSM XML 142") {
 
     SECTION("Using Reader to read nodes") {
-        osmium::io::Reader reader(filename("142-whitespace"));
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::io::Reader reader(filename("142-whitespace"));
+        osrm_osmium::memory::Buffer buffer = reader.read();
         reader.close();
 
         int count = 0;
-        for (auto it = buffer.begin<osmium::Node>(); it != buffer.end<osmium::Node>(); ++it) {
+        for (auto it = buffer.begin<osrm_osmium::Node>(); it != buffer.end<osrm_osmium::Node>(); ++it) {
             ++count;
             REQUIRE(it->id() == count);
             REQUIRE(it->tags().size() == 1);
-            const osmium::Tag& tag = *(it->tags().begin());
+            const osrm_osmium::Tag& tag = *(it->tags().begin());
 
             switch (count) {
                 case 1:
@@ -451,12 +451,12 @@ TEST_CASE("Reading OSM XML 142") {
     }
 
     SECTION("Using Reader to read relation") {
-        osmium::io::Reader reader(filename("142-whitespace"));
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::io::Reader reader(filename("142-whitespace"));
+        osrm_osmium::memory::Buffer buffer = reader.read();
         reader.close();
 
-        auto it = buffer.begin<osmium::Relation>();
-        REQUIRE(it != buffer.end<osmium::Relation>());
+        auto it = buffer.begin<osrm_osmium::Relation>();
+        REQUIRE(it != buffer.end<osrm_osmium::Relation>());
         REQUIRE(it->id() == 21);
         const auto& members = it->members();
         REQUIRE(members.size() == 5);
@@ -499,43 +499,43 @@ TEST_CASE("Reading OSM XML 200") {
 
         REQUIRE(r.header.get("generator") == "testdata");
         REQUIRE(r.buffer.committed() > 0);
-        REQUIRE(r.buffer.get<osmium::memory::Item>(0).type() == osmium::item_type::node);
-        REQUIRE(r.buffer.get<osmium::Node>(0).id() == 36966060);
+        REQUIRE(r.buffer.get<osrm_osmium::memory::Item>(0).type() == osrm_osmium::item_type::node);
+        REQUIRE(r.buffer.get<osrm_osmium::Node>(0).id() == 36966060);
         REQUIRE(std::distance(r.buffer.begin(), r.buffer.end()) == 3);
     }
 
     SECTION("Using Reader") {
-        osmium::io::Reader reader(filename("200-nodes"));
+        osrm_osmium::io::Reader reader(filename("200-nodes"));
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::memory::Buffer buffer = reader.read();
         REQUIRE(buffer.committed() > 0);
-        REQUIRE(buffer.get<osmium::memory::Item>(0).type() == osmium::item_type::node);
-        REQUIRE(buffer.get<osmium::Node>(0).id() == 36966060);
+        REQUIRE(buffer.get<osrm_osmium::memory::Item>(0).type() == osrm_osmium::item_type::node);
+        REQUIRE(buffer.get<osrm_osmium::Node>(0).id() == 36966060);
         REQUIRE(std::distance(buffer.begin(), buffer.end()) == 3);
         reader.close();
     }
 
     SECTION("Using Reader asking for nodes") {
-        osmium::io::Reader reader(filename("200-nodes"), osmium::osm_entity_bits::node);
+        osrm_osmium::io::Reader reader(filename("200-nodes"), osrm_osmium::osm_entity_bits::node);
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::memory::Buffer buffer = reader.read();
         REQUIRE(buffer.committed() > 0);
-        REQUIRE(buffer.get<osmium::memory::Item>(0).type() == osmium::item_type::node);
-        REQUIRE(buffer.get<osmium::Node>(0).id() == 36966060);
+        REQUIRE(buffer.get<osrm_osmium::memory::Item>(0).type() == osrm_osmium::item_type::node);
+        REQUIRE(buffer.get<osrm_osmium::Node>(0).id() == 36966060);
         REQUIRE(std::distance(buffer.begin(), buffer.end()) == 3);
         reader.close();
     }
 
     SECTION("Using Reader asking for header only") {
-        osmium::io::Reader reader(filename("200-nodes"), osmium::osm_entity_bits::nothing);
+        osrm_osmium::io::Reader reader(filename("200-nodes"), osrm_osmium::osm_entity_bits::nothing);
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
         REQUIRE_THROWS({
@@ -546,12 +546,12 @@ TEST_CASE("Reading OSM XML 200") {
     }
 
     SECTION("Using Reader asking for ways") {
-        osmium::io::Reader reader(filename("200-nodes"), osmium::osm_entity_bits::way);
+        osrm_osmium::io::Reader reader(filename("200-nodes"), osrm_osmium::osm_entity_bits::way);
 
-        osmium::io::Header header = reader.header();
+        osrm_osmium::io::Header header = reader.header();
         REQUIRE(header.get("generator") == "testdata");
 
-        osmium::memory::Buffer buffer = reader.read();
+        osrm_osmium::memory::Buffer buffer = reader.read();
         REQUIRE(0 == buffer.committed());
         REQUIRE(! buffer);
         reader.close();

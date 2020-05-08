@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <deque>
 #include <mutex>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace thread {
 
@@ -154,6 +154,6 @@ namespace osmium {
 
     } // namespace thread
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_THREAD_SORTED_QUEUE_HPP

@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/object.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace builder {
         template <typename T> class ObjectBuilder;
@@ -46,31 +46,31 @@ namespace osmium {
 
     class Node : public OSMObject {
 
-        friend class osmium::builder::ObjectBuilder<osmium::Node>;
+        friend class osrm_osmium::builder::ObjectBuilder<osrm_osmium::Node>;
 
-        osmium::Location m_location;
+        osrm_osmium::Location m_location;
 
         Node() :
-            OSMObject(sizeof(Node), osmium::item_type::node) {
+            OSMObject(sizeof(Node), osrm_osmium::item_type::node) {
         }
 
     public:
 
-        static constexpr osmium::item_type itemtype = osmium::item_type::node;
+        static constexpr osrm_osmium::item_type itemtype = osrm_osmium::item_type::node;
 
-        osmium::Location location() const noexcept {
+        osrm_osmium::Location location() const noexcept {
             return m_location;
         }
 
-        Node& set_location(const osmium::Location& location) {
+        Node& set_location(const osrm_osmium::Location& location) {
             m_location = location;
             return *this;
         }
 
     }; // class Node
 
-    static_assert(sizeof(Node) % osmium::memory::align_bytes == 0, "Class osmium::Node has wrong size to be aligned properly!");
+    static_assert(sizeof(Node) % osrm_osmium::memory::align_bytes == 0, "Class osrm_osmium::Node has wrong size to be aligned properly!");
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_NODE_HPP

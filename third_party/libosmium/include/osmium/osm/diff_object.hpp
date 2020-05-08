@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/timestamp.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * A DiffObject holds pointers to three OSMObjects, the current object,
@@ -62,9 +62,9 @@ namespace osmium {
      */
     class DiffObject {
 
-        const osmium::OSMObject* m_prev;
-        const osmium::OSMObject* m_curr;
-        const osmium::OSMObject* m_next;
+        const osrm_osmium::OSMObject* m_prev;
+        const osrm_osmium::OSMObject* m_curr;
+        const osrm_osmium::OSMObject* m_next;
 
     public:
 
@@ -83,7 +83,7 @@ namespace osmium {
          * OSMObjects must be of the same type (Node, Way, or Relation) and
          * have the same ID.
          */
-        DiffObject(const osmium::OSMObject& prev, const osmium::OSMObject& curr, const osmium::OSMObject& next) noexcept :
+        DiffObject(const osrm_osmium::OSMObject& prev, const osrm_osmium::OSMObject& curr, const osrm_osmium::OSMObject& next) noexcept :
             m_prev(&prev),
             m_curr(&curr),
             m_next(&next) {
@@ -103,7 +103,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        const osmium::OSMObject& prev() const noexcept {
+        const osrm_osmium::OSMObject& prev() const noexcept {
             assert(m_prev && m_curr && m_next);
             return *m_prev;
         }
@@ -113,7 +113,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        const osmium::OSMObject& curr() const noexcept {
+        const osrm_osmium::OSMObject& curr() const noexcept {
             assert(m_prev && m_curr && m_next);
             return *m_curr;
         }
@@ -123,7 +123,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        const osmium::OSMObject& next() const noexcept {
+        const osrm_osmium::OSMObject& next() const noexcept {
             assert(m_prev && m_curr && m_next);
             return *m_next;
         }
@@ -153,7 +153,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        osmium::item_type type() const noexcept {
+        osrm_osmium::item_type type() const noexcept {
             assert(m_prev && m_curr && m_next);
             return m_curr->type();
         }
@@ -163,7 +163,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        osmium::object_id_type id() const noexcept {
+        osrm_osmium::object_id_type id() const noexcept {
             assert(m_prev && m_curr && m_next);
             return m_curr->id();
         }
@@ -173,7 +173,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        osmium::object_version_type version() const noexcept {
+        osrm_osmium::object_version_type version() const noexcept {
             assert(m_prev && m_curr && m_next);
             return m_curr->version();
         }
@@ -183,7 +183,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        osmium::changeset_id_type changeset() const noexcept {
+        osrm_osmium::changeset_id_type changeset() const noexcept {
             assert(m_prev && m_curr && m_next);
             return m_curr->changeset();
         }
@@ -193,7 +193,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        const osmium::Timestamp start_time() const noexcept {
+        const osrm_osmium::Timestamp start_time() const noexcept {
             assert(m_prev && m_curr && m_next);
             return m_curr->timestamp();
         }
@@ -207,9 +207,9 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        const osmium::Timestamp end_time() const noexcept {
+        const osrm_osmium::Timestamp end_time() const noexcept {
             assert(m_prev && m_curr && m_next);
-            return last() ? osmium::end_of_time() : m_next->timestamp();
+            return last() ? osrm_osmium::end_of_time() : m_next->timestamp();
         }
 
         /**
@@ -221,7 +221,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        bool is_between(const osmium::Timestamp& from, const osmium::Timestamp& to) const noexcept {
+        bool is_between(const osrm_osmium::Timestamp& from, const osrm_osmium::Timestamp& to) const noexcept {
             assert(m_prev && m_curr && m_next);
             return start_time() < to &&
                    ((start_time() != end_time() && end_time() >  from) ||
@@ -233,7 +233,7 @@ namespace osmium {
          *
          * @pre DiffObject must not be empty.
          */
-        bool is_visible_at(const osmium::Timestamp& timestamp) const noexcept {
+        bool is_visible_at(const osrm_osmium::Timestamp& timestamp) const noexcept {
             assert(m_prev && m_curr && m_next);
             return start_time() <= timestamp && end_time() > timestamp && m_curr->visible();
         }
@@ -263,10 +263,10 @@ namespace osmium {
 
     }; // class DiffObjectDerived
 
-    using DiffNode     = DiffObjectDerived<osmium::Node>;
-    using DiffWay      = DiffObjectDerived<osmium::Way>;
-    using DiffRelation = DiffObjectDerived<osmium::Relation>;
+    using DiffNode     = DiffObjectDerived<osrm_osmium::Node>;
+    using DiffWay      = DiffObjectDerived<osrm_osmium::Way>;
+    using DiffRelation = DiffObjectDerived<osrm_osmium::Relation>;
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_DIFF_OBJECT_HPP

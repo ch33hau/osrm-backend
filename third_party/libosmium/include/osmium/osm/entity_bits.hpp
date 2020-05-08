@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/osm/item_type.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Bitfield for OSM entity types.
@@ -48,13 +48,13 @@ namespace osmium {
          * Usage:
          *
          * @code{.cpp}
-         * osmium::osm_entity_bits::type entities = osmium::osm_entity_bits::node | osmium::osm_entity_bits::way;
+         * osrm_osmium::osm_entity_bits::type entities = osrm_osmium::osm_entity_bits::node | osrm_osmium::osm_entity_bits::way;
          *
-         * entities |= osmium::osm_entity_bits::relation;
+         * entities |= osrm_osmium::osm_entity_bits::relation;
          *
-         * assert(entities & osmium::osm_entity_bits::object);
+         * assert(entities & osrm_osmium::osm_entity_bits::object);
          *
-         * assert(! (entities & osmium::osm_entity_bits::changeset));
+         * assert(! (entities & osrm_osmium::osm_entity_bits::changeset));
          * @endcode
          */
         enum type : unsigned char {
@@ -94,12 +94,12 @@ namespace osmium {
             return lhs;
         }
 
-        inline type from_item_type(osmium::item_type item_type) noexcept {
-            return static_cast<osmium::osm_entity_bits::type>(0x1 << (static_cast<uint16_t>(item_type) - 1));
+        inline type from_item_type(osrm_osmium::item_type item_type) noexcept {
+            return static_cast<osrm_osmium::osm_entity_bits::type>(0x1 << (static_cast<uint16_t>(item_type) - 1));
         }
 
     } // namespace osm_entity_bits
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_ENTITY_BITS_HPP

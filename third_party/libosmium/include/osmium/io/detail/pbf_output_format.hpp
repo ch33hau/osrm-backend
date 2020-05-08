@@ -71,7 +71,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/delta.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -168,7 +168,7 @@ namespace osmium {
 
                     if (m_use_compression) {
                         pbf_blob.add_int32(FileFormat::Blob::optional_int32_raw_size, int32_t(m_msg.size()));
-                        pbf_blob.add_bytes(FileFormat::Blob::optional_bytes_zlib_data, osmium::io::detail::zlib_compress(m_msg));
+                        pbf_blob.add_bytes(FileFormat::Blob::optional_bytes_zlib_data, osrm_osmium::io::detail::zlib_compress(m_msg));
                     } else {
                         pbf_blob.add_bytes(FileFormat::Blob::optional_bytes_raw, m_msg);
                     }
@@ -218,15 +218,15 @@ namespace osmium {
                 std::vector<int64_t> m_lons;
                 std::vector<int32_t> m_tags;
 
-                osmium::util::DeltaEncode<object_id_type, int64_t> m_delta_id;
+                osrm_osmium::util::DeltaEncode<object_id_type, int64_t> m_delta_id;
 
-                osmium::util::DeltaEncode<uint32_t, int64_t> m_delta_timestamp;
-                osmium::util::DeltaEncode<changeset_id_type, int64_t> m_delta_changeset;
-                osmium::util::DeltaEncode<user_id_type, int32_t> m_delta_uid;
-                osmium::util::DeltaEncode<uint32_t, int32_t> m_delta_user_sid;
+                osrm_osmium::util::DeltaEncode<uint32_t, int64_t> m_delta_timestamp;
+                osrm_osmium::util::DeltaEncode<changeset_id_type, int64_t> m_delta_changeset;
+                osrm_osmium::util::DeltaEncode<user_id_type, int32_t> m_delta_uid;
+                osrm_osmium::util::DeltaEncode<uint32_t, int32_t> m_delta_user_sid;
 
-                osmium::util::DeltaEncode<int64_t, int64_t> m_delta_lat;
-                osmium::util::DeltaEncode<int64_t, int64_t> m_delta_lon;
+                osrm_osmium::util::DeltaEncode<int64_t, int64_t> m_delta_lat;
+                osrm_osmium::util::DeltaEncode<int64_t, int64_t> m_delta_lon;
 
                 const pbf_output_options& m_options;
 
@@ -267,7 +267,7 @@ namespace osmium {
                     return m_ids.size() * 3 * sizeof(int64_t);
                 }
 
-                void add_node(const osmium::Node& node) {
+                void add_node(const osrm_osmium::Node& node) {
                     m_ids.push_back(m_delta_id.update(node.id()));
 
                     if (m_options.add_metadata) {
@@ -366,7 +366,7 @@ namespace osmium {
                     return m_pbf_primitive_group;
                 }
 
-                void add_dense_node(const osmium::Node& node) {
+                void add_dense_node(const osrm_osmium::Node& node) {
                     m_dense_nodes.add_node(node);
                     ++m_count;
                 }
@@ -407,7 +407,7 @@ namespace osmium {
 
             }; // class PrimitiveBlock
 
-            class PBFOutputFormat : public osmium::io::detail::OutputFormat, public osmium::handler::Handler {
+            class PBFOutputFormat : public osrm_osmium::io::detail::OutputFormat, public osrm_osmium::handler::Handler {
 
                 pbf_output_options m_options;
 
@@ -428,7 +428,7 @@ namespace osmium {
 
                     primitive_block.add_message(OSMFormat::PrimitiveBlock::repeated_PrimitiveGroup_primitivegroup, m_primitive_block.group_data());
 
-                    m_output_queue.push(osmium::thread::Pool::instance().submit(
+                    m_output_queue.push(osrm_osmium::thread::Pool::instance().submit(
                         SerializeBlob{std::move(primitive_block_data),
                                       pbf_blob_type::data,
                                       m_options.use_compression}
@@ -436,7 +436,7 @@ namespace osmium {
                 }
 
                 template <typename T>
-                void add_meta(const osmium::OSMObject& object, T& pbf_object) {
+                void add_meta(const osrm_osmium::OSMObject& object, T& pbf_object) {
                     {
                         protozero::packed_field_uint32 field{pbf_object, protozero::pbf_tag_type(T::enum_type::packed_uint32_keys)};
                         for (const auto& tag : object.tags()) {
@@ -474,7 +474,7 @@ namespace osmium {
 
             public:
 
-                PBFOutputFormat(const osmium::io::File& file, future_string_queue_type& output_queue) :
+                PBFOutputFormat(const osrm_osmium::io::File& file, future_string_queue_type& output_queue) :
                     OutputFormat(output_queue),
                     m_options(),
                     m_primitive_block(m_options) {
@@ -490,14 +490,14 @@ namespace osmium {
 
                 ~PBFOutputFormat() noexcept final = default;
 
-                void write_header(const osmium::io::Header& header) final {
+                void write_header(const osrm_osmium::io::Header& header) final {
                     std::string data;
                     protozero::pbf_builder<OSMFormat::HeaderBlock> pbf_header_block(data);
 
                     if (!header.boxes().empty()) {
                         protozero::pbf_builder<OSMFormat::HeaderBBox> pbf_header_bbox(pbf_header_block, OSMFormat::HeaderBlock::optional_HeaderBBox_bbox);
 
-                        osmium::Box box = header.joined_boxes();
+                        osrm_osmium::Box box = header.joined_boxes();
                         pbf_header_bbox.add_sint64(OSMFormat::HeaderBBox::required_sint64_left,   int64_t(box.bottom_left().lon() * lonlat_resolution));
                         pbf_header_bbox.add_sint64(OSMFormat::HeaderBBox::required_sint64_right,  int64_t(box.top_right().lon()   * lonlat_resolution));
                         pbf_header_bbox.add_sint64(OSMFormat::HeaderBBox::required_sint64_top,    int64_t(box.top_right().lat()   * lonlat_resolution));
@@ -518,7 +518,7 @@ namespace osmium {
 
                     std::string osmosis_replication_timestamp = header.get("osmosis_replication_timestamp");
                     if (!osmosis_replication_timestamp.empty()) {
-                        osmium::Timestamp ts(osmosis_replication_timestamp.c_str());
+                        osrm_osmium::Timestamp ts(osmosis_replication_timestamp.c_str());
                         pbf_header_block.add_int64(OSMFormat::HeaderBlock::optional_int64_osmosis_replication_timestamp, uint32_t(ts));
                     }
 
@@ -532,22 +532,22 @@ namespace osmium {
                         pbf_header_block.add_string(OSMFormat::HeaderBlock::optional_string_osmosis_replication_base_url, osmosis_replication_base_url);
                     }
 
-                    m_output_queue.push(osmium::thread::Pool::instance().submit(
+                    m_output_queue.push(osrm_osmium::thread::Pool::instance().submit(
                         SerializeBlob{std::move(data),
                                       pbf_blob_type::header,
                                       m_options.use_compression}
                         ));
                 }
 
-                void write_buffer(osmium::memory::Buffer&& buffer) final {
-                    osmium::apply(buffer.cbegin(), buffer.cend(), *this);
+                void write_buffer(osrm_osmium::memory::Buffer&& buffer) final {
+                    osrm_osmium::apply(buffer.cbegin(), buffer.cend(), *this);
                 }
 
                 void write_end() final {
                     store_primitive_block();
                 }
 
-                void node(const osmium::Node& node) {
+                void node(const osrm_osmium::Node& node) {
                     if (m_options.use_dense_nodes) {
                         switch_primitive_block_type(OSMFormat::PrimitiveGroup::optional_DenseNodes_dense);
                         m_primitive_block.add_dense_node(node);
@@ -564,17 +564,17 @@ namespace osmium {
                     pbf_node.add_sint64(OSMFormat::Node::required_sint64_lon, lonlat2int(node.location().lon_without_check()));
                 }
 
-                void way(const osmium::Way& way) {
+                void way(const osrm_osmium::Way& way) {
                     switch_primitive_block_type(OSMFormat::PrimitiveGroup::repeated_Way_ways);
                     protozero::pbf_builder<OSMFormat::Way> pbf_way{ m_primitive_block.group(), OSMFormat::PrimitiveGroup::repeated_Way_ways };
 
                     pbf_way.add_int64(OSMFormat::Way::required_int64_id, way.id());
                     add_meta(way, pbf_way);
 
-                    static auto map_node_ref = [](osmium::NodeRefList::const_iterator node_ref) noexcept -> osmium::object_id_type {
+                    static auto map_node_ref = [](osrm_osmium::NodeRefList::const_iterator node_ref) noexcept -> osrm_osmium::object_id_type {
                         return node_ref->ref();
                     };
-                    typedef osmium::util::DeltaEncodeIterator<osmium::NodeRefList::const_iterator, decltype(map_node_ref), osmium::object_id_type> it_type;
+                    typedef osrm_osmium::util::DeltaEncodeIterator<osrm_osmium::NodeRefList::const_iterator, decltype(map_node_ref), osrm_osmium::object_id_type> it_type;
 
                     const auto& nodes = way.nodes();
                     it_type first { nodes.cbegin(), nodes.cend(), map_node_ref };
@@ -582,7 +582,7 @@ namespace osmium {
                     pbf_way.add_packed_sint64(OSMFormat::Way::packed_sint64_refs, first, last);
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     switch_primitive_block_type(OSMFormat::PrimitiveGroup::repeated_Relation_relations);
                     protozero::pbf_builder<OSMFormat::Relation> pbf_relation { m_primitive_block.group(), OSMFormat::PrimitiveGroup::repeated_Relation_relations };
 
@@ -596,10 +596,10 @@ namespace osmium {
                         }
                     }
 
-                    static auto map_member_ref = [](osmium::RelationMemberList::const_iterator member) noexcept -> osmium::object_id_type {
+                    static auto map_member_ref = [](osrm_osmium::RelationMemberList::const_iterator member) noexcept -> osrm_osmium::object_id_type {
                         return member->ref();
                     };
-                    typedef osmium::util::DeltaEncodeIterator<osmium::RelationMemberList::const_iterator, decltype(map_member_ref), osmium::object_id_type> it_type;
+                    typedef osrm_osmium::util::DeltaEncodeIterator<osrm_osmium::RelationMemberList::const_iterator, decltype(map_member_ref), osrm_osmium::object_id_type> it_type;
                     const auto& members = relation.members();
                     it_type first { members.cbegin(), members.cend(), map_member_ref };
                     it_type last { members.cend(), members.cend(), map_member_ref };
@@ -608,7 +608,7 @@ namespace osmium {
                     {
                         protozero::packed_field_int32 field{pbf_relation, protozero::pbf_tag_type(OSMFormat::Relation::packed_MemberType_types)};
                         for (const auto& member : relation.members()) {
-                            field.add_element(int32_t(osmium::item_type_to_nwr_index(member.type())));
+                            field.add_element(int32_t(osrm_osmium::item_type_to_nwr_index(member.type())));
                         }
                     }
                 }
@@ -617,9 +617,9 @@ namespace osmium {
 
             // we want the register_output_format() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_pbf_output = osmium::io::detail::OutputFormatFactory::instance().register_output_format(osmium::io::file_format::pbf,
-                [](const osmium::io::File& file, future_string_queue_type& output_queue) {
-                    return new osmium::io::detail::PBFOutputFormat(file, output_queue);
+            const bool registered_pbf_output = osrm_osmium::io::detail::OutputFormatFactory::instance().register_output_format(osrm_osmium::io::file_format::pbf,
+                [](const osrm_osmium::io::File& file, future_string_queue_type& output_queue) {
+                    return new osrm_osmium::io::detail::PBFOutputFormat(file, output_queue);
             });
 
             // dummy function to silence the unused variable warning from above
@@ -631,6 +631,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_PBF_OUTPUT_FORMAT_HPP

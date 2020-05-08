@@ -47,7 +47,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/util/cast.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Classes for building OSM objects and other items in buffers
@@ -56,7 +56,7 @@ namespace osmium {
 
         class Builder {
 
-            osmium::memory::Buffer& m_buffer;
+            osrm_osmium::memory::Buffer& m_buffer;
             Builder* m_parent;
             size_t m_item_offset;
 
@@ -68,7 +68,7 @@ namespace osmium {
 
         protected:
 
-            explicit Builder(osmium::memory::Buffer& buffer, Builder* parent, osmium::memory::item_size_type size) :
+            explicit Builder(osrm_osmium::memory::Buffer& buffer, Builder* parent, osrm_osmium::memory::item_size_type size) :
                 m_buffer(buffer),
                 m_parent(parent),
                 m_item_offset(buffer.written()) {
@@ -81,8 +81,8 @@ namespace osmium {
 
             ~Builder() = default;
 
-            osmium::memory::Item& item() const {
-                return *reinterpret_cast<osmium::memory::Item*>(m_buffer.data() + m_item_offset);
+            osrm_osmium::memory::Item& item() const {
+                return *reinterpret_cast<osrm_osmium::memory::Item*>(m_buffer.data() + m_item_offset);
             }
 
         public:
@@ -101,14 +101,14 @@ namespace osmium {
              *
              */
             void add_padding(bool self = false) {
-                auto padding = osmium::memory::align_bytes - (size() % osmium::memory::align_bytes);
-                if (padding != osmium::memory::align_bytes) {
+                auto padding = osrm_osmium::memory::align_bytes - (size() % osrm_osmium::memory::align_bytes);
+                if (padding != osrm_osmium::memory::align_bytes) {
                     std::fill_n(m_buffer.reserve_space(padding), padding, 0);
                     if (self) {
                         add_size(padding);
                     } else if (m_parent) {
                         m_parent->add_size(padding);
-                        assert(m_parent->size() % osmium::memory::align_bytes == 0);
+                        assert(m_parent->size() % osrm_osmium::memory::align_bytes == 0);
                     }
                 }
             }
@@ -124,7 +124,7 @@ namespace osmium {
                 return item().byte_size();
             }
 
-            void add_item(const osmium::memory::Item* item) {
+            void add_item(const osrm_osmium::memory::Item* item) {
                 unsigned char* target = m_buffer.reserve_space(item->padded_size());
                 std::copy_n(reinterpret_cast<const unsigned char*>(item), item->padded_size(), target);
                 add_size(item->padded_size());
@@ -149,7 +149,7 @@ namespace osmium {
              *               \0 byte.
              * @returns The number of bytes appended (length).
              */
-            osmium::memory::item_size_type append(const char* data, const osmium::memory::item_size_type length) {
+            osrm_osmium::memory::item_size_type append(const char* data, const osrm_osmium::memory::item_size_type length) {
                 unsigned char* target = m_buffer.reserve_space(length);
                 std::copy_n(reinterpret_cast<const unsigned char*>(data), length, target);
                 return length;
@@ -161,8 +161,8 @@ namespace osmium {
              * @param str \0-terminated string.
              * @returns The number of bytes appended (strlen(str) + 1).
              */
-            osmium::memory::item_size_type append(const char* str) {
-                return append(str, static_cast<osmium::memory::item_size_type>(std::strlen(str) + 1));
+            osrm_osmium::memory::item_size_type append(const char* str) {
+                return append(str, static_cast<osrm_osmium::memory::item_size_type>(std::strlen(str) + 1));
             }
 
             /**
@@ -170,13 +170,13 @@ namespace osmium {
              *
              * @returns The number of bytes appended (always 1).
              */
-            osmium::memory::item_size_type append_zero() {
+            osrm_osmium::memory::item_size_type append_zero() {
                 *m_buffer.reserve_space(1) = '\0';
                 return 1;
             }
 
             /// Return the buffer this builder is using.
-            osmium::memory::Buffer& buffer() noexcept {
+            osrm_osmium::memory::Buffer& buffer() noexcept {
                 return m_buffer;
             }
 
@@ -185,11 +185,11 @@ namespace osmium {
         template <typename TItem>
         class ObjectBuilder : public Builder {
 
-            static_assert(std::is_base_of<osmium::memory::Item, TItem>::value, "ObjectBuilder can only build objects derived from osmium::memory::Item");
+            static_assert(std::is_base_of<osrm_osmium::memory::Item, TItem>::value, "ObjectBuilder can only build objects derived from osrm_osmium::memory::Item");
 
         public:
 
-            explicit ObjectBuilder(osmium::memory::Buffer& buffer, Builder* parent = nullptr) :
+            explicit ObjectBuilder(osrm_osmium::memory::Buffer& buffer, Builder* parent = nullptr) :
                 Builder(buffer, parent, sizeof(TItem)) {
                 new (&item()) TItem();
             }
@@ -232,6 +232,6 @@ namespace osmium {
 
     } // namespace builder
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_BUILDER_BUILDER_HPP

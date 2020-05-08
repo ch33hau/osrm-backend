@@ -49,7 +49,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/relations/collector.hpp>
 #include <osmium/relations/detail/member_meta.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace relations {
         class RelationMeta;
@@ -64,7 +64,7 @@ namespace osmium {
          * This class collects all data needed for creating areas from
          * relations tagged with type=multipolygon or type=boundary.
          * Most of its functionality is derived from the parent class
-         * osmium::relations::Collector.
+         * osrm_osmium::relations::Collector.
          *
          * The actual assembling of the areas is done by the assembler
          * class given as template argument.
@@ -72,21 +72,21 @@ namespace osmium {
          * @tparam TAssembler Multipolygon Assembler class.
          */
         template <typename TAssembler>
-        class MultipolygonCollector : public osmium::relations::Collector<MultipolygonCollector<TAssembler>, false, true, false> {
+        class MultipolygonCollector : public osrm_osmium::relations::Collector<MultipolygonCollector<TAssembler>, false, true, false> {
 
-            typedef typename osmium::relations::Collector<MultipolygonCollector<TAssembler>, false, true, false> collector_type;
+            typedef typename osrm_osmium::relations::Collector<MultipolygonCollector<TAssembler>, false, true, false> collector_type;
 
             typedef typename TAssembler::config_type assembler_config_type;
             const assembler_config_type m_assembler_config;
 
-            osmium::memory::Buffer m_output_buffer;
+            osrm_osmium::memory::Buffer m_output_buffer;
 
             static constexpr size_t initial_output_buffer_size = 1024 * 1024;
             static constexpr size_t max_buffer_size_for_flush = 100 * 1024;
 
             void flush_output_buffer() {
                 if (this->callback()) {
-                    osmium::memory::Buffer buffer(initial_output_buffer_size);
+                    osrm_osmium::memory::Buffer buffer(initial_output_buffer_size);
                     using std::swap;
                     swap(buffer, m_output_buffer);
                     this->callback()(std::move(buffer));
@@ -104,7 +104,7 @@ namespace osmium {
             explicit MultipolygonCollector(const assembler_config_type& assembler_config) :
                 collector_type(),
                 m_assembler_config(assembler_config),
-                m_output_buffer(initial_output_buffer_size, osmium::memory::Buffer::auto_grow::yes) {
+                m_output_buffer(initial_output_buffer_size, osrm_osmium::memory::Buffer::auto_grow::yes) {
             }
 
             /**
@@ -113,7 +113,7 @@ namespace osmium {
              *
              * Overwritten from the base class.
              */
-            bool keep_relation(const osmium::Relation& relation) const {
+            bool keep_relation(const osrm_osmium::Relation& relation) const {
                 const char* type = relation.tags().get_value_by_key("type");
 
                 // ignore relations without "type" tag
@@ -131,9 +131,9 @@ namespace osmium {
             /**
              * Overwritten from the base class.
              */
-            bool keep_member(const osmium::relations::RelationMeta& /*relation_meta*/, const osmium::RelationMember& member) const {
+            bool keep_member(const osrm_osmium::relations::RelationMeta& /*relation_meta*/, const osrm_osmium::RelationMember& member) const {
                 // We are only interested in members of type way.
-                return member.type() == osmium::item_type::way;
+                return member.type() == osrm_osmium::item_type::way;
             }
 
             /**
@@ -142,14 +142,14 @@ namespace osmium {
              *
              * Overwritten from the base class.
              */
-            void way_not_in_any_relation(const osmium::Way& way) {
+            void way_not_in_any_relation(const osrm_osmium::Way& way) {
                 // you need at least 4 nodes to make up a polygon
                 if (way.nodes().size() <= 3) {
                     return;
                 }
                 try {
                     if (!way.nodes().front().location() || !way.nodes().back().location()) {
-                        throw osmium::invalid_location("invalid location");
+                        throw osrm_osmium::invalid_location("invalid location");
                     }
                     if (way.ends_have_same_location()) {
                         // way is closed and has enough nodes, build simple multipolygon
@@ -157,13 +157,13 @@ namespace osmium {
                         assembler(way, m_output_buffer);
                         possibly_flush_output_buffer();
                     }
-                } catch (osmium::invalid_location&) {
+                } catch (osrm_osmium::invalid_location&) {
                     // XXX ignore
                 }
             }
 
-            void complete_relation(osmium::relations::RelationMeta& relation_meta) {
-                const osmium::Relation& relation = this->get_relation(relation_meta);
+            void complete_relation(osrm_osmium::relations::RelationMeta& relation_meta) {
+                const osrm_osmium::Relation& relation = this->get_relation(relation_meta);
                 std::vector<size_t> offsets;
                 for (const auto& member : relation.members()) {
                     if (member.ref() != 0) {
@@ -174,7 +174,7 @@ namespace osmium {
                     TAssembler assembler(m_assembler_config);
                     assembler(relation, offsets, this->members_buffer(), m_output_buffer);
                     possibly_flush_output_buffer();
-                } catch (osmium::invalid_location&) {
+                } catch (osrm_osmium::invalid_location&) {
                     // XXX ignore
                 }
             }
@@ -183,8 +183,8 @@ namespace osmium {
                 flush_output_buffer();
             }
 
-            osmium::memory::Buffer read() {
-                osmium::memory::Buffer buffer(initial_output_buffer_size, osmium::memory::Buffer::auto_grow::yes);
+            osrm_osmium::memory::Buffer read() {
+                osrm_osmium::memory::Buffer buffer(initial_output_buffer_size, osrm_osmium::memory::Buffer::auto_grow::yes);
 
                 using std::swap;
                 swap(buffer, m_output_buffer);
@@ -196,6 +196,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_MULTIPOLYGON_COLLECTOR_HPP

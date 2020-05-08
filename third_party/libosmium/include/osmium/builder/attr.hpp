@@ -49,7 +49,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/types.hpp>
 #include <osmium/osm.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace builder {
 
@@ -169,8 +169,8 @@ namespace osmium {
         } // namespace detail
 
 #define OSMIUM_ATTRIBUTE(_handler, _name, _type) \
-    struct _name : public osmium::builder::detail::type_wrapper<_type> { \
-        using handler = osmium::builder::detail::_handler;
+    struct _name : public osrm_osmium::builder::detail::type_wrapper<_type> { \
+        using handler = osrm_osmium::builder::detail::_handler;
 
 #define OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(_handler, _name, _type) \
     OSMIUM_ATTRIBUTE(_handler, _name, _type) \
@@ -180,18 +180,18 @@ namespace osmium {
 
 #define OSMIUM_ATTRIBUTE_ITER(_handler, _name) \
     template <typename TIterator> \
-    struct _name : public osmium::builder::detail::iterator_wrapper<TIterator> { \
-        using handler = osmium::builder::detail::_handler; \
+    struct _name : public osrm_osmium::builder::detail::iterator_wrapper<TIterator> { \
+        using handler = osrm_osmium::builder::detail::_handler; \
         constexpr _name(TIterator first, TIterator last) : \
-            osmium::builder::detail::iterator_wrapper<TIterator>(first, last) {} \
+            osrm_osmium::builder::detail::iterator_wrapper<TIterator>(first, last) {} \
     }
 
         namespace attr {
 
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(object_handler, _id, osmium::object_id_type);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(object_handler, _version, osmium::object_version_type);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(entity_handler, _uid, osmium::user_id_type);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(entity_handler, _cid, osmium::changeset_id_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(object_handler, _id, osrm_osmium::object_id_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(object_handler, _version, osrm_osmium::object_version_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(entity_handler, _uid, osrm_osmium::user_id_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(entity_handler, _cid, osrm_osmium::changeset_id_type);
 
             OSMIUM_ATTRIBUTE(object_handler, _deleted, bool)
                 constexpr explicit _deleted(bool value = true) noexcept :
@@ -203,24 +203,24 @@ namespace osmium {
                     type_wrapper(value) {}
             };
 
-            OSMIUM_ATTRIBUTE(object_handler, _timestamp, osmium::Timestamp)
-                constexpr explicit _timestamp(const osmium::Timestamp& value) noexcept :
+            OSMIUM_ATTRIBUTE(object_handler, _timestamp, osrm_osmium::Timestamp)
+                constexpr explicit _timestamp(const osrm_osmium::Timestamp& value) noexcept :
                     type_wrapper(value) {}
                 constexpr explicit _timestamp(time_t value) noexcept :
-                    type_wrapper(osmium::Timestamp{value}) {}
+                    type_wrapper(osrm_osmium::Timestamp{value}) {}
                 constexpr explicit _timestamp(uint32_t value) noexcept :
-                    type_wrapper(osmium::Timestamp{value}) {}
+                    type_wrapper(osrm_osmium::Timestamp{value}) {}
                 explicit _timestamp(const char* value) :
-                    type_wrapper(osmium::Timestamp{value}) {}
+                    type_wrapper(osrm_osmium::Timestamp{value}) {}
                 explicit _timestamp(const std::string& value) :
-                    type_wrapper(osmium::Timestamp{value}) {}
+                    type_wrapper(osrm_osmium::Timestamp{value}) {}
             };
 
-            OSMIUM_ATTRIBUTE(node_handler, _location, osmium::Location)
-                constexpr explicit _location(const osmium::Location& value) noexcept :
+            OSMIUM_ATTRIBUTE(node_handler, _location, osrm_osmium::Location)
+                constexpr explicit _location(const osrm_osmium::Location& value) noexcept :
                     type_wrapper(value) {}
                 explicit _location(double lat, double lon) :
-                    type_wrapper(osmium::Location{lat, lon}) {}
+                    type_wrapper(osrm_osmium::Location{lat, lon}) {}
             };
 
             OSMIUM_ATTRIBUTE(entity_handler, _user, const char*)
@@ -235,23 +235,23 @@ namespace osmium {
 
             class member_type {
 
-                osmium::item_type      m_type;
-                osmium::object_id_type m_ref;
+                osrm_osmium::item_type      m_type;
+                osrm_osmium::object_id_type m_ref;
                 const char*            m_role;
 
             public:
 
-                constexpr member_type(osmium::item_type type, osmium::object_id_type ref, const char* role = "") noexcept :
+                constexpr member_type(osrm_osmium::item_type type, osrm_osmium::object_id_type ref, const char* role = "") noexcept :
                     m_type(type),
                     m_ref(ref),
                     m_role(role) {
                 }
 
-                constexpr osmium::item_type type() const noexcept {
+                constexpr osrm_osmium::item_type type() const noexcept {
                     return m_type;
                 }
 
-                constexpr osmium::object_id_type ref() const noexcept {
+                constexpr osrm_osmium::object_id_type ref() const noexcept {
                     return m_ref;
                 }
 
@@ -263,25 +263,25 @@ namespace osmium {
 
             class comment_type {
 
-                osmium::Timestamp    m_date;
-                osmium::user_id_type m_uid;
+                osrm_osmium::Timestamp    m_date;
+                osrm_osmium::user_id_type m_uid;
                 const char*          m_user;
                 const char*          m_text;
 
             public:
 
-                constexpr comment_type(osmium::Timestamp date, osmium::user_id_type uid, const char* user, const char* text) noexcept :
+                constexpr comment_type(osrm_osmium::Timestamp date, osrm_osmium::user_id_type uid, const char* user, const char* text) noexcept :
                     m_date(date),
                     m_uid(uid),
                     m_user(user),
                     m_text(text) {
                 }
 
-                constexpr osmium::Timestamp date() const noexcept {
+                constexpr osrm_osmium::Timestamp date() const noexcept {
                     return m_date;
                 }
 
-                constexpr osmium::user_id_type uid() const noexcept {
+                constexpr osrm_osmium::user_id_type uid() const noexcept {
                     return m_uid;
                 }
 
@@ -344,8 +344,8 @@ namespace osmium {
 
 
 
-            OSMIUM_ATTRIBUTE(nodes_handler, _node, osmium::NodeRef)
-                constexpr explicit _node(osmium::object_id_type value) noexcept :
+            OSMIUM_ATTRIBUTE(nodes_handler, _node, osrm_osmium::NodeRef)
+                constexpr explicit _node(osrm_osmium::object_id_type value) noexcept :
                     type_wrapper(NodeRef{value}) {}
                 constexpr explicit _node(const NodeRef& value) noexcept :
                     type_wrapper(value) {}
@@ -361,12 +361,12 @@ namespace osmium {
                 return detail::nodes_from_iterator_pair<typename TContainer::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using object_id_ilist = std::initializer_list<osmium::object_id_type>;
+            using object_id_ilist = std::initializer_list<osrm_osmium::object_id_type>;
             inline detail::nodes_from_iterator_pair<object_id_ilist::const_iterator> _nodes(const object_id_ilist& container) {
                 return detail::nodes_from_iterator_pair<object_id_ilist::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using node_ref_ilist = std::initializer_list<osmium::NodeRef>;
+            using node_ref_ilist = std::initializer_list<osrm_osmium::NodeRef>;
             inline detail::nodes_from_iterator_pair<node_ref_ilist::const_iterator> _nodes(const node_ref_ilist& container) {
                 return detail::nodes_from_iterator_pair<node_ref_ilist::const_iterator>(std::begin(container), std::end(container));
             }
@@ -375,13 +375,13 @@ namespace osmium {
             OSMIUM_ATTRIBUTE(members_handler, _member, member_type)
                 constexpr explicit _member(const member_type& value) noexcept :
                     type_wrapper(value) {}
-                constexpr explicit _member(osmium::item_type type, osmium::object_id_type id) noexcept :
+                constexpr explicit _member(osrm_osmium::item_type type, osrm_osmium::object_id_type id) noexcept :
                     type_wrapper({type, id}) {}
-                constexpr explicit _member(osmium::item_type type, osmium::object_id_type id, const char* role) noexcept :
+                constexpr explicit _member(osrm_osmium::item_type type, osrm_osmium::object_id_type id, const char* role) noexcept :
                     type_wrapper({type, id, role}) {}
-                explicit _member(osmium::item_type type, osmium::object_id_type id, const std::string& role) noexcept :
+                explicit _member(osrm_osmium::item_type type, osrm_osmium::object_id_type id, const std::string& role) noexcept :
                     type_wrapper({type, id, role.c_str()}) {}
-                explicit _member(const osmium::RelationMember& member) noexcept :
+                explicit _member(const osrm_osmium::RelationMember& member) noexcept :
                     type_wrapper({member.type(), member.ref(), member.role()}) {}
             };
 
@@ -401,15 +401,15 @@ namespace osmium {
             }
 
 
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _num_changes, osmium::num_changes_type);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _num_comments, osmium::num_comments_type);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _created_at, osmium::Timestamp);
-            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _closed_at, osmium::Timestamp);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _num_changes, osrm_osmium::num_changes_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _num_comments, osrm_osmium::num_comments_type);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _created_at, osrm_osmium::Timestamp);
+            OSMIUM_ATTRIBUTE_WITH_CONSTRUCTOR(changeset_handler, _closed_at, osrm_osmium::Timestamp);
 
             OSMIUM_ATTRIBUTE(discussion_handler, _comment, comment_type)
                 constexpr explicit _comment(const comment_type& value) noexcept :
                     type_wrapper(value) {}
-                explicit _comment(const osmium::ChangesetComment& comment) noexcept :
+                explicit _comment(const osrm_osmium::ChangesetComment& comment) noexcept :
                     type_wrapper({comment.date(), comment.uid(), comment.user(), comment.text()}) {}
             };
 
@@ -439,12 +439,12 @@ namespace osmium {
                 return detail::outer_ring_from_iterator_pair<typename TContainer::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using object_id_ilist = std::initializer_list<osmium::object_id_type>;
+            using object_id_ilist = std::initializer_list<osrm_osmium::object_id_type>;
             inline detail::outer_ring_from_iterator_pair<object_id_ilist::const_iterator> _outer_ring(const object_id_ilist& container) {
                 return detail::outer_ring_from_iterator_pair<object_id_ilist::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using node_ref_ilist = std::initializer_list<osmium::NodeRef>;
+            using node_ref_ilist = std::initializer_list<osrm_osmium::NodeRef>;
             inline detail::outer_ring_from_iterator_pair<node_ref_ilist::const_iterator> _outer_ring(const node_ref_ilist& container) {
                 return detail::outer_ring_from_iterator_pair<node_ref_ilist::const_iterator>(std::begin(container), std::end(container));
             }
@@ -459,12 +459,12 @@ namespace osmium {
                 return detail::inner_ring_from_iterator_pair<typename TContainer::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using object_id_ilist = std::initializer_list<osmium::object_id_type>;
+            using object_id_ilist = std::initializer_list<osrm_osmium::object_id_type>;
             inline detail::inner_ring_from_iterator_pair<object_id_ilist::const_iterator> _inner_ring(const object_id_ilist& container) {
                 return detail::inner_ring_from_iterator_pair<object_id_ilist::const_iterator>(std::begin(container), std::end(container));
             }
 
-            using node_ref_ilist = std::initializer_list<osmium::NodeRef>;
+            using node_ref_ilist = std::initializer_list<osrm_osmium::NodeRef>;
             inline detail::inner_ring_from_iterator_pair<node_ref_ilist::const_iterator> _inner_ring(const node_ref_ilist& container) {
                 return detail::inner_ring_from_iterator_pair<node_ref_ilist::const_iterator>(std::begin(container), std::end(container));
             }
@@ -481,30 +481,30 @@ namespace osmium {
             struct changeset_handler : public entity_handler {
 
                 template <typename TDummy>
-                static void set_value(osmium::Changeset&, const TDummy&) noexcept {
+                static void set_value(osrm_osmium::Changeset&, const TDummy&) noexcept {
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_cid id) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_cid id) noexcept {
                     changeset.set_id(id.value);
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_num_changes num_changes) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_num_changes num_changes) noexcept {
                     changeset.set_num_changes(num_changes.value);
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_num_comments num_comments) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_num_comments num_comments) noexcept {
                     changeset.set_num_comments(num_comments.value);
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_created_at created_at) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_created_at created_at) noexcept {
                     changeset.set_created_at(created_at.value);
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_closed_at closed_at) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_closed_at closed_at) noexcept {
                     changeset.set_closed_at(closed_at.value);
                 }
 
-                static void set_value(osmium::Changeset& changeset, attr::_uid uid) noexcept {
+                static void set_value(osrm_osmium::Changeset& changeset, attr::_uid uid) noexcept {
                     changeset.set_uid(uid.value);
                 }
 
@@ -513,34 +513,34 @@ namespace osmium {
             struct object_handler : public entity_handler {
 
                 template <typename TDummy>
-                static void set_value(osmium::OSMObject&, const TDummy&) noexcept {
+                static void set_value(osrm_osmium::OSMObject&, const TDummy&) noexcept {
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_id id) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_id id) noexcept {
                     object.set_id(id.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_version version) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_version version) noexcept {
                     object.set_version(version.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_visible visible) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_visible visible) noexcept {
                     object.set_visible(visible.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_deleted deleted) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_deleted deleted) noexcept {
                     object.set_deleted(deleted.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_timestamp timestamp) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_timestamp timestamp) noexcept {
                     object.set_timestamp(timestamp.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_cid changeset) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_cid changeset) noexcept {
                     object.set_changeset(changeset.value);
                 }
 
-                static void set_value(osmium::OSMObject& object, attr::_uid uid) noexcept {
+                static void set_value(osrm_osmium::OSMObject& object, attr::_uid uid) noexcept {
                     object.set_uid(uid.value);
                 }
 
@@ -550,7 +550,7 @@ namespace osmium {
 
                 using object_handler::set_value;
 
-                static void set_value(osmium::Node& node, attr::_location location) noexcept {
+                static void set_value(osrm_osmium::Node& node, attr::_location location) noexcept {
                     node.set_location(location.value);
                 }
 
@@ -693,12 +693,12 @@ namespace osmium {
 
             template <typename TBuilder, typename THandler, typename... TArgs>
             inline typename std::enable_if<!is_handled_by<THandler, TArgs...>::value>::type
-            add_list(osmium::builder::Builder&, const TArgs&...) noexcept {
+            add_list(osrm_osmium::builder::Builder&, const TArgs&...) noexcept {
             }
 
             template <typename TBuilder, typename THandler, typename... TArgs>
             inline typename std::enable_if<is_handled_by<THandler, TArgs...>::value>::type
-            add_list(osmium::builder::Builder& parent, const TArgs&... args) {
+            add_list(osrm_osmium::builder::Builder& parent, const TArgs&... args) {
                 TBuilder builder(parent.buffer(), &parent);
                 (void)std::initializer_list<int>{
                     (THandler::set_value(builder, args), 0)...
@@ -722,7 +722,7 @@ namespace osmium {
          * @returns The position in the buffer where this node was added.
          */
         template <typename... TArgs>
-        inline size_t add_node(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_node(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_node() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::any_node_handlers, TArgs...>::value, "Attribute not allowed in add_node()");
 
@@ -743,7 +743,7 @@ namespace osmium {
          * @returns The position in the buffer where this way was added.
          */
         template <typename... TArgs>
-        inline size_t add_way(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_way(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_way() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::any_way_handlers, TArgs...>::value, "Attribute not allowed in add_way()");
 
@@ -765,7 +765,7 @@ namespace osmium {
          * @returns The position in the buffer where this relation was added.
          */
         template <typename... TArgs>
-        inline size_t add_relation(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_relation(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_relation() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::any_relation_handlers, TArgs...>::value, "Attribute not allowed in add_relation()");
 
@@ -787,7 +787,7 @@ namespace osmium {
          * @returns The position in the buffer where this changeset was added.
          */
         template <typename... TArgs>
-        inline size_t add_changeset(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_changeset(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_changeset() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::any_changeset_handlers, TArgs...>::value, "Attribute not allowed in add_changeset()");
 
@@ -809,7 +809,7 @@ namespace osmium {
          * @returns The position in the buffer where this area was added.
          */
         template <typename... TArgs>
-        inline size_t add_area(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_area(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_area() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::any_area_handlers, TArgs...>::value, "Attribute not allowed in add_area()");
 
@@ -834,7 +834,7 @@ namespace osmium {
          * @returns The position in the buffer where this list was added.
          */
         template <typename... TArgs>
-        inline size_t add_way_node_list(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_way_node_list(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_way_node_list() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::nodes_handler, TArgs...>::value, "Attribute not allowed in add_way_node_list()");
 
@@ -856,7 +856,7 @@ namespace osmium {
          * @returns The position in the buffer where this list was added.
          */
         template <typename... TArgs>
-        inline size_t add_tag_list(osmium::memory::Buffer& buffer, const TArgs&... args) {
+        inline size_t add_tag_list(osrm_osmium::memory::Buffer& buffer, const TArgs&... args) {
             static_assert(sizeof...(args) > 0, "add_tag_list() must have buffer and at least one additional argument");
             static_assert(detail::are_all_handled_by<detail::tags_handler, TArgs...>::value, "Attribute not allowed in add_tag_list()");
 
@@ -872,6 +872,6 @@ namespace osmium {
 
     } // namespace builder
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_BUILDER_ATTR_HPP

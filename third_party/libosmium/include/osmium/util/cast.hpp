@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <limits>
 #include <type_traits>
 
-namespace osmium {
+namespace osrm_osmium {
 
     // These functions are wrappers around static_cast<>() that call assert()
     // to check that there is no integer overflow happening before doing the
@@ -98,6 +98,6 @@ namespace osmium {
         return static_cast<T>(value);
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_CAST_HPP

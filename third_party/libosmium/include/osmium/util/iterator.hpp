@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <cstddef>
 #include <utility>
 
-namespace osmium {
+namespace osrm_osmium {
 
     template <typename It, typename P = std::pair<It, It>>
     struct iterator_range : public P {
@@ -69,6 +69,6 @@ namespace osmium {
 
     };
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_UTIL_ITERATOR_HPP

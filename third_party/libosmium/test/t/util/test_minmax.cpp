@@ -6,7 +6,7 @@
 TEST_CASE("minmax numeric") {
 
     SECTION("min") {
-        osmium::min_op<int> x;
+        osrm_osmium::min_op<int> x;
         REQUIRE(x() == std::numeric_limits<int>::max());
 
         x.update(17);
@@ -20,7 +20,7 @@ TEST_CASE("minmax numeric") {
     }
 
     SECTION("max") {
-        osmium::max_op<uint32_t> x;
+        osrm_osmium::max_op<uint32_t> x;
         REQUIRE(x() == 0);
 
         x.update(17);
@@ -38,28 +38,28 @@ TEST_CASE("minmax numeric") {
 TEST_CASE("minmax timestamp") {
 
     SECTION("min") {
-        osmium::min_op<osmium::Timestamp> x;
+        osrm_osmium::min_op<osrm_osmium::Timestamp> x;
 
-        x.update(osmium::Timestamp("2010-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2010-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2010-01-01T00:00:00Z");
 
-        x.update(osmium::Timestamp("2015-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2015-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2010-01-01T00:00:00Z");
 
-        x.update(osmium::Timestamp("2000-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2000-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2000-01-01T00:00:00Z");
     }
 
     SECTION("max") {
-        osmium::max_op<osmium::Timestamp> x;
+        osrm_osmium::max_op<osrm_osmium::Timestamp> x;
 
-        x.update(osmium::Timestamp("2010-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2010-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2010-01-01T00:00:00Z");
 
-        x.update(osmium::Timestamp("2015-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2015-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2015-01-01T00:00:00Z");
 
-        x.update(osmium::Timestamp("2000-01-01T00:00:00Z"));
+        x.update(osrm_osmium::Timestamp("2000-01-01T00:00:00Z"));
         REQUIRE(x().to_iso() == "2015-01-01T00:00:00Z");
 
     }

@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/types.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace area {
 
@@ -60,29 +60,29 @@ namespace osmium {
                 *m_out << "DATA PROBLEM: " << msg << " on " << item_type_to_char(m_object_type) << m_object_id << ": ";
             }
 
-            void report_duplicate_node(osmium::object_id_type node_id1, osmium::object_id_type node_id2, osmium::Location location) override {
+            void report_duplicate_node(osrm_osmium::object_id_type node_id1, osrm_osmium::object_id_type node_id2, osrm_osmium::Location location) override {
                 header("duplicate node");
                 *m_out << "node_id1=" << node_id1 << " node_id2=" << node_id2 << " location=" << location << "\n";
             }
 
-            void report_intersection(osmium::object_id_type way1_id, osmium::Location way1_seg_start, osmium::Location way1_seg_end,
-                                     osmium::object_id_type way2_id, osmium::Location way2_seg_start, osmium::Location way2_seg_end, osmium::Location intersection) override {
+            void report_intersection(osrm_osmium::object_id_type way1_id, osrm_osmium::Location way1_seg_start, osrm_osmium::Location way1_seg_end,
+                                     osrm_osmium::object_id_type way2_id, osrm_osmium::Location way2_seg_start, osrm_osmium::Location way2_seg_end, osrm_osmium::Location intersection) override {
                 header("intersection");
                 *m_out << "way1_id=" << way1_id << " way1_seg_start=" << way1_seg_start << " way1_seg_end=" << way1_seg_end
                        << " way2_id=" << way2_id << " way2_seg_start=" << way2_seg_start << " way2_seg_end=" << way2_seg_end << " intersection=" << intersection << "\n";
             }
 
-            void report_ring_not_closed(osmium::Location end1, osmium::Location end2) override {
+            void report_ring_not_closed(osrm_osmium::Location end1, osrm_osmium::Location end2) override {
                 header("ring not closed");
                 *m_out << "end1=" << end1 << " end2=" << end2 << "\n";
             }
 
-            void report_role_should_be_outer(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_outer(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 header("role should be outer");
                 *m_out << "way_id=" << way_id << " seg_start=" << seg_start << " seg_end=" << seg_end << "\n";
             }
 
-            void report_role_should_be_inner(osmium::object_id_type way_id, osmium::Location seg_start, osmium::Location seg_end) override {
+            void report_role_should_be_inner(osrm_osmium::object_id_type way_id, osrm_osmium::Location seg_start, osrm_osmium::Location seg_end) override {
                 header("role should be inner");
                 *m_out << "way_id=" << way_id << " seg_start=" << seg_start << " seg_end=" << seg_end << "\n";
             }
@@ -91,6 +91,6 @@ namespace osmium {
 
     } // namespace area
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_AREA_PROBLEM_REPORTER_STREAM_HPP

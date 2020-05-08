@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/index/detail/mmap_vector_base.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace detail {
 
@@ -60,7 +60,7 @@ namespace osmium {
 
     } // namespace detail
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // __linux__
 

@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/memory/buffer.hpp>
 #include <osmium/thread/queue.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -54,14 +54,14 @@ namespace osmium {
              * transport exceptions. The future also helps with keeping the
              * data in order.
              */
-            using future_buffer_queue_type = osmium::thread::Queue<std::future<osmium::memory::Buffer>>;
+            using future_buffer_queue_type = osrm_osmium::thread::Queue<std::future<osrm_osmium::memory::Buffer>>;
 
             /**
              * This type of queue contains OSM file data in the form it is
              * stored on disk, ie encoded as XML, PBF, etc.
              * The "end of file" is marked by an empty string.
              */
-            using string_queue_type = osmium::thread::Queue<std::string>;
+            using string_queue_type = osrm_osmium::thread::Queue<std::string>;
 
             /**
              * This type of queue contains OSM file data in the form it is
@@ -71,24 +71,24 @@ namespace osmium {
              * transport exceptions. The future also helps with keeping the
              * data in order.
              */
-            using future_string_queue_type = osmium::thread::Queue<std::future<std::string>>;
+            using future_string_queue_type = osrm_osmium::thread::Queue<std::future<std::string>>;
 
             template <typename T>
-            inline void add_to_queue(osmium::thread::Queue<std::future<T>>& queue, T&& data) {
+            inline void add_to_queue(osrm_osmium::thread::Queue<std::future<T>>& queue, T&& data) {
                 std::promise<T> promise;
                 queue.push(promise.get_future());
                 promise.set_value(std::forward<T>(data));
             }
 
             template <typename T>
-            inline void add_to_queue(osmium::thread::Queue<std::future<T>>& queue, std::exception_ptr&& exception) {
+            inline void add_to_queue(osrm_osmium::thread::Queue<std::future<T>>& queue, std::exception_ptr&& exception) {
                 std::promise<T> promise;
                 queue.push(promise.get_future());
                 promise.set_exception(std::move(exception));
             }
 
             template <typename T>
-            inline void add_end_of_data_to_queue(osmium::thread::Queue<std::future<T>>& queue) {
+            inline void add_end_of_data_to_queue(osrm_osmium::thread::Queue<std::future<T>>& queue) {
                 add_to_queue<T>(queue, T{});
             }
 
@@ -96,14 +96,14 @@ namespace osmium {
                 return data.empty();
             }
 
-            inline bool at_end_of_data(osmium::memory::Buffer& buffer) {
+            inline bool at_end_of_data(osrm_osmium::memory::Buffer& buffer) {
                 return !buffer;
             }
 
             template <typename T>
             class queue_wrapper {
 
-                using queue_type = osmium::thread::Queue<std::future<T>>;
+                using queue_type = osrm_osmium::thread::Queue<std::future<T>>;
 
                 queue_type& m_queue;
                 bool m_has_reached_end_of_data;
@@ -152,6 +152,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_QUEUE_UTIL_HPP

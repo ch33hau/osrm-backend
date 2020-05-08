@@ -63,13 +63,13 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/entity_bits.hpp>
 #include <osmium/thread/util.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
         /**
          * This is the user-facing interface for reading OSM files. Instantiate
-         * an object of this class with a file name or osmium::io::File object
+         * an object of this class with a file name or osrm_osmium::io::File object
          * and then call read() on it in a loop until it returns an invalid
          * Buffer.
          */
@@ -78,8 +78,8 @@ namespace osmium {
             static constexpr size_t max_input_queue_size = 20; // XXX
             static constexpr size_t max_osmdata_queue_size = 20; // XXX
 
-            osmium::io::File m_file;
-            osmium::osm_entity_bits::type m_read_which_entities;
+            osrm_osmium::io::File m_file;
+            osrm_osmium::osm_entity_bits::type m_read_which_entities;
 
             enum class status {
                 okay   = 0, // normal reading
@@ -92,25 +92,25 @@ namespace osmium {
 
             detail::future_string_queue_type m_input_queue;
 
-            std::unique_ptr<osmium::io::Decompressor> m_decompressor;
+            std::unique_ptr<osrm_osmium::io::Decompressor> m_decompressor;
 
-            osmium::io::detail::ReadThreadManager m_read_thread_manager;
+            osrm_osmium::io::detail::ReadThreadManager m_read_thread_manager;
 
             detail::future_buffer_queue_type m_osmdata_queue;
-            detail::queue_wrapper<osmium::memory::Buffer> m_osmdata_queue_wrapper;
+            detail::queue_wrapper<osrm_osmium::memory::Buffer> m_osmdata_queue_wrapper;
 
-            std::future<osmium::io::Header> m_header_future;
-            osmium::io::Header m_header;
+            std::future<osrm_osmium::io::Header> m_header_future;
+            osrm_osmium::io::Header m_header;
 
-            osmium::thread::thread_handler m_thread;
+            osrm_osmium::thread::thread_handler m_thread;
 
             // This function will run in a separate thread.
-            static void parser_thread(const osmium::io::File& file,
+            static void parser_thread(const osrm_osmium::io::File& file,
                                       detail::future_string_queue_type& input_queue,
                                       detail::future_buffer_queue_type& osmdata_queue,
-                                      std::promise<osmium::io::Header>&& header_promise,
-                                      osmium::osm_entity_bits::type read_which_entities) {
-                std::promise<osmium::io::Header> promise = std::move(header_promise);
+                                      std::promise<osrm_osmium::io::Header>&& header_promise,
+                                      osrm_osmium::osm_entity_bits::type read_which_entities) {
+                std::promise<osrm_osmium::io::Header> promise = std::move(header_promise);
                 auto creator = detail::ParserFactory::instance().get_creator_function(file);
                 auto parser = creator(input_queue, osmdata_queue, promise, read_which_entities);
                 parser->parse();
@@ -182,7 +182,7 @@ namespace osmium {
                     throw io_error("Reading OSM files from the network currently not supported on Windows.");
 #endif
                 } else {
-                    return osmium::io::detail::open_for_reading(filename);
+                    return osrm_osmium::io::detail::open_for_reading(filename);
                 }
             }
 
@@ -197,32 +197,32 @@ namespace osmium {
              *                            significantly if objects that are not needed anyway are not
              *                            parsed.
              */
-            explicit Reader(const osmium::io::File& file, osmium::osm_entity_bits::type read_which_entities = osmium::osm_entity_bits::all) :
+            explicit Reader(const osrm_osmium::io::File& file, osrm_osmium::osm_entity_bits::type read_which_entities = osrm_osmium::osm_entity_bits::all) :
                 m_file(file.check()),
                 m_read_which_entities(read_which_entities),
                 m_status(status::okay),
                 m_childpid(0),
                 m_input_queue(max_input_queue_size, "raw_input"),
                 m_decompressor(m_file.buffer() ?
-                    osmium::io::CompressionFactory::instance().create_decompressor(file.compression(), m_file.buffer(), m_file.buffer_size()) :
-                    osmium::io::CompressionFactory::instance().create_decompressor(file.compression(), open_input_file_or_url(m_file.filename(), &m_childpid))),
+                    osrm_osmium::io::CompressionFactory::instance().create_decompressor(file.compression(), m_file.buffer(), m_file.buffer_size()) :
+                    osrm_osmium::io::CompressionFactory::instance().create_decompressor(file.compression(), open_input_file_or_url(m_file.filename(), &m_childpid))),
                 m_read_thread_manager(*m_decompressor, m_input_queue),
                 m_osmdata_queue(max_osmdata_queue_size, "parser_results"),
                 m_osmdata_queue_wrapper(m_osmdata_queue),
                 m_header_future(),
                 m_header(),
                 m_thread() {
-                std::promise<osmium::io::Header> header_promise;
+                std::promise<osrm_osmium::io::Header> header_promise;
                 m_header_future = header_promise.get_future();
-                m_thread = osmium::thread::thread_handler{parser_thread, std::ref(m_file), std::ref(m_input_queue), std::ref(m_osmdata_queue), std::move(header_promise), read_which_entities};
+                m_thread = osrm_osmium::thread::thread_handler{parser_thread, std::ref(m_file), std::ref(m_input_queue), std::ref(m_osmdata_queue), std::move(header_promise), read_which_entities};
             }
 
-            explicit Reader(const std::string& filename, osmium::osm_entity_bits::type read_types = osmium::osm_entity_bits::all) :
-                Reader(osmium::io::File(filename), read_types) {
+            explicit Reader(const std::string& filename, osrm_osmium::osm_entity_bits::type read_types = osrm_osmium::osm_entity_bits::all) :
+                Reader(osrm_osmium::io::File(filename), read_types) {
             }
 
-            explicit Reader(const char* filename, osmium::osm_entity_bits::type read_types = osmium::osm_entity_bits::all) :
-                Reader(osmium::io::File(filename), read_types) {
+            explicit Reader(const char* filename, osrm_osmium::osm_entity_bits::type read_types = osrm_osmium::osm_entity_bits::all) :
+                Reader(osrm_osmium::io::File(filename), read_types) {
             }
 
             Reader(const Reader&) = delete;
@@ -245,7 +245,7 @@ namespace osmium {
              * this function first, you might miss an exception, because the
              * destructor is not allowed to throw.
              *
-             * @throws Some form of osmium::io_error when there is a problem.
+             * @throws Some form of osrm_osmium::io_error when there is a problem.
              */
             void close() {
                 m_status = status::closed;
@@ -279,9 +279,9 @@ namespace osmium {
              * Get the header data from the file.
              *
              * @returns Header.
-             * @throws Some form of osmium::io_error if there is an error.
+             * @throws Some form of osrm_osmium::io_error if there is an error.
              */
-            osmium::io::Header header() {
+            osrm_osmium::io::Header header() {
                 if (m_status == status::error) {
                     throw io_error("Can not get header from reader when in status 'error'");
                 }
@@ -289,7 +289,7 @@ namespace osmium {
                 try {
                     if (m_header_future.valid()) {
                         m_header = m_header_future.get();
-                        if (m_read_which_entities == osmium::osm_entity_bits::nothing) {
+                        if (m_read_which_entities == osrm_osmium::osm_entity_bits::nothing) {
                             m_status = status::eof;
                         }
                     }
@@ -305,17 +305,17 @@ namespace osmium {
              * Reads the next buffer from the input. An invalid buffer signals
              * end-of-file. After end-of-file all read() calls will return an
              * invalid buffer. An invalid buffer is also always returned if
-             * osmium::osm_entity_bits::nothing was set when the Reader was
+             * osrm_osmium::osm_entity_bits::nothing was set when the Reader was
              * constructed.
              *
              * @returns Buffer.
-             * @throws Some form of osmium::io_error if there is an error.
+             * @throws Some form of osrm_osmium::io_error if there is an error.
              */
-            osmium::memory::Buffer read() {
-                osmium::memory::Buffer buffer;
+            osrm_osmium::memory::Buffer read() {
+                osrm_osmium::memory::Buffer buffer;
 
                 if (m_status != status::okay ||
-                    m_read_which_entities == osmium::osm_entity_bits::nothing) {
+                    m_read_which_entities == osrm_osmium::osm_entity_bits::nothing) {
                     throw io_error("Can not read from reader when in status 'closed', 'eof', or 'error'");
                 }
 
@@ -361,11 +361,11 @@ namespace osmium {
          * RAM.
          */
         template <typename... TArgs>
-        osmium::memory::Buffer read_file(TArgs&&... args) {
-            osmium::memory::Buffer buffer(1024*1024, osmium::memory::Buffer::auto_grow::yes);
+        osrm_osmium::memory::Buffer read_file(TArgs&&... args) {
+            osrm_osmium::memory::Buffer buffer(1024*1024, osrm_osmium::memory::Buffer::auto_grow::yes);
 
             Reader reader(std::forward<TArgs>(args)...);
-            while (osmium::memory::Buffer read_buffer = reader.read()) {
+            while (osrm_osmium::memory::Buffer read_buffer = reader.read()) {
                 buffer.add_buffer(read_buffer);
                 buffer.commit();
             }
@@ -375,6 +375,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_READER_HPP

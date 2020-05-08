@@ -38,7 +38,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/osm/location.hpp>
 #include <osmium/osm/segment.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Undirected connection between two Locations. The first Location is
@@ -49,7 +49,7 @@ namespace osmium {
 
     public:
 
-        explicit UndirectedSegment(const osmium::Location& location1, const osmium::Location& location2) :
+        explicit UndirectedSegment(const osrm_osmium::Location& location1, const osrm_osmium::Location& location2) :
             Segment(location1, location2) {
             if (location2 < location1) {
                 swap_locations();
@@ -91,10 +91,10 @@ namespace osmium {
      * Output UndirectedSegment to a stream.
      */
     template <typename TChar, typename TTraits>
-    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osmium::UndirectedSegment& segment) {
+    inline std::basic_ostream<TChar, TTraits>& operator<<(std::basic_ostream<TChar, TTraits>& out, const osrm_osmium::UndirectedSegment& segment) {
         return out << segment.first() << "--" << segment.second();
     }
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_OSM_UNDIRECTED_SEGMENT_HPP

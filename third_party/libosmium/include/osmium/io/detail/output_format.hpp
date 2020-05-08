@@ -47,7 +47,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/io/file_format.hpp>
 #include <osmium/memory/buffer.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
         class Header;
@@ -57,16 +57,16 @@ namespace osmium {
 
         namespace detail {
 
-            class OutputBlock : public osmium::handler::Handler {
+            class OutputBlock : public osrm_osmium::handler::Handler {
 
             protected:
 
-                std::shared_ptr<osmium::memory::Buffer> m_input_buffer;
+                std::shared_ptr<osrm_osmium::memory::Buffer> m_input_buffer;
 
                 std::shared_ptr<std::string> m_out;
 
-                explicit OutputBlock(osmium::memory::Buffer&& buffer) :
-                    m_input_buffer(std::make_shared<osmium::memory::Buffer>(std::move(buffer))),
+                explicit OutputBlock(osrm_osmium::memory::Buffer&& buffer) :
+                    m_input_buffer(std::make_shared<osrm_osmium::memory::Buffer>(std::move(buffer))),
                     m_out(std::make_shared<std::string>()) {
                 }
 
@@ -82,7 +82,7 @@ namespace osmium {
              * formats.
              *
              * Do not use this class or derived classes directly. Use the
-             * osmium::io::Writer class instead.
+             * osrm_osmium::io::Writer class instead.
              */
             class OutputFormat {
 
@@ -112,10 +112,10 @@ namespace osmium {
 
                 virtual ~OutputFormat() noexcept = default;
 
-                virtual void write_header(const osmium::io::Header&) {
+                virtual void write_header(const osrm_osmium::io::Header&) {
                 }
 
-                virtual void write_buffer(osmium::memory::Buffer&&) = 0;
+                virtual void write_buffer(osrm_osmium::memory::Buffer&&) = 0;
 
                 virtual void write_end() {
                 }
@@ -126,18 +126,18 @@ namespace osmium {
              * This factory class is used to create objects that write OSM data
              * into a specified output format.
              *
-             * Do not use this class directly. Instead use the osmium::io::Writer
+             * Do not use this class directly. Instead use the osrm_osmium::io::Writer
              * class.
              */
             class OutputFormatFactory {
 
             public:
 
-                typedef std::function<osmium::io::detail::OutputFormat*(const osmium::io::File&, future_string_queue_type&)> create_output_type;
+                typedef std::function<osrm_osmium::io::detail::OutputFormat*(const osrm_osmium::io::File&, future_string_queue_type&)> create_output_type;
 
             private:
 
-                typedef std::map<osmium::io::file_format, create_output_type> map_type;
+                typedef std::map<osrm_osmium::io::file_format, create_output_type> map_type;
 
                 map_type m_callbacks;
 
@@ -152,17 +152,17 @@ namespace osmium {
                     return factory;
                 }
 
-                bool register_output_format(osmium::io::file_format format, create_output_type create_function) {
+                bool register_output_format(osrm_osmium::io::file_format format, create_output_type create_function) {
                     if (! m_callbacks.insert(map_type::value_type(format, create_function)).second) {
                         return false;
                     }
                     return true;
                 }
 
-                std::unique_ptr<osmium::io::detail::OutputFormat> create_output(const osmium::io::File& file, future_string_queue_type& output_queue) {
+                std::unique_ptr<osrm_osmium::io::detail::OutputFormat> create_output(const osrm_osmium::io::File& file, future_string_queue_type& output_queue) {
                     auto it = m_callbacks.find(file.format());
                     if (it != m_callbacks.end()) {
-                        return std::unique_ptr<osmium::io::detail::OutputFormat>((it->second)(file, output_queue));
+                        return std::unique_ptr<osrm_osmium::io::detail::OutputFormat>((it->second)(file, output_queue));
                     }
 
                     throw unsupported_file_format_error(
@@ -179,6 +179,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_OUTPUT_FORMAT_HPP

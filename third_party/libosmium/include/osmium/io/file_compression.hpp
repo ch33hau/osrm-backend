@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <iosfwd>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -67,6 +67,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_FILE_COMPRESSION_HPP

@@ -40,20 +40,20 @@ DEALINGS IN THE SOFTWARE.
 
 #define OSMIUM_HAS_INDEX_MAP_SPARSE_MMAP_ARRAY
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace index {
 
         namespace map {
 
             template <typename TId, typename TValue>
-            using SparseMmapArray = VectorBasedSparseMap<TId, TValue, osmium::detail::mmap_vector_anon>;
+            using SparseMmapArray = VectorBasedSparseMap<TId, TValue, osrm_osmium::detail::mmap_vector_anon>;
 
         } // namespace map
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // __linux__
 

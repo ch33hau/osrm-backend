@@ -41,7 +41,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * Exception signaling that an element could not be
@@ -95,6 +95,6 @@ namespace osmium {
 
     } // namespace index
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_INDEX_INDEX_HPP

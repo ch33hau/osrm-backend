@@ -64,7 +64,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/thread/pool.hpp>
 #include <osmium/visitor.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     namespace io {
 
@@ -116,7 +116,7 @@ namespace osmium {
                     write_spaces(prefix_spaces());
                 }
 
-                void write_meta(const osmium::OSMObject& object) {
+                void write_meta(const osrm_osmium::OSMObject& object) {
                     output_formatted(" id=\"%" PRId64 "\"", object.id());
 
                     if (m_options.add_metadata) {
@@ -150,7 +150,7 @@ namespace osmium {
                     }
                 }
 
-                void write_tags(const osmium::TagList& tags, int spaces) {
+                void write_tags(const osrm_osmium::TagList& tags, int spaces) {
                     for (const auto& tag : tags) {
                         write_spaces(spaces);
                         *m_out += "  <tag k=\"";
@@ -161,7 +161,7 @@ namespace osmium {
                     }
                 }
 
-                void write_discussion(const osmium::ChangesetDiscussion& comments) {
+                void write_discussion(const osrm_osmium::ChangesetDiscussion& comments) {
                     for (const auto& comment : comments) {
                         output_formatted("   <comment uid=\"%d\" user=\"", comment.uid());
                         append_xml_encoded_string(*m_out, comment.user());
@@ -213,7 +213,7 @@ namespace osmium {
 
             public:
 
-                XMLOutputBlock(osmium::memory::Buffer&& buffer, const xml_output_options& options) :
+                XMLOutputBlock(osrm_osmium::memory::Buffer&& buffer, const xml_output_options& options) :
                     OutputBlock(std::move(buffer)),
                     m_options(options) {
                 }
@@ -227,7 +227,7 @@ namespace osmium {
                 ~XMLOutputBlock() noexcept = default;
 
                 std::string operator()() {
-                    osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
+                    osrm_osmium::apply(m_input_buffer->cbegin(), m_input_buffer->cend(), *this);
 
                     if (m_options.use_change_ops) {
                         open_close_op_tag();
@@ -240,7 +240,7 @@ namespace osmium {
                     return out;
                 }
 
-                void node(const osmium::Node& node) {
+                void node(const osrm_osmium::Node& node) {
                     if (m_options.use_change_ops) {
                         open_close_op_tag(node.visible() ? (node.version() == 1 ? operation::op_create : operation::op_modify) : operation::op_delete);
                     }
@@ -252,9 +252,9 @@ namespace osmium {
 
                     if (node.location()) {
                         *m_out += " lat=\"";
-                        osmium::util::double2string(std::back_inserter(*m_out), node.location().lat_without_check(), 7);
+                        osrm_osmium::util::double2string(std::back_inserter(*m_out), node.location().lat_without_check(), 7);
                         *m_out += "\" lon=\"";
-                        osmium::util::double2string(std::back_inserter(*m_out), node.location().lon_without_check(), 7);
+                        osrm_osmium::util::double2string(std::back_inserter(*m_out), node.location().lon_without_check(), 7);
                         *m_out += "\"";
                     }
 
@@ -271,7 +271,7 @@ namespace osmium {
                     *m_out += "</node>\n";
                 }
 
-                void way(const osmium::Way& way) {
+                void way(const osrm_osmium::Way& way) {
                     if (m_options.use_change_ops) {
                         open_close_op_tag(way.visible() ? (way.version() == 1 ? operation::op_create : operation::op_modify) : operation::op_delete);
                     }
@@ -298,7 +298,7 @@ namespace osmium {
                     *m_out += "</way>\n";
                 }
 
-                void relation(const osmium::Relation& relation) {
+                void relation(const osrm_osmium::Relation& relation) {
                     if (m_options.use_change_ops) {
                         open_close_op_tag(relation.visible() ? (relation.version() == 1 ? operation::op_create : operation::op_modify) : operation::op_delete);
                     }
@@ -329,7 +329,7 @@ namespace osmium {
                     *m_out += "</relation>\n";
                 }
 
-                void changeset(const osmium::Changeset& changeset) {
+                void changeset(const osrm_osmium::Changeset& changeset) {
                     *m_out += " <changeset";
 
                     output_formatted(" id=\"%" PRId32 "\"", changeset.id());
@@ -385,13 +385,13 @@ namespace osmium {
 
             }; // class XMLOutputBlock
 
-            class XMLOutputFormat : public osmium::io::detail::OutputFormat, public osmium::handler::Handler {
+            class XMLOutputFormat : public osrm_osmium::io::detail::OutputFormat, public osrm_osmium::handler::Handler {
 
                 xml_output_options m_options;
 
             public:
 
-                XMLOutputFormat(const osmium::io::File& file, future_string_queue_type& output_queue) :
+                XMLOutputFormat(const osrm_osmium::io::File& file, future_string_queue_type& output_queue) :
                     OutputFormat(output_queue),
                     m_options() {
                     m_options.add_metadata     = file.is_not_false("add_metadata");
@@ -404,7 +404,7 @@ namespace osmium {
 
                 ~XMLOutputFormat() noexcept final = default;
 
-                void write_header(const osmium::io::Header& header) final {
+                void write_header(const osrm_osmium::io::Header& header) final {
                     std::string out = "<?xml version='1.0' encoding='UTF-8'?>\n";
 
                     if (m_options.use_change_ops) {
@@ -434,8 +434,8 @@ namespace osmium {
                     send_to_output_queue(std::move(out));
                 }
 
-                void write_buffer(osmium::memory::Buffer&& buffer) final {
-                    m_output_queue.push(osmium::thread::Pool::instance().submit(XMLOutputBlock{std::move(buffer), m_options}));
+                void write_buffer(osrm_osmium::memory::Buffer&& buffer) final {
+                    m_output_queue.push(osrm_osmium::thread::Pool::instance().submit(XMLOutputBlock{std::move(buffer), m_options}));
                 }
 
                 void write_end() final {
@@ -454,9 +454,9 @@ namespace osmium {
 
             // we want the register_output_format() function to run, setting
             // the variable is only a side-effect, it will never be used
-            const bool registered_xml_output = osmium::io::detail::OutputFormatFactory::instance().register_output_format(osmium::io::file_format::xml,
-                [](const osmium::io::File& file, future_string_queue_type& output_queue) {
-                    return new osmium::io::detail::XMLOutputFormat(file, output_queue);
+            const bool registered_xml_output = osrm_osmium::io::detail::OutputFormatFactory::instance().register_output_format(osrm_osmium::io::file_format::xml,
+                [](const osrm_osmium::io::File& file, future_string_queue_type& output_queue) {
+                    return new osrm_osmium::io::detail::XMLOutputFormat(file, output_queue);
             });
 
             // dummy function to silence the unused variable warning from above
@@ -468,6 +468,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_DETAIL_XML_OUTPUT_FORMAT_HPP

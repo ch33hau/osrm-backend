@@ -45,7 +45,7 @@ DEALINGS IN THE SOFTWARE.
 #include <osmium/util/options.hpp>
 #include <osmium/util/compatibility.hpp>
 
-namespace osmium {
+namespace osrm_osmium {
 
     /**
      * @brief Everything related to input and output of OSM data.
@@ -71,7 +71,7 @@ namespace osmium {
          *
          * If the filename is empty or "-", this means stdin or stdout is used.
          */
-        class File : public osmium::util::Options {
+        class File : public osrm_osmium::util::Options {
 
         private:
 
@@ -256,7 +256,7 @@ namespace osmium {
              * Check file format etc. for consistency and throw exception if
              * there is a problem.
              *
-             * @throws osmium::io_error
+             * @throws osrm_osmium::io_error
              */
             const File& check() const {
                 if (m_file_format == file_format::unknown) {
@@ -323,6 +323,6 @@ namespace osmium {
 
     } // namespace io
 
-} // namespace osmium
+} // namespace osrm_osmium
 
 #endif // OSMIUM_IO_FILE_HPP
