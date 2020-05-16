@@ -105,6 +105,7 @@ int Extractor::run()
         std::atomic<unsigned> number_of_relations{0};
         std::atomic<unsigned> number_of_others{0};
 
+        std::clog << '\0' << 'S' << "Parsing OSM" << '\0';
         util::SimpleLogger().Write() << "Parsing in progress..";
         TIMER_START(parsing);
 

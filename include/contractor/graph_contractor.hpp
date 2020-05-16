@@ -618,6 +618,7 @@ class GraphContractor
 
     template <class Edge> inline void GetEdges(util::DeallocatingVector<Edge> &edges)
     {
+        std::clog << '\0' << 'S' << "Get Edges" << '\0';
         util::Percent p(98, 100,contractor_graph->GetNumberOfNodes());
         util::SimpleLogger().Write() << "Getting edges of minimized graph";
         const NodeID number_of_nodes = contractor_graph->GetNumberOfNodes();

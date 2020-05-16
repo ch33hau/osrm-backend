@@ -253,6 +253,7 @@ unsigned EdgeBasedGraphFactory::RenumberEdges()
 /// Creates the nodes in the edge expanded graph from edges in the node-based graph.
 void EdgeBasedGraphFactory::GenerateEdgeExpandedNodes()
 {
+    std::clog << '\0' << 'S' << "Edge-Expanded Nodes" << '\0';
     util::Percent progress(15, 20,m_node_based_graph->GetNumberOfNodes());
 
     // loop over all edges and generate new set of nodes
@@ -305,6 +306,7 @@ void EdgeBasedGraphFactory::GenerateEdgeExpandedEdges(
     const std::string &edge_fixed_penalties_filename,
     const bool generate_edge_lookup)
 {
+    std::clog << '\0' << 'S' << "Edge-Expanded Edges" << '\0';
     util::SimpleLogger().Write() << "generating edge-expanded edges";
 
     BOOST_ASSERT(lua_state != nullptr);
