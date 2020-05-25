@@ -9,4 +9,4 @@
 [tbb]
   url=git@github.com:motis-project/tbb.git
   branch=master
-  commit=63b312f6c87495b124afd15e8b15f8a0dd43408b
+  commit=8126c92c987bc848aee4c33d8e4fa3ce3e7d0968
