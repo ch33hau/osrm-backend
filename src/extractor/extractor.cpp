@@ -36,6 +36,8 @@
 #include <tbb/parallel_for.h>
 #include <tbb/task_scheduler_init.h>
 
+#include "utl/progress_tracker.h"
+
 #include <cstdlib>
 
 #include <algorithm>
@@ -105,7 +107,7 @@ int Extractor::run()
         std::atomic<unsigned> number_of_relations{0};
         std::atomic<unsigned> number_of_others{0};
 
-        std::clog << '\0' << 'S' << "Parsing OSM" << '\0';
+        utl::get_active_progress_tracker_or_activate("osrm").status("Parsing OSM");
         util::SimpleLogger().Write() << "Parsing in progress..";
         TIMER_START(parsing);
 

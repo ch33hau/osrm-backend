@@ -4,6 +4,8 @@
 #include <atomic>
 #include <iostream>
 
+#include "utl/progress_tracker.h"
+
 namespace osrm
 {
 namespace util
@@ -12,15 +14,16 @@ namespace util
 class Percent
 {
   public:
-    Percent(unsigned from, unsigned to,
+    Percent(std::string const& status, unsigned from, unsigned to,
             unsigned max_value, unsigned step = 5)
-    { Reinit(from, to, max_value, step); }
+    { Reinit(status, from, to, max_value, step); }
 
     // Reinitializes
-    void Reinit(unsigned from, unsigned to, unsigned max_value, unsigned step = 5)
+    void Reinit(std::string const& status, unsigned from, unsigned to, unsigned max_value, unsigned step = 5)
     {
-        m_from = from;
-        m_to = to;
+        m_progress_tracker =  &utl::get_active_progress_tracker_or_activate("osrm");
+        m_progress_tracker->status(status).reset_bounds().out_bounds(from, to);
+
         m_max_value = max_value;
         m_current_value = 0;
         m_percent_interval = m_max_value / 100;
@@ -55,6 +58,8 @@ class Percent
 
   private:
     std::atomic_uint m_current_value;
+
+    utl::progress_tracker* m_progress_tracker{nullptr};
     unsigned m_from;
     unsigned m_to;
     unsigned m_max_value;
@@ -63,15 +68,10 @@ class Percent
     unsigned m_last_percent;
     unsigned m_step;
 
-    void update_status(double percent) {
-        auto const val = m_from + (percent / 100.0) * (m_to - m_from);
-        std::clog << '\0' << static_cast<int>(val) << '\0';
-    }
-
     // Displays progress.
     void PrintPercent(double percent)
     {
-        update_status(percent);
+        m_progress_tracker->update(percent);
         while (percent >= m_last_percent + m_step)
         {
             m_last_percent += m_step;

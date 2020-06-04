@@ -10,3 +10,7 @@
   url=git@github.com:motis-project/tbb.git
   branch=master
   commit=8126c92c987bc848aee4c33d8e4fa3ce3e7d0968
+[utl]
+  url=git@github.com:motis-project/utl.git
+  branch=master
+  commit=085c6d22901a8b97102a9aa163114f489341fdb8

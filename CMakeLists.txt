@@ -192,6 +192,7 @@ set(EXTRACTOR_LIBRARIES
     ${OSMIUM_LIBRARIES}
     tbb_static
     zlibstatic
+    utl
     ${MAYBE_COVERAGE_LIBRARIES})
 set(CONTRACTOR_LIBRARIES
     ${Boost_LIBRARIES}
@@ -199,12 +200,14 @@ set(CONTRACTOR_LIBRARIES
     luabind
     lua
     tbb_static
+    utl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(ENGINE_LIBRARIES
     ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     tbb_static
+    utl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES}
     zlibstatic)
@@ -212,12 +215,14 @@ set(STORAGE_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     tbb_static
+    utl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(UTIL_LIBRARIES
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     tbb_static
+    utl
     ${MAYBE_COVERAGE_LIBRARIES})
 
 # Libraries

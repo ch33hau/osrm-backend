@@ -270,7 +270,7 @@ class GraphContractor
         const constexpr size_t DeleteGrainSize = 1;
 
         const NodeID number_of_nodes = contractor_graph->GetNumberOfNodes();
-        util::Percent p(25, 98, number_of_nodes);
+        util::Percent p("Contract Graph", 25, 98, number_of_nodes);
 
         ThreadDataContainer thread_data_list(number_of_nodes);
 
@@ -618,8 +618,7 @@ class GraphContractor
 
     template <class Edge> inline void GetEdges(util::DeallocatingVector<Edge> &edges)
     {
-        std::clog << '\0' << 'S' << "Get Edges" << '\0';
-        util::Percent p(98, 100,contractor_graph->GetNumberOfNodes());
+        util::Percent p("Get Edges", 98, 100,contractor_graph->GetNumberOfNodes());
         util::SimpleLogger().Write() << "Getting edges of minimized graph";
         const NodeID number_of_nodes = contractor_graph->GetNumberOfNodes();
         if (contractor_graph->GetNumberOfNodes())
