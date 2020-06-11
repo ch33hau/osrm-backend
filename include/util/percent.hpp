@@ -21,7 +21,7 @@ class Percent
     // Reinitializes
     void Reinit(std::string const& status, unsigned from, unsigned to, unsigned max_value, unsigned step = 5)
     {
-        m_progress_tracker =  &utl::get_active_progress_tracker_or_activate("osrm");
+        m_progress_tracker = utl::get_active_progress_tracker_or_activate("osrm");
         m_progress_tracker->status(status).reset_bounds().out_bounds(from, to);
 
         m_max_value = max_value;
@@ -59,7 +59,7 @@ class Percent
   private:
     std::atomic_uint m_current_value;
 
-    utl::progress_tracker* m_progress_tracker{nullptr};
+    utl::progress_tracker_ptr m_progress_tracker;
     unsigned m_from;
     unsigned m_to;
     unsigned m_max_value;
