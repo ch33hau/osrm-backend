@@ -84,7 +84,6 @@ else()
   file(RENAME ${NEWFILE} ${OLDFILE})
 endif()
 
-set(BOOST_COMPONENTS date_time filesystem iostreams program_options regex system thread)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/include/util/version.hpp.in
@@ -131,27 +130,17 @@ endif()
 include_directories(osrm-extract "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include")
 
 
-find_package(Boost 1.49.0 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-
 # collect a subset of the boost libraries needed
 # by libosrm
-foreach(lib ${Boost_LIBRARIES})
-  if(NOT WIN32)
-    if(lib MATCHES filesystem OR lib MATCHES thread OR lib MATCHES iostreams OR lib MATCHES system)
-       list(APPEND BOOST_ENGINE_LIBRARIES "${lib}")
-    endif()
-  else()
-    list(APPEND BOOST_ENGINE_LIBRARIES "${lib}")
-  endif()
-endforeach(lib)
+SET(BOOST_ENGINE_LIBRARIES boost-date_time boost-filesystem boost-iostreams boost-program_options boost-regex boost-system boost-thread)
 
-if(NOT WIN32 AND NOT Boost_USE_STATIC_LIBS)
-  add_dependency_defines(-DBOOST_TEST_DYN_LINK)
-endif()
-add_dependency_defines(-DBOOST_SPIRIT_USE_PHOENIX_V3)
-add_dependency_defines(-DBOOST_RESULT_OF_USE_DECLTYPE)
-add_dependency_defines(-DBOOST_FILESYSTEM_NO_DEPRECATED)
-add_dependency_includes(${Boost_INCLUDE_DIRS})
+# if(NOT WIN32 AND NOT Boost_USE_STATIC_LIBS)
+#   add_dependency_defines(-DBOOST_TEST_DYN_LINK)
+# endif()
+# add_dependency_defines(-DBOOST_SPIRIT_USE_PHOENIX_V3)
+# add_dependency_defines(-DBOOST_RESULT_OF_USE_DECLTYPE)
+# add_dependency_defines(-DBOOST_FILESYSTEM_NO_DEPRECATED)
+# add_dependency_includes(${Boost_INCLUDE_DIRS})
 if (MSVC)
   add_dependency_defines(-D_USE_MATH_DEFINES)
 endif()
@@ -171,20 +160,20 @@ add_definitions(${OSRM_DEFINES})
 include_directories(SYSTEM ${OSRM_INCLUDE_PATHS})
 
 # Binaries
-target_link_libraries(osrm-datastore osrm_store ${Boost_LIBRARIES})
-target_link_libraries(osrm-extract osrm_extract ${Boost_LIBRARIES})
+target_link_libraries(osrm-datastore osrm_store ${BOOST_ENGINE_LIBRARIES})
+target_link_libraries(osrm-extract osrm_extract ${BOOST_ENGINE_LIBRARIES})
 if (MSVC)
   # missing symbol "__imp_ntohl" in function
   # osrm_osmium::io::detail::PBFParser::read_blob_header_size_from_file(void)"
   target_link_libraries(osrm-extract wsock32 ws2_32)
 endif()
-target_link_libraries(osrm-contract ${Boost_LIBRARIES} tbb_static osrm_contract)
-target_link_libraries(osrm-routed osrm ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
+target_link_libraries(osrm-contract ${BOOST_ENGINE_LIBRARIES} tbb_static osrm_contract)
+target_link_libraries(osrm-routed osrm ${BOOST_ENGINE_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} zlib_static)
 
 
 set(EXTRACTOR_LIBRARIES
     ${BZIP2_LIBRARIES}
-    ${Boost_LIBRARIES}
+    ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${EXPAT_LIBRARIES}
     luabind
@@ -195,7 +184,7 @@ set(EXTRACTOR_LIBRARIES
     utl
     ${MAYBE_COVERAGE_LIBRARIES})
 set(CONTRACTOR_LIBRARIES
-    ${Boost_LIBRARIES}
+    ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     luabind
     lua
@@ -212,14 +201,14 @@ set(ENGINE_LIBRARIES
     ${MAYBE_COVERAGE_LIBRARIES}
     zlibstatic)
 set(STORAGE_LIBRARIES
-    ${Boost_LIBRARIES}
+    ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     tbb_static
     utl
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(UTIL_LIBRARIES
-    ${Boost_LIBRARIES}
+    ${BOOST_ENGINE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     tbb_static
     utl
@@ -243,7 +232,7 @@ if(BUILD_COMPONENTS)
     add_executable(osrm-components src/tools/components.cpp ${UtilGlob})
     target_link_libraries(osrm-components tbb_static)
     include_directories(SYSTEM ${GDAL_INCLUDE_DIR})
-    target_link_libraries(osrm-components ${GDAL_LIBRARIES} ${Boost_LIBRARIES})
+    target_link_libraries(osrm-components ${GDAL_LIBRARIES} ${BOOST_ENGINE_LIBRARIES})
     install(TARGETS osrm-components DESTINATION bin)
   else()
     message(WARNING "libgdal and/or development headers not found")
@@ -253,14 +242,14 @@ endif()
 if(BUILD_TOOLS)
   message(STATUS "Activating OSRM internal tools")
   add_executable(osrm-io-benchmark src/tools/io-benchmark.cpp ${UtilGlob})
-  target_link_libraries(osrm-io-benchmark ${Boost_LIBRARIES})
+  target_link_libraries(osrm-io-benchmark ${BOOST_ENGINE_LIBRARIES})
   add_executable(osrm-unlock-all src/tools/unlock_all_mutexes.cpp ${UtilGlob})
-  target_link_libraries(osrm-unlock-all ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(osrm-unlock-all ${BOOST_ENGINE_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
   if(UNIX AND NOT APPLE)
     target_link_libraries(osrm-unlock-all rt)
   endif()
   add_executable(osrm-springclean src/tools/springclean.cpp ${UtilGlob})
-  target_link_libraries(osrm-springclean ${Boost_LIBRARIES})
+  target_link_libraries(osrm-springclean ${BOOST_ENGINE_LIBRARIES})
 
   install(TARGETS osrm-io-benchmark DESTINATION bin)
   install(TARGETS osrm-unlock-all DESTINATION bin)

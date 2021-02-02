@@ -1,7 +1,7 @@
 [luabind]
   url=git@github.com:motis-project/luabind.git
   branch=master
-  commit=7e793fe1ed7aa5ab0c638466cbc2d528e33cc85c
+  commit=9223568bbcf818ecfb1001d49f567627ee10852a
 [tbb]
   url=git@github.com:motis-project/tbb.git
   branch=master
@@ -14,3 +14,7 @@
   url=git@github.com:motis-project/zlib.git
   branch=master
   commit=8e7c86d3a0e49101b9a67d74c4a07345dcb0e485
+[boost]
+  url=git@github.com:motis-project/boost.git
+  branch=master
+  commit=4c256be5b83f0d91898ea48d65bdb33e07d30f65

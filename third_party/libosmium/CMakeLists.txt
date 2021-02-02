@@ -118,15 +118,15 @@ endif()
 #
 #-----------------------------------------------------------------------------
 
-find_package(Boost 1.38)
-mark_as_advanced(CLEAR BOOST_ROOT)
+# find_package(Boost 1.38)
+# mark_as_advanced(CLEAR BOOST_ROOT)
 
-if(Boost_FOUND)
-    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-else()
-    set(BOOST_ROOT "NOT FOUND: please choose" CACHE PATH "")
-    message(FATAL_ERROR "PLEASE, specify the directory where the Boost library is installed in BOOST_ROOT")
-endif()
+# if(Boost_FOUND)
+#     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+# else()
+#     set(BOOST_ROOT "NOT FOUND: please choose" CACHE PATH "")
+#     message(FATAL_ERROR "PLEASE, specify the directory where the Boost library is installed in BOOST_ROOT")
+# endif()
 
 # set OSMIUM_INCLUDE_DIR so FindOsmium will not set anything different
 set(OSMIUM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -361,6 +361,7 @@ if(BUILD_HEADERS)
         # There is no way in CMake to just compile but not link a C++ file,
         # so we pretend to build a library here.
         add_library(${libname} STATIC ${DUMMYCPP} include/${hpp})
+        target_link_libraries(${libname} boost)
 
         #### this is better but only supported from cmake 3.0:
         ###add_library(${libname} OBJECT ${DUMMYCPP} include/${hpp})
