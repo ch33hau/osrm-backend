@@ -59,6 +59,11 @@ class BasePlugin
         // are all phantoms from a tiny cc?
         const auto check_all_in_same_component =
             [](const std::vector<std::pair<PhantomNode, PhantomNode>> &nodes) {
+                if (nodes.empty())
+                {
+                    return true;
+                }
+
                 const auto component_id = nodes.front().first.component.id;
 
                 return std::all_of(std::begin(nodes),
