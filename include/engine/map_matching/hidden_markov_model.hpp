@@ -51,7 +51,7 @@ struct TransitionLogProbability
 template <class CandidateLists> struct HiddenMarkovModel
 {
     std::vector<std::vector<double>> viterbi;
-    std::vector<std::vector<std::pair<unsigned, unsigned>>> parents;
+    std::vector<std::vector<std::pair<std::size_t, std::size_t>>> parents;
     std::vector<std::vector<float>> path_distances;
     std::vector<std::vector<bool>> pruned;
     std::vector<bool> breakage;
@@ -94,7 +94,7 @@ template <class CandidateLists> struct HiddenMarkovModel
         {
             std::fill(viterbi[t].begin(), viterbi[t].end(), IMPOSSIBLE_LOG_PROB);
             std::fill(parents[t].begin(), parents[t].end(), std::make_pair(0U, 0U));
-            std::fill(path_distances[t].begin(), path_distances[t].end(), 0.0);
+            std::fill(path_distances[t].begin(), path_distances[t].end(), 0.0F);
             std::fill(pruned[t].begin(), pruned[t].end(), true);
         }
         std::fill(breakage.begin() + initial_timestamp, breakage.end(), true);
