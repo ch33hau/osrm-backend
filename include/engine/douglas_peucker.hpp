@@ -5,6 +5,7 @@
 
 #include <iterator>
 #include <vector>
+#include <cstdint>
 
 namespace osrm
 {
