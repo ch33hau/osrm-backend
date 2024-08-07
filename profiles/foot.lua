@@ -3,7 +3,7 @@
 local find_access_tag = require("lib/access").find_access_tag
 
 -- Begin of globals
-barrier_whitelist = { [""] = true, ["cycle_barrier"] = true, ["bollard"] = true, ["entrance"] = true, ["cattle_grid"] = true, ["border_control"] = true, ["toll_booth"] = true, ["sally_port"] = true, ["gate"] = true, ["no"] = true, ["block"] = true}
+barrier_whitelist = { [""] = true, ["cycle_barrier"] = true, ["bollard"] = true, ["entrance"] = true, ["cattle_grid"] = true, ["border_control"] = true, ["toll_booth"] = true, ["sally_port"] = true, ["gate"] = true, ["no"] = true, ["block"] = true, ["lift_gate"] = true}
 access_tag_whitelist = { ["yes"] = true, ["foot"] = true, ["permissive"] = true, ["designated"] = true  }
 access_tag_blacklist = { ["no"] = true, ["private"] = true, ["agricultural"] = true, ["forestry"] = true, ["delivery"] = true }
 access_tag_restricted = { ["destination"] = true, ["delivery"] = true }
@@ -87,6 +87,9 @@ function node_function (node, result)
     result.traffic_lights = true
   end
 
+  local kerb = node:get_value_by_key("kerb")
+  local flat_kerb = kerb and ("lowered" == kerb or "flush" == kerb)
+
   -- parse access and barrier tags
   if access and access ~= "" then
     if access_tag_blacklist[access] then
@@ -95,7 +98,7 @@ function node_function (node, result)
       result.barrier = false
     end
   elseif barrier and barrier ~= "" then
-    if barrier_whitelist[barrier] then
+    if barrier_whitelist[barrier] or flat_kerb then
       result.barrier = false
     else
       result.barrier = true
